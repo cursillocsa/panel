@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel de Fran · Gauss</title>
+<style>
+:root{--rojo:#c0392b;--negro:#201e1e;--fondo:#f3f5f9;--azul:#1f4e79;--verde:#1b8a3a}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:#222;font-size:16px}
+header{background:var(--negro);color:#fff;padding:14px 16px;border-bottom:4px solid var(--rojo);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:20px;flex:1}header h1 span{color:#ff6b5e}
+#volver{display:none;background:#444;color:#fff;border:0;border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
+main{padding:14px 16px 70px;max-width:820px;margin:0 auto}
+.card{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card h2{margin:0 0 10px;font-size:17px;color:var(--azul)}
+.botones{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.bgrande{display:block;text-align:left;border:0;border-radius:14px;padding:18px;font-size:19px;font-weight:bold;cursor:pointer;color:#fff;min-height:96px;font-family:inherit}
+.bgrande small{display:block;font-weight:normal;font-size:13px;opacity:.9;margin-top:6px}
+label{display:block;font-weight:bold;margin-top:12px;font-size:14px}
+input,select{width:100%;font-size:17px;padding:10px;border:1px solid #bbb;border-radius:8px;margin-top:4px;background:#fff;font-family:inherit}
+input[type=checkbox]{width:auto;transform:scale(1.3);margin:0 8px 0 0}
+.fila{display:flex;gap:12px}.fila>div{flex:1;min-width:0}
+@media(max-width:600px){.fila{flex-direction:column;gap:0}}
+.btn{display:block;width:100%;font-size:18px;padding:14px;background:var(--rojo);color:#fff;border:0;border-radius:12px;cursor:pointer;font-weight:bold;margin-top:16px;font-family:inherit}
+.btn:disabled{opacity:.6}.btn.az{background:var(--azul)}.btn.gr{background:#666}
+.ayuda{color:#777;font-size:13px;font-weight:normal}
+.err{color:var(--rojo);font-weight:bold;margin-top:10px}
+#msg{color:#666;text-align:center;margin-top:30px}
+.pdf{border:1px solid #e3e3e3;border-radius:12px;padding:12px;margin-top:10px}
+.pdf b{display:block;font-size:15px}.pdf small{color:#777}
+.acc{display:inline-block;border:0;border-radius:18px;padding:8px 14px;font-size:14px;font-weight:bold;color:#fff;cursor:pointer;margin:8px 6px 0 0;font-family:inherit;text-decoration:none}
+.chip{display:inline-block;border:1px solid #bbb;border-radius:18px;padding:7px 12px;margin:4px 6px 0 0;font-size:14px;cursor:pointer;background:#fff;user-select:none}
+.chip.on{background:var(--azul);color:#fff;border-color:var(--azul)}
+.gr-curso{margin-top:10px}.gr-curso b{font-size:13px;color:#555}
+.gr-item{display:inline-flex;align-items:center;border:1px solid #ddd;border-radius:8px;padding:6px 10px;margin:4px 6px 0 0;font-size:14px;cursor:pointer;background:#fff}
+.gr-item.on{background:#e8f0fe;border-color:var(--azul)}
+.paso{display:inline-block;background:var(--azul);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-right:6px;font-size:14px}
+.aviso{background:#fff2cc;border-radius:8px;padding:10px;margin-top:10px;font-size:14px}
+.ok{background:#d9ead3;border-radius:8px;padding:10px;margin-top:10px;font-size:14px}
+.auto{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sw{border:0;border-radius:18px;padding:8px 14px;font-weight:bold;cursor:pointer;font-family:inherit}
+.sw.on{background:var(--verde);color:#fff}.sw.off{background:#ddd;color:#333}
+</style></head><body>
+<header><h1>🧑‍💻 Panel de Fran <span>Gauss</span></h1><button id="volver" onclick="inicio()">⬅ Inicio</button></header>
+<main><div id="app"></div><div id="msg">Cargando…</div></main>
+<script>
+var API_ADM='https://script.google.com/macros/s/AKfycbzPNqOlPMgP1lme__szBCxU4kzz7fSJ3PxLxUZu_CcywI5ftsESe6e7hL63z1Xp7M6U/exec';
+var API_CSA='https://script.google.com/macros/s/AKfycbxkJKfreWnlk8OZjS18maXcKNO4UblFEiaOwcBpe2VZYm5fs3CmlKEjwNqETak_ObJa/exec';
+var PIN='';try{PIN=localStorage.getItem('gaussPinFran')||'';}catch(e){}
+var GR=null,INFO=null,PN=null;
+function el(i){return document.getElementById(i);}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function msg(t){el('msg').innerHTML=t||'';}
+function guardado(k,v){try{if(v===undefined)return localStorage.getItem(k)||'';localStorage.setItem(k,v);}catch(e){return '';}}
+function hoyIso(){var d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
+function isoMas(iso,n){var p=iso.split('-').map(Number),d=new Date(Date.UTC(p[0],p[1]-1,p[2]+n));return d.toISOString().slice(0,10);}
+function fecha(iso){if(!iso)return '';var p=iso.split('-');return p[2]+'/'+p[1];}
+function llamar(api,acc,params,ok,mal){
+ var q='accion='+acc+'&pin='+encodeURIComponent(PIN);
+ for(var k in params)q+='&'+k+'='+encodeURIComponent(params[k]==null?'':params[k]);
+ fetch(api+'?'+q,{credentials:'omit'}).then(function(r){return r.json();})
+ .then(function(d){if(d&&d.error)mal({message:d.error});else ok(d);})
+ .catch(function(){mal({message:'No pude conectar ('+(api===API_CSA?'CSA':'Administración')+'). Revisá la conexión y probá de nuevo.'});});}
+function adm(a,p,ok,mal){llamar(API_ADM,a,p,ok,mal);}
+function csa(a,p,ok,mal){llamar(API_CSA,a,p,ok,mal);}
+function falla(e,dest){var m=String(e.message||e);
+ if(m.indexOf('PIN:')>=0&&!dest){pedirPin(m.replace(/^.*PIN:\s*/,''));return;}
+ m=m.replace(/^.*PIN:\s*/,'PIN: ');
+ if(dest&&el(dest))el(dest).innerHTML='<div class="err">⚠️ '+esc(m)+'</div>';else msg('<span class="err">⚠️ '+esc(m)+'</span>');}
+function pedirPin(m){el('volver').style.display='none';msg('');
+ el('app').innerHTML='<div class="card" style="text-align:center"><h2>🔒 Panel de Fran</h2><div style="margin-bottom:10px;color:'+(m.indexOf('Ingres')===0?'#555':'#c0392b')+'">'+esc(m)+'</div>'+
+ '<input id="pin" type="password" placeholder="PIN" style="font-size:22px;width:180px;text-align:center"><br><button class="btn" style="width:auto;display:inline-block;padding:12px 34px" onclick="entrar()">Entrar</button></div>';
+ var i=el('pin');i.focus();i.onkeydown=function(ev){if(ev.key==='Enter')entrar();};}
+function entrar(){PIN=el('pin').value.trim();guardado('gaussPinFran',PIN);cargar();}
+function cargar(){el('app').innerHTML='';msg('Cargando…');
+ var listo=0,fin=function(){if(++listo===2)inicio();};
+ adm('franGrupos',{},function(d){GR=d;fin();},function(e){falla(e);});
+ csa('franInfo',{},function(d){INFO=d;fin();},function(e){falla(e);});}
+cargar();
+function pantalla(h){el('volver').style.display='inline-block';msg('');el('app').innerHTML=h;window.scrollTo(0,0);}
+
+// ---------- INICIO ----------
+function inicio(){el('volver').style.display='none';msg('');window.scrollTo(0,0);
+ el('app').innerHTML='<div class="botones">'+
+  '<button class="bgrande" style="background:#c0392b" onclick="semanal()">📊 Resumen semanal<small>Académico + económico · sábado a viernes</small></button>'+
+  '<button class="bgrande" style="background:#1f4e79" onclick="especifico()">🎯 Resumen específico<small>Fechas y grupos a elección · por coordinador</small></button>'+
+  '<button class="bgrande" style="background:#6a1b9a" onclick="pdfNotas()">🖨️ PDF de notas<small>Un examen o todos, de un grupo</small></button>'+
+  '<button class="bgrande" style="background:#00838f" onclick="lista()">📋 Crear lista de llamado<small>Desde el celular</small></button>'+
+  '<button class="bgrande" style="background:#455a64" onclick="historial()">📁 Historial<small>Lo último que generaste</small></button>'+
+  '</div><div class="card" style="margin-top:14px"><div class="auto"><div><b>⏰ Resumen semanal automático</b><div class="ayuda">Los viernes a las 19 h se generan solos los dos PDFs (sin mail). Abrís el panel y compartís.</div></div>'+
+  '<button class="sw off" id="swA" onclick="auto()">…</button></div></div>';
+ verAuto();}
+var AUTO=null;
+function verAuto(modo){var r={},n=0,fin=function(){if(++n<2)return;AUTO=r.a&&r.c;var b=el('swA');if(!b)return;
+  b.className='sw '+(AUTO?'on':'off');b.textContent=AUTO?'✅ Activado':(r.a||r.c?'⚠️ A medias':'Apagado');b.disabled=false;};
+ adm('franAuto',{modo:modo||'ver'},function(d){r.a=d.activo;fin();},function(e){r.a=false;fin();});
+ csa('franAuto',{modo:modo||'ver'},function(d){r.c=d.activo;fin();},function(e){r.c=false;fin();});}
+function auto(){var b=el('swA');b.disabled=true;b.textContent='…';verAuto(AUTO?'off':'on');}
+
+// ---------- PDFs: ver, descargar, compartir ----------
+function tarjeta(r,api){var id='p'+Math.random().toString(36).slice(2,8);
+ var cuando=r.t?new Date(r.t).toLocaleString('es-PY',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+ return '<div class="pdf"><b>'+(r.tipo==='Económico'?'💰 ':(r.tipo==='Lista'?'📋 ':'📘 '))+esc(r.nombre.replace(/\.pdf$/,''))+'</b><small>'+(r.ya?'Ya estaba generado · ':'')+esc(cuando)+'</small><br>'+
+  (r.url?'<a class="acc" style="background:#1f4e79" href="'+esc(r.url)+'" target="_blank">📂 Abrir</a>':
+  '<button class="acc" style="background:#1f4e79" onclick="archivo(\''+api+'\',\''+esc(r.id)+'\',\'ver\',this)">👁️ Ver</button>'+
+  '<button class="acc" style="background:#555" onclick="archivo(\''+api+'\',\''+esc(r.id)+'\',\'bajar\',this)">⬇️ Descargar</button>'+
+  '<button class="acc" style="background:#25d366" onclick="archivo(\''+api+'\',\''+esc(r.id)+'\',\'compartir\',this)">📲 Compartir</button>')+'<div id="'+id+'"></div></div>';}
+var CACHE_PDF={};
+function archivo(api,id,modo,b){var txt=b.textContent,ventana=null;b.disabled=true;b.textContent='…';
+ if(modo==='ver')ventana=window.open('','_blank');
+ var usar=function(d){b.disabled=false;b.textContent=txt;CACHE_PDF[id]=d;
+  var bin=atob(d.b64),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  var blob=new Blob([u],{type:d.mime||'application/pdf'}),url=URL.createObjectURL(blob);
+  if(modo==='ver'){if(ventana)ventana.location=url;else window.open(url,'_blank');return;}
+  if(modo==='compartir'){var f=null;try{f=new File([blob],d.nombre,{type:d.mime||'application/pdf'});}catch(e){}
+   if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:d.nombre}).catch(function(){});return;}
+   alert('Este navegador no puede compartir archivos directo: lo descargo y lo adjuntás en WhatsApp.');}
+  var a=document.createElement('a');a.href=url;a.download=d.nombre;document.body.appendChild(a);a.click();a.remove();};
+ if(CACHE_PDF[id]){usar(CACHE_PDF[id]);return;}
+ llamar(api==='csa'?API_CSA:API_ADM,'franArchivo',{id:id},usar,function(e){b.disabled=false;b.textContent=txt;if(ventana)ventana.close();alert('⚠️ '+(e.message||e));});}
+
+// ---------- 📊 RESUMEN SEMANAL ----------
+function sabVie(anterior){var d=new Date(),dow=d.getDay(),v=new Date(d);
+ v.setDate(d.getDate()+(dow===5?0:(dow===6||dow===0?-((dow+2)%7):5-dow))-(anterior?7:0));
+ var s=new Date(v);s.setDate(v.getDate()-6);var f=function(x){return ('0'+x.getDate()).slice(-2)+'/'+('0'+(x.getMonth()+1)).slice(-2);};return f(s)+' al '+f(v);}
+function semanal(){pantalla('<div class="card"><h2>📊 Resumen semanal</h2>'+
+  '<label>Semana</label><select id="sS"><option value="0">Esta semana · sábado '+sabVie(false).replace(' al ',' → viernes ')+'</option><option value="1">Semana anterior · '+sabVie(true)+'</option></select>'+
+  '<div class="ayuda" style="margin-top:6px">Si ya estaba generado (por ejemplo el automático del viernes), lo trae al instante.</div>'+
+  '<button class="btn" id="sB" onclick="genSemanal(0)">📊 Generar académico + económico</button><div id="sR"></div></div>');}
+function genSemanal(force){var b=el('sB'),ant=el('sS').value;b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';
+ el('sR').innerHTML='<div id="sA" class="pdf">📘 Académico: generando…</div><div id="sE" class="pdf">💰 Económico: generando…</div>';
+ var n=0,fin=function(){if(++n<2)return;b.disabled=false;b.textContent='📊 Generar académico + económico';
+  el('sR').insertAdjacentHTML('beforeend','<button class="btn gr" style="font-size:15px;padding:10px" onclick="genSemanal(1)">🔄 Volver a generar con los datos de ahora</button>');};
+ csa('franSemanal',{anterior:ant,force:force},function(r){el('sA').outerHTML=tarjeta(r,'csa');fin();},function(e){falla(e,'sA');fin();});
+ adm('franSemanal',{anterior:ant,force:force},function(r){el('sE').outerHTML=tarjeta(r,'adm');fin();},function(e){falla(e,'sE');fin();});}
+
+// ---------- 🎯 RESUMEN ESPECÍFICO ----------
+var SEL={},COORD='';
+function vigentes(){return GR.grupos.filter(function(g){return g.vigente||el('eTodos')&&el('eTodos').checked;});}
+function especifico(){SEL={};COORD='';
+ var coords={};GR.grupos.forEach(function(g){if(g.enc&&g.vigente)coords[g.enc]=1;});
+ var cursos={};GR.grupos.forEach(function(g){if(g.vigente)cursos[(g.curso||'Otros')+(g.mod?' '+g.mod:'')]=1;});
+ pantalla('<div class="card"><h2><span class="paso">1</span>¿Qué resumen?</h2>'+
+  '<label style="font-weight:normal"><input type="checkbox" id="eA" checked>📘 Académico</label>'+
+  '<label style="font-weight:normal"><input type="checkbox" id="eE">💰 Económico <span class="ayuda">(cobrado y deuda de esos grupos; sin gastos)</span></label></div>'+
+  '<div class="card"><h2><span class="paso">2</span>¿De qué grupos?</h2>'+
+  '<div class="ayuda">Por coordinador (marca sus grupos):</div><div>'+(Object.keys(coords).length?Object.keys(coords).sort().map(function(c){return '<span class="chip" data-c="'+esc(c)+'" onclick="porCoord(this)">'+esc(c)+'</span>';}).join(''):'<span class="ayuda">Cargá PROFESOR ENCARGADO en GRUPOS de Administración.</span>')+'</div>'+
+  '<div class="ayuda" style="margin-top:10px">Rápido por curso:</div><div>'+Object.keys(cursos).sort().map(function(c){return '<span class="chip" data-k="'+esc(c)+'" onclick="porCurso(this)">Todos '+esc(c)+'</span>';}).join('')+
+  '<span class="chip" onclick="SEL={};COORD=\'\';pintarGr()">✕ Ninguno</span></div>'+
+  '<div id="eG"></div><label style="font-weight:normal;margin-top:10px"><input type="checkbox" id="eTodos" onchange="pintarGr()">Mostrar también grupos que ya terminaron</label></div>'+
+  '<div class="card"><h2><span class="paso">3</span>¿Qué fechas?</h2><div id="eUlt"></div>'+
+  '<div class="fila"><div><label>Desde</label><input type="date" id="eD" value="'+isoMas(hoyIso(),-6)+'"></div><div><label>Hasta</label><input type="date" id="eH" value="'+hoyIso()+'"></div></div>'+
+  '<button class="btn" id="eB" onclick="genEsp()">🎯 Generar</button><div id="eR"></div></div>');
+ pintarGr();}
+function claveCurso(g){return (g.curso||'Otros')+(g.mod?' '+g.mod:'');}
+function pintarGr(){var por={};vigentes().forEach(function(g){(por[claveCurso(g)]=por[claveCurso(g)]||[]).push(g);});
+ el('eG').innerHTML=Object.keys(por).sort().map(function(k){return '<div class="gr-curso"><b>'+esc(k)+'</b><br>'+por[k].map(function(g){
+  return '<span class="gr-item'+(SEL[g.cod]?' on':'')+'" onclick="toggleG(\''+esc(g.cod)+'\')">'+(SEL[g.cod]?'☑️ ':'⬜ ')+esc(g.nombre)+'</span>';}).join('')+'</div>';}).join('');
+ [].forEach.call(document.querySelectorAll('.chip[data-c]'),function(c){c.className='chip'+(c.getAttribute('data-c')===COORD?' on':'');});
+ var n=Object.keys(SEL).length;el('eB').textContent='🎯 Generar'+(n?' ('+n+' grupo'+(n>1?'s':'')+')':' (todos los grupos)');}
+function toggleG(c){if(SEL[c])delete SEL[c];else SEL[c]=1;pintarGr();}
+function porCurso(ch){var k=ch.getAttribute('data-k');COORD='';vigentes().forEach(function(g){if(claveCurso(g)===k)SEL[g.cod]=1;});pintarGr();}
+function porCoord(ch){var c=ch.getAttribute('data-c');COORD=c;SEL={};GR.grupos.forEach(function(g){if(g.enc===c&&g.vigente)SEL[g.cod]=1;});
+ var u=(INFO.coords||{})[c];
+ if(u){el('eUlt').innerHTML='<div class="aviso">La última vez le generaste a <b>'+esc(c)+'</b> del '+fecha(u.desde)+' al '+fecha(u.hasta)+'. Te propongo seguir desde el '+fecha(isoMas(u.hasta,1))+'.</div>';
+  el('eD').value=isoMas(u.hasta,1);el('eH').value=hoyIso();}
+ else el('eUlt').innerHTML='<div class="ayuda">Primera vez para '+esc(c)+': elegí las fechas.</div>';
+ pintarGr();}
+function genEsp(){var A=el('eA').checked,E=el('eE').checked,r=el('eR'),d=el('eD').value,h=el('eH').value;
+ if(!A&&!E){r.innerHTML='<div class="err">Elegí académico, económico o los dos.</div>';return;}
+ if(!d||!h){r.innerHTML='<div class="err">Elegí las fechas.</div>';return;}
+ var cods=Object.keys(SEL),gs=GR.grupos.filter(function(g){return SEL[g.cod];});
+ var etiqueta=COORD?COORD:(cods.length===0?'':(cods.length<=3?gs.map(function(g){return g.nombre;}).join(', '):cods.length+' grupos'));
+ var b=el('eB');b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';
+ r.innerHTML=(A?'<div id="eRA" class="pdf">📘 Académico: generando…</div>':'')+(E?'<div id="eRE" class="pdf">💰 Económico: generando…</div>':'');
+ var n=0,tot=(A?1:0)+(E?1:0),fin=function(){if(++n<tot)return;b.disabled=false;pintarGr();};
+ if(A)csa('franAca',{desde:d,hasta:h,grupos:gs.map(function(g){return g.nombre;}).join('|'),etiqueta:etiqueta,coord:COORD},function(x){
+  el('eRA').outerHTML=tarjeta(x,'csa');if(COORD){INFO.coords=INFO.coords||{};INFO.coords[COORD]={desde:d,hasta:h};}fin();},function(e){falla(e,'eRA');fin();});
+ if(E)adm('franEco',{desde:d,hasta:h,grupos:cods.join(','),etiqueta:etiqueta},function(x){el('eRE').outerHTML=tarjeta(x,'adm');fin();},function(e){falla(e,'eRE');fin();});}
+
+// ---------- 🖨️ PDF DE NOTAS ----------
+function pdfNotas(){var seguir=function(){
+ pantalla('<div class="card"><h2>🖨️ PDF de notas de un grupo</h2>'+
+  '<label>Planilla</label><select id="nP" onchange="nGrupos()">'+PN.map(function(p,i){return '<option value="'+i+'">'+esc(p.nombre)+'</option>';}).join('')+'</select>'+
+  '<label>Grupo</label><select id="nG" onchange="nExs()"></select>'+
+  '<label>¿Qué exámenes?</label><select id="nM" onchange="nExs()"><option value="uno">Solo un examen</option><option value="todos">Todos los exámenes del grupo</option></select>'+
+  '<div id="nEw"><label>Examen</label><select id="nE"></select></div>'+
+  '<button class="btn" id="nB" onclick="nGenerar()">🖨️ Generar PDF</button><div id="nR"></div></div>');nGrupos();};
+ if(PN)seguir();else{pantalla('');msg('Cargando planillas de notas… (unos segundos)');csa('notasDatos',{},function(d){PN=d;seguir();},function(e){falla(e);});}}
+function nGrupos(){var p=PN[el('nP').value];el('nG').innerHTML=p.grupos.map(function(g,i){return '<option value="'+i+'">'+esc(g.nombre)+(g.ex.length?'':' (sin notas)')+'</option>';}).join('');nExs();}
+function nExs(){var g=PN[el('nP').value].grupos[el('nG').value],todos=el('nM').value==='todos';el('nR').innerHTML='';el('nEw').style.display=todos?'none':'block';
+ el('nE').innerHTML=g&&g.ex.length?g.ex.slice().reverse().map(function(e){return '<option value="'+e.col+'">'+esc(e.texto)+'</option>';}).join(''):'<option value="">— sin notas —</option>';}
+function nGenerar(){var p=PN[el('nP').value],g=p.grupos[el('nG').value],r=el('nR');
+ if(!g||!g.ex.length){r.innerHTML='<div class="err">Ese grupo todavía no tiene notas cargadas.</div>';return;}
+ var cols=el('nM').value==='todos'?g.ex.map(function(e){return e.col;}):[el('nE').value];
+ var b=el('nB');b.disabled=true;b.textContent='Generando…';
+ csa('pdfNotas',{archivo:p.id,hoja:g.nombre,cols:cols.join(',')},function(x){b.disabled=false;b.textContent='🖨️ Generar PDF';
+  r.innerHTML='<div class="pdf"><b>🖨️ '+esc(x.nombre)+'</b><a class="acc" style="background:#1f4e79" href="'+esc(x.ver)+'" target="_blank">👁️ Ver</a><a class="acc" style="background:#555" href="'+esc(x.bajar)+'" target="_blank">⬇️ Descargar</a></div>';},
+  function(e){b.disabled=false;b.textContent='🖨️ Generar PDF';falla(e,'nR');});}
+
+// ---------- 📋 LISTA DE LLAMADO ----------
+function lista(){var d=new Date();d.setDate(d.getDate()+((8-d.getDay())%7||7));var lunes=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+ pantalla('<div class="card"><h2>📋 Crear lista de llamado</h2>'+
+  '<label>Lista</label><select id="lL">'+INFO.listas.map(function(l){return '<option value="'+esc(l.nombre)+'">'+esc(l.nombre)+' ('+esc(String(l.tipo).toLowerCase())+')</option>';}).join('')+'</select>'+
+  '<label>Cualquier día de la semana <span class="ayuda">(o del mes, si es mensual)</span></label><input type="date" id="lF" value="'+lunes+'">'+
+  '<button class="btn" id="lB" onclick="crearL()">📋 Crear lista</button><div id="lR"></div></div>');}
+function crearL(){var b=el('lB');b.disabled=true;b.textContent='Creando… (puede tardar un minuto)';
+ csa('franCrearLista',{lista:el('lL').value,fecha:el('lF').value},function(r){b.disabled=false;b.textContent='📋 Crear lista';
+  el('lR').innerHTML='<div class="ok">✅ Lista creada</div>'+tarjeta({nombre:r.nombre,tipo:'Lista',url:r.url,t:Date.now()});},
+  function(e){b.disabled=false;b.textContent='📋 Crear lista';falla(e,'lR');});}
+
+// ---------- 📁 HISTORIAL ----------
+function historial(){pantalla('<div class="card"><h2>📁 Historial</h2><div id="hR">Cargando…</div></div>');
+ var todo=[],n=0,fin=function(){if(++n<2)return;todo.sort(function(a,b){return (b.t||0)-(a.t||0);});
+  el('hR').innerHTML=todo.length?todo.slice(0,30).map(function(x){return tarjeta(x,x.api);}).join(''):'<div class="ayuda">Todavía no generaste nada desde el panel.</div>';};
+ csa('franInfo',{},function(d){INFO=d;(d.hist||[]).forEach(function(x){x.api='csa';todo.push(x);});fin();},function(){fin();});
+ adm('franHist',{},function(d){(d.hist||[]).forEach(function(x){x.api='adm';todo.push(x);});fin();},function(){fin();});}
+</script></body></html>
