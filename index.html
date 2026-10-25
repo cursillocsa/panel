@@ -39,8 +39,9 @@ input[type=checkbox]{width:auto;transform:scale(1.3);margin:0 8px 0 0}
 .auto{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .sw{border:0;border-radius:18px;padding:8px 14px;font-weight:bold;cursor:pointer;font-family:inherit}
 .sw.on{background:var(--verde);color:#fff}.sw.off{background:#ddd;color:#333}
+header h1 span.tit{color:inherit}h1 .tit{cursor:pointer;-webkit-tap-highlight-color:transparent}h1 .tit:active{opacity:.6}
 </style></head><body>
-<header><h1>🧑‍💻 Panel de Fran <span>Gauss</span></h1><button id="volver" onclick="inicio()">⬅ Inicio</button></header>
+<header><h1><span class="tit" onclick="if(GR&&INFO)inicio()" title="Ir al inicio">🧑‍💻 Panel de Fran <span>Gauss</span></span></h1><button id="volver" onclick="inicio()">⬅ Inicio</button></header>
 <main><div id="app"></div><div id="msg">Cargando…</div></main>
 <script>
 var API_ADM='https://script.google.com/macros/s/AKfycbzPNqOlPMgP1lme__szBCxU4kzz7fSJ3PxLxUZu_CcywI5ftsESe6e7hL63z1Xp7M6U/exec';
