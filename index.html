@@ -138,7 +138,12 @@ function sabVie(anterior){var d=new Date(),dow=d.getDay(),v=new Date(d);
 function semanal(){pantalla('<div class="card"><h2>📊 Resumen semanal</h2>'+
   '<label>Semana</label><select id="sS"><option value="0">Esta semana · sábado '+sabVie(false).replace(' al ',' → viernes ')+'</option><option value="1">Semana anterior · '+sabVie(true)+'</option></select>'+
   '<div class="ayuda" style="margin-top:6px">Si ya estaba generado (por ejemplo el automático del viernes), lo trae al instante.</div>'+
-  '<button class="btn" id="sB" onclick="genSemanal(0)">📊 Generar académico + económico</button><div id="sR"></div></div>');}
+  '<button class="btn" id="sB" onclick="genSemanal(0)">📊 Generar académico + económico</button><div id="sR"></div></div>'+
+  '<div class="card"><h2>🧪 Académico nuevo (prueba)</h2><div class="ayuda">Formato corto: una tabla por grupo. Se guarda en otra carpeta (RESÚMENES SEMANALES (PRUEBA)); el de siempre no cambia.</div>'+
+  '<button class="btn" id="sN" style="background:#6a1b9a" onclick="genNuevo()">🧪 Generar el académico nuevo</button><div id="sNR"></div></div>');}
+function genNuevo(){var b=el('sN');b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';el('sNR').innerHTML='';
+ csa('franSemanal',{anterior:el('sS').value,nuevo:'1'},function(r){b.disabled=false;b.textContent='🧪 Generar el académico nuevo';el('sNR').innerHTML=tarjeta(r,'csa');},
+  function(e){b.disabled=false;b.textContent='🧪 Generar el académico nuevo';falla(e,'sNR');});}
 function genSemanal(force){var b=el('sB'),ant=el('sS').value;b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';
  el('sR').innerHTML='<div id="sA" class="pdf">📘 Académico: generando…</div><div id="sE" class="pdf">💰 Económico: generando…</div>';
  var n=0,fin=function(){if(++n<2)return;b.disabled=false;b.textContent='📊 Generar académico + económico';
