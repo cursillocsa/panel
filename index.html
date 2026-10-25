@@ -47,6 +47,16 @@ var API_ADM='https://script.google.com/macros/s/AKfycbzPNqOlPMgP1lme__szBCxU4kzz
 var API_CSA='https://script.google.com/macros/s/AKfycbxkJKfreWnlk8OZjS18maXcKNO4UblFEiaOwcBpe2VZYm5fs3CmlKEjwNqETak_ObJa/exec';
 var PIN='';try{PIN=localStorage.getItem('gaussPinFran')||'';}catch(e){}
 var GR=null,INFO=null,PN=null;
+// ⚡ Supabase: copia rápida (solo lectura). Si falla o no está, se usa la planilla como siempre.
+var SB_URL='https://heycvwxaewjbwbusddqg.supabase.co',SB_KEY='sb_publishable_MpClcQrbgiAtqcsaa5js3w_XCYqHztI';
+function sbLeer(tipo,clave,ok,mal){
+ if(!PIN){mal();return;}
+ var hecho=false,to=setTimeout(function(){if(!hecho){hecho=true;mal();}},4000);
+ fetch(SB_URL+'/rest/v1/rpc/gauss_leer',{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+  body:JSON.stringify({p_pin:PIN,p_tipo:tipo,p_clave:String(clave)})})
+ .then(function(r){return r.json();})
+ .then(function(d){if(hecho)return;hecho=true;clearTimeout(to);if(d&&d.datos)ok(d.datos,d.t);else mal();})
+ .catch(function(){if(hecho)return;hecho=true;clearTimeout(to);mal();});}
 function el(i){return document.getElementById(i);}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function msg(t){el('msg').innerHTML=t||'';}
@@ -73,8 +83,11 @@ function pedirPin(m){el('volver').style.display='none';msg('');
 function entrar(){PIN=el('pin').value.trim();guardado('gaussPinFran',PIN);cargar();}
 function cargar(){el('app').innerHTML='';msg('Cargando…');
  var listo=0,fin=function(){if(++listo===2)inicio();};
- adm('franGrupos',{},function(d){GR=d;fin();},function(e){falla(e);});
- csa('franInfo',{},function(d){INFO=d;fin();},function(e){falla(e);});}
+ // copia rápida de Supabase; después se confirma con las planillas sin hacer esperar
+ var gP=function(cb){adm('franGrupos',{},function(d){GR=d;if(cb)cb();},function(e){if(cb)falla(e);else if(String(e.message||'').indexOf('PIN:')>=0)falla(e);});};
+ var iP=function(cb){csa('franInfo',{},function(d){INFO=d;if(cb)cb();},function(e){if(cb)falla(e);});};
+ sbLeer('franGrupos','todo',function(d){GR=d;fin();gP();},function(){gP(fin);});
+ sbLeer('franInfo','todo',function(d){INFO=d;fin();iP();},function(){iP(fin);});}
 cargar();
 function pantalla(h){el('volver').style.display='inline-block';msg('');el('app').innerHTML=h;window.scrollTo(0,0);}
 
@@ -185,7 +198,8 @@ function pdfNotas(){var seguir=function(){
   '<label>¿Qué exámenes?</label><select id="nM" onchange="nExs()"><option value="uno">Solo un examen</option><option value="todos">Todos los exámenes del grupo</option></select>'+
   '<div id="nEw"><label>Examen</label><select id="nE"></select></div>'+
   '<button class="btn" id="nB" onclick="nGenerar()">🖨️ Generar PDF</button><div id="nR"></div></div>');nGrupos();};
- if(PN)seguir();else{pantalla('');msg('Cargando planillas de notas… (unos segundos)');csa('notasDatos',{},function(d){PN=d;seguir();},function(e){falla(e);});}}
+ if(PN)seguir();else{pantalla('');msg('Cargando planillas de notas… (unos segundos)');var pl=function(){csa('notasDatos',{},function(d){PN=d;seguir();},function(e){falla(e);});};
+  sbLeer('csaNotas','todo',function(d){PN=d;seguir();csa('notasDatos',{},function(d2){PN=d2;},function(){});},pl);}}
 function nGrupos(){var p=PN[el('nP').value];el('nG').innerHTML=p.grupos.map(function(g,i){return '<option value="'+i+'">'+esc(g.nombre)+(g.ex.length?'':' (sin notas)')+'</option>';}).join('');nExs();}
 function nExs(){var g=PN[el('nP').value].grupos[el('nG').value],todos=el('nM').value==='todos';el('nR').innerHTML='';el('nEw').style.display=todos?'none':'block';
  el('nE').innerHTML=g&&g.ex.length?g.ex.slice().reverse().map(function(e){return '<option value="'+e.col+'">'+esc(e.texto)+'</option>';}).join(''):'<option value="">— sin notas —</option>';}
