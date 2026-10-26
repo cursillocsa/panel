@@ -99,6 +99,7 @@ function inicio(){el('volver').style.display='none';msg('');window.scrollTo(0,0)
   '<button class="bgrande" style="background:#1f4e79" onclick="especifico()">🎯 Resumen específico<small>Fechas y grupos a elección · por coordinador</small></button>'+
   '<button class="bgrande" style="background:#6a1b9a" onclick="pdfNotas()">🖨️ PDF de notas<small>Un examen o todos, de un grupo</small></button>'+
   '<button class="bgrande" style="background:#00838f" onclick="lista()">📋 Crear lista de llamado<small>Desde el celular</small></button>'+
+  '<button class="bgrande" style="background:#2e7d32" onclick="horario()">📥 Cargar horario de la semana<small>Excel de Carlos → exámenes al calendario + docente y materia en las listas FIUNA</small></button>'+
   '<button class="bgrande" style="background:#455a64" onclick="historial()">📁 Historial<small>Lo último que generaste</small></button>'+
   '</div><div class="card" style="margin-top:14px"><div class="auto"><div><b>⏰ Resumen semanal automático</b><div class="ayuda">Los viernes a las 19 h se generan solos los dos PDFs (sin mail). Abrís el panel y compartís.</div></div>'+
   '<button class="sw off" id="swA" onclick="auto()">…</button></div></div>';
@@ -234,4 +235,82 @@ function historial(){pantalla('<div class="card"><h2>📁 Historial</h2><div id=
   el('hR').innerHTML=todo.length?todo.slice(0,30).map(function(x){return tarjeta(x,x.api);}).join(''):'<div class="ayuda">Todavía no generaste nada desde el panel.</div>';};
  csa('franInfo',{},function(d){INFO=d;(d.hist||[]).forEach(function(x){x.api='csa';todo.push(x);});fin();},function(){fin();});
  adm('franHist',{},function(d){(d.hist||[]).forEach(function(x){x.api='adm';todo.push(x);});fin();},function(){fin();});}
+
+// ---------- 📥 HORARIO SEMANAL DE CARLOS ----------
+function val(id){var e=el(id);return e?String(e.value||""):"";}
+var HOR=null;
+function postCSA(acc,params,ok,mal){var b={accion:acc,pin:PIN};for(var k in params)b[k]=params[k];
+ fetch(API_CSA,{method:'POST',body:JSON.stringify(b),credentials:'omit'}).then(function(r){return r.json();})
+ .then(function(d){if(d&&d.error)mal({message:d.error});else ok(d);})
+ .catch(function(){mal({message:'No pude conectar con el CSA. Revisá la conexión y probá de nuevo.'});});}
+function cargarXLSX(fn){if(window.XLSX){fn();return;}var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+ s.onload=fn;s.onerror=function(){msg('<span class="err">⚠️ No pude cargar el lector de Excel. Revisá la conexión.</span>');};document.head.appendChild(s);}
+function horario(){HOR=null;pantalla('<div class="card"><h2>📥 Cargar horario de la semana</h2>'+
+ '<div class="ayuda">Subí el Excel de Carlos. Se leen solo los grupos <b>FIUNA</b>: los <b>exámenes</b> van al 📅 calendario (y salen las alertas de ausencia), '+
+ 'TAREA / DESCANSO / terminar ejercicios quedan como <b>🚫 sin clase</b>, y en las listas de esa semana se completan solas las filas <b>DOCENTE</b> y <b>MATERIA</b>.</div>'+
+ '<label>Archivo de Excel</label><input type="file" id="hF" accept=".xlsx,.xls" onchange="leerHorario()">'+
+ '<div id="hR"></div></div>');}
+var MESES_H=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+function sinTilde(s){return String(s==null?'':s).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
+// "Octubre_26_al_31.xlsx" → lunes de esa semana
+function lunesDeArchivo(nombre){var n=sinTilde(nombre).replace(/_/g,' '),m=-1;MESES_H.forEach(function(x,i){if(n.indexOf(sinTilde(x))>=0)m=i;});
+ var d=(n.match(/(\d{1,2})/)||[])[1];if(m<0||!d)return '';var hoy=new Date(),y=hoy.getFullYear();if(m<hoy.getMonth()-6)y++;
+ var f=new Date(Date.UTC(y,m,Number(d))),w=f.getUTCDay();f=new Date(f.getTime()-((w+6)%7)*864e5);return f.toISOString().slice(0,10);}
+function lunesDeHoy(){var h=hoyIso(),p=h.split('-').map(Number),f=new Date(Date.UTC(p[0],p[1]-1,p[2])),w=f.getUTCDay();
+ return new Date(f.getTime()+(w===0?1:-(w-1))*864e5).toISOString().slice(0,10);}
+var DIAS_H=['LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO'];
+// Celda → {k: E examen | S sin clase | C clase, mat, prof}
+function celdaHorario(txt){var t=String(txt||'').replace(/\r/g,'').trim();if(!t)return null;var n=sinTilde(t);
+ if(/^(TAREA|DESCANSO|TERMINAR EJERCICIOS)/.test(n))return {k:'S',mat:'',prof:'',txt:t.replace(/\s+/g,' ')};
+ var mat=t.split('.')[0].trim(),prof='',m=t.match(/\s{3,}([^\s].*?)\s*$/);
+ if(m&&m[1].length<=25)prof=m[1].trim();
+ else{var partes=t.split('.').map(function(x){return x.trim();}).filter(function(x){return x;}),u=partes[partes.length-1]||'';
+  var w=u.split(/\s+/),ult=w.slice(-1)[0]||'';if(partes.length>1&&ult&&/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+$/.test(ult)&&!/^(Ejercicios|Examen|Teoria|Repaso|Capitulo|Rectas|Vectores|Triangulos|Principia|Generales|Trigo|Geo)$/i.test(ult))prof=ult;}
+ var ex=/\bEXAMEN\b/.test(n.replace(/PRE[\s-]*EXAMEN/g,''));   // "Miscelánea pre examen" no es examen
+ return {k:ex?'E':'C',mat:mat,prof:prof,txt:t.replace(/\s{2,}/g,' ').slice(0,120)};}
+function leerHorario(){var f=el('hF').files[0],r=el('hR');if(!f)return;r.innerHTML='<div class="ayuda">Leyendo el Excel…</div>';
+ cargarXLSX(function(){var fr=new FileReader();fr.onload=function(ev){try{
+  var wb=XLSX.read(new Uint8Array(ev.target.result),{type:'array'}),nom=wb.SheetNames.filter(function(s){return /HORARIO/i.test(s);})[0]||wb.SheetNames[0];
+  var A=XLSX.utils.sheet_to_json(wb.Sheets[nom],{header:1,defval:'',raw:false}),items=[],grupos={};
+  for(var i=0;i<A.length-3;i++){var fila=A[i];
+   for(var c=0;c<fila.length;c++){var g=sinTilde(fila[c]);if(!/^FIUNA (EXT|COL|INT)\b/.test(g))continue;
+    var dia=sinTilde((A[i+1]||[])[c]),d=-1;DIAS_H.forEach(function(x,k){if(dia.indexOf(x)===0)d=k;});if(d<0)continue;
+    [0,1].forEach(function(t){var x=celdaHorario((A[i+2+t]||[])[c]);if(!x)return;grupos[g]=1;
+     items.push({g:String(fila[c]).replace(/\s+/g,' ').trim(),d:d,t:t,k:x.k,mat:x.mat,prof:x.prof,txt:x.txt});});}}
+  if(!items.length){r.innerHTML='<div class="err">No encontré grupos FIUNA en la hoja "'+esc(nom)+'".</div>';return;}
+  HOR={items:items,archivo:f.name};var lu=lunesDeArchivo(f.name)||lunesDeHoy();
+  r.innerHTML='<div class="ok" style="margin-top:10px">Leí <b>'+items.length+' turnos</b> de '+Object.keys(grupos).length+' grupos FIUNA ('+items.filter(function(x){return x.k==='E';}).length+' con examen).</div>'+
+   '<label>Semana (lunes)</label><input type="date" id="hL" value="'+lu+'">'+
+   '<label style="font-weight:normal;margin-top:8px"><input type="checkbox" id="hP" style="width:auto"> Pisar el docente / materia que ya estén escritos en las listas</label>'+
+   '<button class="btn" id="hV" onclick="previaHorario()">👁️ Ver qué se va a cargar</button><div id="hPrev"></div>';
+ }catch(e){r.innerHTML='<div class="err">⚠️ No pude leer el archivo: '+esc(e.message||e)+'</div>';}};fr.readAsArrayBuffer(f);});}
+function datosHorario(){return {lunes:val('hL'),items:HOR.items};}
+function previaHorario(){var d=el('hPrev'),b=el('hV');if(!HOR)return;if(!val('hL')){d.innerHTML='<div class="err">Elegí la semana.</div>';return;}
+ b.disabled=true;b.textContent='Revisando… (unos segundos)';d.innerHTML='';
+ postCSA('franHorario',{datos:datosHorario(),confirmar:'0',pisar:el('hP').checked?'1':''},function(r){b.disabled=false;b.textContent='👁️ Ver qué se va a cargar';d.innerHTML=htmlHorario(r)+
+   '<button class="btn" style="background:#1b8a3a" id="hC" onclick="cargarHorario()">✅ Cargar en el calendario y las listas</button><div id="hM"></div>';},
+  function(e){b.disabled=false;b.textContent='👁️ Ver qué se va a cargar';falla(e,'hPrev');});}
+function lista2(t,l,col){return l&&l.length?'<div style="margin-top:8px;background:'+(col||'#fff2cc')+';border-radius:8px;padding:8px"><b>'+t+'</b><div style="font-size:14px">'+l.map(esc).join(' · ')+'</div></div>':'';}
+function htmlHorario(r){
+ return '<div class="card" style="margin-top:10px;background:#f7f9fc"><b>Semana del '+esc(r.semana)+'</b>'+
+  '<div style="margin-top:6px">📝 <b>'+r.examenes.length+' exámenes</b> al calendario'+(r.examenes.length?':':'')+'</div>'+
+  r.examenes.map(function(x){return '<div style="font-size:14px;margin-left:10px">• '+esc(x.g)+' · '+esc(x.dia)+' '+esc(x.turno)+' · <b>'+esc(x.mat)+'</b></div>';}).join('')+
+  '<div style="margin-top:6px">🚫 <b>'+r.sinClase+' turnos sin clase</b> (tarea, descanso, terminar ejercicios)</div>'+
+  '<div style="margin-top:6px">📋 <b>'+r.celdas+' casillas</b> de DOCENTE / MATERIA para completar en: '+(r.listas.length?esc(r.listas.join(', ')):'<span class="err" style="display:inline">ninguna lista</span>')+
+  (r.yaTenian?' <span class="ayuda">('+r.yaTenian+' ya tenían otro valor y no se tocan; tildá "pisar" para cambiarlas)</span>':'')+'</div>'+
+  lista2('⚠️ Grupos que no existen en el CSA (se saltean):',r.sinGrupo)+
+  lista2('⚠️ Grupos sin lista creada para esa semana (no se completa docente/materia):',r.sinLista)+
+  lista2('⚠️ Materias sin equivalencia (hoja MATERIAS, columnas H e I):',r.sinMateria)+
+  lista2('⚠️ Apodos de profes sin docente (hoja PROFES HORARIO):',r.sinProfe)+
+  (r.apodosNuevos&&r.apodosNuevos.length?'<div style="margin-top:8px;background:#eaf2fb;border-radius:8px;padding:8px"><b>👤 Apodos nuevos</b> (se agregan a PROFES HORARIO; revisá que estén bien):'+
+   r.apodosNuevos.map(function(a){return '<div style="font-size:14px">'+esc(a.apodo)+' → '+(a.docente?esc(a.docente):'<span style="color:#c0392b">sin adivinar: completalo en la hoja</span>')+'</div>';}).join('')+'</div>':'')+
+  lista2('Avisos:',r.avisos)+'</div>';}
+function cargarHorario(){var b=el('hC'),m=el('hM');if(!confirm('¿Cargar el horario de la semana en el calendario y las listas?'))return;
+ b.disabled=true;b.textContent='Cargando… (puede tardar un poco)';
+ postCSA('franHorario',{datos:datosHorario(),confirmar:'1',pisar:el('hP').checked?'1':''},function(r){
+   pantalla('<div class="card ok"><b style="font-size:19px">✅ Horario cargado</b>'+htmlHorario(r)+
+    '<div class="ayuda" style="margin-top:8px">Si volvés a cargar el horario de la misma semana, se reemplaza lo que se cargó antes en el calendario (no se duplica).</div>'+
+    '<button class="btn" onclick="inicio()">⬅ Volver al inicio</button></div>');},
+  function(e){b.disabled=false;b.textContent='✅ Cargar en el calendario y las listas';falla(e,'hM');});}
+
 </script></body></html>
