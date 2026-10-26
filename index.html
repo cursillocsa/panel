@@ -298,6 +298,9 @@ function htmlHorario(r){
   '<div style="margin-top:6px">🚫 <b>'+r.sinClase+' turnos sin clase</b> (tarea, descanso, terminar ejercicios)</div>'+
   '<div style="margin-top:6px">📋 <b>'+r.celdas+' casillas</b> de DOCENTE / MATERIA para completar en: '+(r.listas.length?esc(r.listas.join(', ')):'<span class="err" style="display:inline">ninguna lista</span>')+
   (r.yaTenian?' <span class="ayuda">('+r.yaTenian+' ya tenían otro valor y no se tocan; tildá "pisar" para cambiarlas)</span>':'')+'</div>'+
+  '<div style="margin-top:6px">🙈 <b>'+(r.ocultar||0)+' turnos sin clase</b> se ocultan en las listas'+(r.mostrar?' · <b>'+r.mostrar+'</b> se vuelven a mostrar':'')+
+  ' <span class="ayuda">(no se borran: se ven tocando las flechitas ◀▶ del encabezado)</span></div>'+
+  lista2('⚠️ Turnos sin clase que ya tienen marcas P/A/J (no se ocultan):',r.conMarcas)+
   lista2('⚠️ Grupos que no existen en el CSA (se saltean):',r.sinGrupo)+
   lista2('⚠️ Grupos sin lista creada para esa semana (no se completa docente/materia):',r.sinLista)+
   lista2('⚠️ Materias sin equivalencia (hoja MATERIAS, columnas H e I):',r.sinMateria)+
