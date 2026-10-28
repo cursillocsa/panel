@@ -1,78 +1,55 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Panel de jefes · Gauss</title>
+<title>Panel de Fran · Gauss</title>
 <style>
 :root{--rojo:#c0392b;--negro:#201e1e;--fondo:#f3f5f9;--azul:#1f4e79;--verde:#1b8a3a}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:#222;font-size:15px}
-header{background:var(--negro);color:#fff;padding:12px 16px;border-bottom:4px solid var(--rojo);position:sticky;top:0;z-index:5}
-.top{display:flex;align-items:center;gap:10px}
-header h1{margin:0;font-size:19px;flex:1}header h1 span{color:#ff6b5e}
-.tabs{display:flex;gap:6px;margin-top:10px;overflow-x:auto}
-.tab{background:#3a3636;color:#ddd;border:0;border-radius:18px;padding:8px 14px;font-size:14px;font-weight:bold;cursor:pointer;white-space:nowrap;font-family:inherit}
-.tab.on{background:#fff;color:var(--negro)}
-main{padding:14px 16px 70px;max-width:1000px;margin:0 auto}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:#222;font-size:16px}
+header{background:var(--negro);color:#fff;padding:14px 16px;border-bottom:4px solid var(--rojo);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:20px;flex:1}header h1 span{color:#ff6b5e}
+#volver{display:none;background:#444;color:#fff;border:0;border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
+main{padding:14px 16px 70px;max-width:820px;margin:0 auto}
 .card{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.card h2{margin:0 0 10px;font-size:16px;color:var(--azul)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
-.k{background:#f3f5f9;border-radius:10px;padding:10px}
-.k span{font-size:11px;color:#666;text-transform:uppercase;display:block}
-.k b{display:block;font-size:20px;margin-top:3px}
-.k small{display:block;font-size:12px;color:#666;margin-top:3px}
-.r{background:#f4cccc}.y{background:#fff2cc}.g{background:#d9ead3}
-.up{color:var(--verde)}.down{color:var(--rojo)}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#d9e2f3;text-align:left;padding:6px;white-space:nowrap}
-td{padding:6px;border-bottom:1px solid #eee;vertical-align:top}
-td.n,th.n{text-align:right;white-space:nowrap}
-.scroll{overflow-x:auto}
-input,select{font-size:16px;padding:9px;border:1px solid #bbb;border-radius:8px;background:#fff;font-family:inherit}
-#q{width:100%;font-size:17px;padding:11px 12px;border:0;border-radius:8px;margin-top:10px;display:none}
-#res{background:#fff;border-radius:8px;margin-top:6px;max-height:60vh;overflow:auto;display:none;box-shadow:0 4px 14px rgba(0,0,0,.25)}
-#res div{padding:10px 12px;border-bottom:1px solid #eee;color:#222;cursor:pointer;display:flex;justify-content:space-between;gap:8px}
-#res div:hover{background:#e8f0fe}#res small{color:#777}
-.badge{font-size:12px;font-weight:bold;border-radius:12px;padding:3px 8px;white-space:nowrap;align-self:center}
-.bR{background:#f4cccc;color:#a61c1c}.bG{background:#d9ead3;color:#1b5e20}
-.nom{font-size:21px;font-weight:bold;margin:0}.sub{color:#555;margin-top:4px}
-.wa{display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:7px 12px;border-radius:18px;margin:8px 6px 0 0;font-weight:bold;font-size:13px}
-.vacio{color:#999;font-style:italic}
+.card h2{margin:0 0 10px;font-size:17px;color:var(--azul)}
+.botones{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.bgrande{display:block;text-align:left;border:0;border-radius:14px;padding:18px;font-size:19px;font-weight:bold;cursor:pointer;color:#fff;min-height:96px;font-family:inherit}
+.bgrande small{display:block;font-weight:normal;font-size:13px;opacity:.9;margin-top:6px}
+label{display:block;font-weight:bold;margin-top:12px;font-size:14px}
+input,select{width:100%;font-size:17px;padding:10px;border:1px solid #bbb;border-radius:8px;margin-top:4px;background:#fff;font-family:inherit}
+input[type=checkbox]{width:auto;transform:scale(1.3);margin:0 8px 0 0}
+.fila{display:flex;gap:12px}.fila>div{flex:1;min-width:0}
+@media(max-width:600px){.fila{flex-direction:column;gap:0}}
+.btn{display:block;width:100%;font-size:18px;padding:14px;background:var(--rojo);color:#fff;border:0;border-radius:12px;cursor:pointer;font-weight:bold;margin-top:16px;font-family:inherit}
+.btn:disabled{opacity:.6}.btn.az{background:var(--azul)}.btn.gr{background:#666}
+.ayuda{color:#777;font-size:13px;font-weight:normal}
+.err{color:var(--rojo);font-weight:bold;margin-top:10px}
 #msg{color:#666;text-align:center;margin-top:30px}
-.err{color:var(--rojo);font-weight:bold}
-.btn{border:0;border-radius:10px;padding:11px 16px;font-size:15px;font-weight:bold;color:#fff;background:var(--azul);cursor:pointer;font-family:inherit}
-.btn:disabled{opacity:.5}.btn.rojo{background:var(--rojo)}.btn.gr{background:#666}
-.mini{border:0;border-radius:6px;padding:5px 9px;font-size:13px;cursor:pointer;background:#eee;font-family:inherit}
-.chip{display:inline-block;border-radius:6px;padding:4px 8px;font-weight:bold}
-.bar{background:#d9e2f3;border-radius:4px;height:10px;position:relative;min-width:60px}
-.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--azul);border-radius:4px}
-.sel-sala{font-size:15px;padding:6px;min-width:84px}
-.junto{background:#fff2cc!important;border-color:#b7950b!important;font-weight:bold}
+.pdf{border:1px solid #e3e3e3;border-radius:12px;padding:12px;margin-top:10px}
+.pdf b{display:block;font-size:15px}.pdf small{color:#777}
+.acc{display:inline-block;border:0;border-radius:18px;padding:8px 14px;font-size:14px;font-weight:bold;color:#fff;cursor:pointer;margin:8px 6px 0 0;font-family:inherit;text-decoration:none}
+.chip{display:inline-block;border:1px solid #bbb;border-radius:18px;padding:7px 12px;margin:4px 6px 0 0;font-size:14px;cursor:pointer;background:#fff;user-select:none}
+.chip.on{background:var(--azul);color:#fff;border-color:var(--azul)}
+.gr-curso{margin-top:10px}.gr-curso b{font-size:13px;color:#555}
+.gr-item{display:inline-flex;align-items:center;border:1px solid #ddd;border-radius:8px;padding:6px 10px;margin:4px 6px 0 0;font-size:14px;cursor:pointer;background:#fff}
+.gr-item.on{background:#e8f0fe;border-color:var(--azul)}
+.paso{display:inline-block;background:var(--azul);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-right:6px;font-size:14px}
 .aviso{background:#fff2cc;border-radius:8px;padding:10px;margin-top:10px;font-size:14px}
-.subtabs{display:flex;gap:6px;margin-bottom:12px}
-.subtabs button{flex:1}
-.fila{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
-.fila label{font-size:13px;font-weight:bold;display:block;margin-bottom:4px}
-.ayuda{color:#777;font-size:12px}
+.ok{background:#d9ead3;border-radius:8px;padding:10px;margin-top:10px;font-size:14px}
+.auto{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sw{border:0;border-radius:18px;padding:8px 14px;font-weight:bold;cursor:pointer;font-family:inherit}
+.sw.on{background:var(--verde);color:#fff}.sw.off{background:#ddd;color:#333}
 header h1 span.tit{color:inherit}h1 .tit{cursor:pointer;-webkit-tap-highlight-color:transparent}h1 .tit:active{opacity:.6}
 </style></head><body>
-<header><div class="top"><h1><span class="tit" onclick="if(L)ir('alumno')" title="Ir al inicio">👔 Panel de jefes <span>Gauss</span></span></h1></div>
-<div class="tabs" id="tabs" style="display:none">
-<button class="tab" data-t="alumno" onclick="ir('alumno')">🔎 Alumno</button>
-<button class="tab" data-t="mes" onclick="ir('mes')">📅 Cómo va el mes</button>
-<button class="tab" data-t="grupos" onclick="ir('grupos')">🏫 Grupos y salas</button>
-<button class="tab" data-t="tend" onclick="ir('tend')">📈 Tendencias</button>
-<button class="tab" data-t="cuot" onclick="ir('cuot')">💳 Cuotero</button>
-</div>
-<input id="q" placeholder="Buscá al alumno por nombre, apellido o ID…" autocomplete="off" oninput="filtrar()">
-<div id="res"></div></header>
+<header><h1><span class="tit" onclick="if(GR&&INFO)inicio()" title="Ir al inicio">🧑‍💻 Panel de Fran <span>Gauss</span></span></h1><button id="volver" onclick="inicio()">⬅ Inicio</button></header>
 <main><div id="app"></div><div id="msg">Cargando…</div></main>
 <script>
-var API='https://script.google.com/macros/s/AKfycbzPNqOlPMgP1lme__szBCxU4kzz7fSJ3PxLxUZu_CcywI5ftsESe6e7hL63z1Xp7M6U/exec';
-var PIN='';try{PIN=localStorage.getItem('gaussPinJefe')||'';}catch(e){}
-var L=null,GR=null,TAB='';
+var API_ADM='https://script.google.com/macros/s/AKfycbzPNqOlPMgP1lme__szBCxU4kzz7fSJ3PxLxUZu_CcywI5ftsESe6e7hL63z1Xp7M6U/exec';
+var API_CSA='https://script.google.com/macros/s/AKfycbxkJKfreWnlk8OZjS18maXcKNO4UblFEiaOwcBpe2VZYm5fs3CmlKEjwNqETak_ObJa/exec';
+var PIN='';try{PIN=localStorage.getItem('gaussPinFran')||'';}catch(e){}
+var GR=null,INFO=null,PN=null;
 // ⚡ Supabase: copia rápida (solo lectura). Si falla o no está, se usa la planilla como siempre.
 var SB_URL='https://heycvwxaewjbwbusddqg.supabase.co',SB_KEY='sb_publishable_MpClcQrbgiAtqcsaa5js3w_XCYqHztI';
-var NAV=0,TOCADO=false,NUEVO=null;
 function sbLeer(tipo,clave,ok,mal){
  if(!PIN){mal();return;}
  var hecho=false,to=setTimeout(function(){if(!hecho){hecho=true;mal();}},4000);
@@ -81,357 +58,271 @@ function sbLeer(tipo,clave,ok,mal){
  .then(function(r){return r.json();})
  .then(function(d){if(hecho)return;hecho=true;clearTimeout(to);if(d&&d.datos)ok(d.datos,d.t);else mal();})
  .catch(function(){if(hecho)return;hecho=true;clearTimeout(to);mal();});}
-function estable(o){if(Array.isArray(o))return '['+o.map(estable).join(',')+']';
- if(o&&typeof o==='object')return '{'+Object.keys(o).filter(function(k){return k!=='_ms'&&k!=='_total'&&o[k]!==undefined;}).sort()
-  .map(function(k){return JSON.stringify(k)+':'+estable(o[k]);}).join(',')+'}';
- return JSON.stringify(o);}
-function haceCuanto(t){var m=Math.round((Date.now()-new Date(t).getTime())/60000);return isNaN(m)?'':(m<1?'recién':m<60?'hace '+m+' min':'hace '+Math.round(m/60)+' h');}
-function sbMarca(h){var m=el('sbMarca');if(!m){m=document.createElement('div');m.id='sbMarca';m.style.cssText='font-size:12px;color:#777;text-align:center;margin:0 0 8px';
-  var a=el('app');a.parentNode.insertBefore(m,a);}m.innerHTML=h||'';}
-// Muestra la copia de Supabase al instante y después confirma con la planilla.
-// "refresco" (opcional): qué hacer con los datos nuevos de la planilla (si no, se vuelve a usar "ok").
-function rapido(acc,params,tipo,clave,ok,mal,refresco){
- var n=++NAV;sbMarca('');
- sbLeer(tipo,clave,function(d,t){
-  if(n!==NAV)return;TOCADO=false;ok(d);sbMarca('⚡ Vista rápida · confirmando con la planilla…');
-  pedir(acc,params,function(D){
-   if(n!==NAV)return;
-   if(estable(D)===estable(d)){sbMarca('✅ Confirmado con la planilla');setTimeout(function(){if(n===NAV)sbMarca('');},2500);return;}
-   var aplicar=function(){var y=window.scrollY;(refresco||ok)(D);window.scrollTo(0,y);sbMarca('');};
-   if(!TOCADO||refresco){aplicar();return;}
-   NUEVO=aplicar;sbMarca('<b style="color:#b45f06">🔄 La planilla tiene datos más nuevos.</b> <button onclick="NUEVO()" style="font-size:12px">Actualizar</button>');
-  },function(e){if(n!==NAV)return;if(String(e.message||'').indexOf('PIN:')>=0){mal(e);return;}
-   sbMarca('<span style="color:#c0392b">⚠️ No se pudo confirmar con la planilla (se ve la vista rápida).</span>');});
- },function(){if(n===NAV)pedir(acc,params,function(D){if(n===NAV)ok(D);},function(e){if(n===NAV)mal(e);});});}
-function numBusca(q,nums){var d=String(q).replace(/\D/g,'');if(d.length<4||/[a-záéíóúñ]/i.test(q))return false;d=d.replace(/^595/,'').replace(/^0+/,'');if(d.length<3)return false;
- return String(nums||'').split(' ').some(function(t){return t&&t.indexOf(d)>=0;});}   // 🔎 buscar por CI o celular
 function el(i){return document.getElementById(i);}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function sa(s){return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
-function gs(n){n=Number(n)||0;return (n<0?'− ':'')+'Gs. '+Math.round(Math.abs(n)).toLocaleString('es-PY');}
-function mil(n){n=Number(n)||0;return Math.round(n).toLocaleString('es-PY');}
-function guardado(k,v){try{if(v===undefined)return localStorage.getItem(k)||'';localStorage.setItem(k,v);}catch(e){return '';}}
 function msg(t){el('msg').innerHTML=t||'';}
-function pedir(acc,params,ok,mal){
+function guardado(k,v){try{if(v===undefined)return localStorage.getItem(k)||'';localStorage.setItem(k,v);}catch(e){return '';}}
+function hoyIso(){var d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
+function isoMas(iso,n){var p=iso.split('-').map(Number),d=new Date(Date.UTC(p[0],p[1]-1,p[2]+n));return d.toISOString().slice(0,10);}
+function fecha(iso){if(!iso)return '';var p=iso.split('-');return p[2]+'/'+p[1];}
+function llamar(api,acc,params,ok,mal){
  var q='accion='+acc+'&pin='+encodeURIComponent(PIN);
  for(var k in params)q+='&'+k+'='+encodeURIComponent(params[k]==null?'':params[k]);
- fetch(API+'?'+q,{credentials:'omit'}).then(function(r){return r.json();})
+ fetch(api+'?'+q,{credentials:'omit'}).then(function(r){return r.json();})
  .then(function(d){if(d&&d.error)mal({message:d.error});else ok(d);})
- .catch(function(){mal({message:'No pude conectar. Revisá la conexión y probá de nuevo.'});});}
+ .catch(function(){mal({message:'No pude conectar ('+(api===API_CSA?'CSA':'Administración')+'). Revisá la conexión y probá de nuevo.'});});}
+function adm(a,p,ok,mal){llamar(API_ADM,a,p,ok,mal);}
+function csa(a,p,ok,mal){llamar(API_CSA,a,p,ok,mal);}
 function falla(e,dest){var m=String(e.message||e);
- if(m.indexOf('PIN:')>=0){pedirPin(m.replace(/^.*PIN:\s*/,''));return;}
+ if(m.indexOf('PIN:')>=0&&!dest){pedirPin(m.replace(/^.*PIN:\s*/,''));return;}
+ m=m.replace(/^.*PIN:\s*/,'PIN: ');
  if(dest&&el(dest))el(dest).innerHTML='<div class="err">⚠️ '+esc(m)+'</div>';else msg('<span class="err">⚠️ '+esc(m)+'</span>');}
-function pedirPin(m){el('tabs').style.display='none';el('q').style.display='none';msg('');
- el('app').innerHTML='<div class="card" style="text-align:center"><h2>🔒 Panel de jefes</h2><div style="margin-bottom:10px;color:'+(m.indexOf('Ingres')===0?'#555':'#c0392b')+'">'+esc(m)+'</div>'+
- '<input id="pin" type="password" inputmode="numeric" placeholder="PIN" style="font-size:22px;width:180px;text-align:center"><br><button class="btn rojo" style="margin-top:12px" onclick="entrar()">Entrar</button></div>';
+function pedirPin(m){el('volver').style.display='none';msg('');
+ el('app').innerHTML='<div class="card" style="text-align:center"><h2>🔒 Panel de Fran</h2><div style="margin-bottom:10px;color:'+(m.indexOf('Ingres')===0?'#555':'#c0392b')+'">'+esc(m)+'</div>'+
+ '<input id="pin" type="password" placeholder="PIN" style="font-size:22px;width:180px;text-align:center"><br><button class="btn" style="width:auto;display:inline-block;padding:12px 34px" onclick="entrar()">Entrar</button></div>';
  var i=el('pin');i.focus();i.onkeydown=function(ev){if(ev.key==='Enter')entrar();};}
-function entrar(){PIN=el('pin').value.trim();guardado('gaussPinJefe',PIN);cargar();}
+function entrar(){PIN=el('pin').value.trim();guardado('gaussPinFran',PIN);cargar();}
 function cargar(){el('app').innerHTML='';msg('Cargando…');
- function listo(){el('tabs').style.display='flex';ir(guardado('gaussJefeTab')||'alumno');}
- sbLeer('pagosLista','todo',function(d){L=d;listo();
-   pedir('lista',{},function(d2){L=d2;if(el('res').style.display==='block')filtrar();},function(e){if(String(e.message||'').indexOf('PIN:')>=0)falla(e);});},
-  function(){pedir('lista',{},function(d){L=d;listo();},function(e){falla(e);});});}
-el('app').addEventListener('input',function(){TOCADO=true;});
+ var listo=0,fin=function(){if(++listo===2)inicio();};
+ // copia rápida de Supabase; después se confirma con las planillas sin hacer esperar
+ var gP=function(cb){adm('franGrupos',{},function(d){GR=d;if(cb)cb();},function(e){if(cb)falla(e);else if(String(e.message||'').indexOf('PIN:')>=0)falla(e);});};
+ var iP=function(cb){csa('franInfo',{},function(d){INFO=d;if(cb)cb();},function(e){if(cb)falla(e);});};
+ sbLeer('franGrupos','todo',function(d){GR=d;fin();gP();},function(){gP(fin);});
+ sbLeer('franInfo','todo',function(d){INFO=d;fin();iP();},function(){iP(fin);});}
 cargar();
-// ◀ deslizar para atrás: vuelve a la pestaña o ficha anterior
-window.addEventListener('popstate',function(e){var s=e.state||{};if(s.ficha){ficha(s.ficha,true);return;}ir(s.tab||'alumno',true);});
-function ir(t,desdeHist){if(!TAB&&window.history&&history.replaceState){try{history.replaceState({tab:t},'');}catch(e){}}if(!desdeHist&&TAB&&TAB!==t&&window.history&&history.pushState){try{history.pushState({tab:t},'');}catch(e){}}TAB=t;NAV++;sbMarca('');guardado('gaussJefeTab',t);msg('');el('res').style.display='none';
- [].forEach.call(document.querySelectorAll('.tab'),function(b){b.className='tab'+(b.getAttribute('data-t')===t?' on':'');});
- el('q').style.display=t==='alumno'?'block':'none';window.scrollTo(0,0);
- if(t==='alumno')inicioAlumno();else if(t==='mes')verMes(guardado('gaussJefeMes')||'');else if(t==='grupos')verGrupos();else if(t==='cuot')verCuot();else verTend();}
-function k(t,v,cl,sub){return '<div class="k '+(cl||'')+'"><span>'+esc(t)+'</span><b>'+(v===''||v==null?'–':v)+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</div>';}
-function delta(a,b,txtPrev,inverso){if(b===null||b===undefined)return '';var d=a-b;if(!d)return 'igual que '+esc(txtPrev);
- var bien=inverso?d<0:d>0;return '<span class="'+(bien?'up':'down')+'">'+(d>0?'▲ ':'▼ ')+(Math.abs(d)>=1000?mil(Math.abs(d)):Math.abs(d))+'</span> vs '+esc(txtPrev);}
-function tabla(enc,filas,der){der=der||[];
- if(!filas.length)return '<div class="vacio">— sin datos —</div>';
- return '<div class="scroll"><table><tr>'+enc.map(function(e,i){return '<th'+(der.indexOf(i)>=0?' class="n"':'')+'>'+esc(e)+'</th>';}).join('')+'</tr>'+
-  filas.map(function(f){return '<tr>'+f.map(function(c,i){return '<td'+(der.indexOf(i)>=0?' class="n"':'')+'>'+c+'</td>';}).join('')+'</tr>';}).join('')+'</table></div>';}
-function waLink(cel,txt){var d=String(cel||'').replace(/\D/g,'');if(d.length<7)return '';if(d.charAt(0)==='0')d='595'+d.slice(1);
- return '<a class="wa" href="https://wa.me/'+d+'" target="_blank">📲 '+esc(txt)+'</a>';}
 
-// ================= 🔎 ALUMNO =================
-function inicioAlumno(){el('app').innerHTML='';el('q').value='';
- msg(L?L.alumnos.length+' alumnos. Escribí arriba para buscar.':'');el('q').focus();}
-function filtrar(){var q=sa(el('q').value.trim()),r=el('res');
- if(!L||q.length<2){r.style.display='none';return;}
- var p=q.split(/\s+/),h=L.alumnos.filter(function(x){var t=sa(x[0]+' '+x[1]+' '+x[2]);return p.every(function(w){return t.indexOf(w)>=0;})||numBusca(q,x[5]);}).slice(0,30);
- r.innerHTML=h.length?h.map(function(x){return '<div onclick="ficha(\''+esc(x[0])+'\')"><span>'+esc(x[1])+'<br><small>'+esc(x[0])+' · '+esc(x[2]||'sin grupo')+' · '+esc(x[3])+'</small></span>'+
-  '<span class="badge '+(x[4]>0?'bR':'bG')+'">'+(x[4]>0?'Debe '+gs(x[4]):'Al día')+'</span></div>';}).join(''):'<div class="vacio">No hay coincidencias</div>';
- r.style.display='block';}
-function ficha(id,desdeHist){if(!desdeHist&&window.history&&history.pushState){try{history.pushState({ficha:id,tab:TAB},'');}catch(e){}}el('res').style.display='none';el('q').blur();el('app').innerHTML='';msg('Cargando ficha…');
- rapido('jefeFicha',{id:id},'jefeFicha',id,pintarFicha,function(e){falla(e);});}
-function pintarFicha(f){msg('');var c=f.csa||{};
- var sc=c.sem==='🔴'?'r':(c.sem==='🟡'?'y':(c.sem==='🟢'?'g':''));
- var pc=function(v){var n=parseFloat(v);return isNaN(n)?'':(n<70?'r':(n<85?'y':'g'));};
- var h='<div class="card '+sc+'"><div style="display:flex;gap:12px;align-items:center"><div style="font-size:32px">'+esc(c.sem||'')+'</div><div><p class="nom">'+esc(f.nombre)+'</p>'+
-  '<div class="sub">'+esc(f.id)+' · '+esc(f.grupo||'sin grupo')+' · '+esc(f.situacion)+'</div>'+(f.plan?'<div class="sub">Plan: '+esc(f.plan)+'</div>':'')+'</div></div>'+
-  (c.motivos?'<div style="margin-top:8px"><b>Motivos:</b> '+esc(c.motivos)+'</div>':'')+
-  (c.seguimiento?'<div><b>Seguimiento:</b> '+esc(c.seguimiento)+'</div>':'')+'</div>';
- h+='<div class="card"><h2>💰 Pagos</h2><div class="grid">'+
-  k('Deuda vencida',gs(f.deuda),f.deuda>0?'r':'g',f.multas?'de eso, multas '+gs(f.multas):'')+
-  k('Cuotas vencidas',f.impagas||0,f.impagas>1?'r':'')+
-  k('Próximo vencimiento',f.prox?esc(f.prox.venc):'–','',f.prox?gs(f.prox.monto):'')+
-  (f.favor?k('Saldo a favor',gs(f.favor),'g'):'')+'</div></div>';
- h+='<div class="card"><h2>📅 Asistencia y notas</h2>'+(f.csa?'<div class="grid">'+
-  k('Asistencia total',c.total===''?'':c.total+'%',pc(c.total))+k('Últimos 30 días',c.d30===''?'':c.d30+'%',pc(c.d30))+
-  k('Faltas esta semana',c.faltasSem||0,c.faltasSem>0?'y':'')+k('Última vez que vino',esc(c.ultVino||''))+k('Última ausencia',esc(c.ultAus))+
-  k('Promedio exámenes',c.prom,c.prom===''?'':(c.prom<40?'r':(c.prom<60?'y':'g')),c.tend?esc(c.tend):'')+
-  k('Último contacto',esc(c.ultContacto))+'</div>'+(c.prof?'<div class="sub" style="margin-top:8px">Prof. encargado: '+esc(c.prof)+'</div>':''):
-  '<div class="vacio">'+esc(f.csaError||'Todavía no figura en el CSA.')+'</div>')+'</div>';
- h+='<div class="card"><h2>📇 Contacto</h2><div>Celular: '+esc(f.cel||'–')+'</div><div>Responsable: '+esc(f.resp||'–')+' · '+esc(f.celResp||'–')+'</div>'+
-  waLink(f.cel,'WhatsApp alumno')+waLink(f.celResp,'WhatsApp responsable')+'</div>';
- var cu=f.cuotas.filter(function(x){return x.estado!=='Pagado'&&x.estado!=='Perdonada';}).concat(f.cuotas.filter(function(x){return x.estado==='Pagado'||x.estado==='Perdonada';}).slice(-3));
- h+='<div class="card"><h2>🗓️ Cuotas</h2>'+tabla(['Concepto','Vence','Monto','Pagado','Saldo','Estado'],cu.map(function(x){
-  var cl=x.estado==='Vencido'?'r':(x.estado==='Pagado'||x.estado==='Perdonada'?'g':(x.estado==='Parcial'?'y':''));
-  return [esc(x.concepto),esc(x.vence),mil(x.monto),x.pagado?mil(x.pagado):'–',x.saldo?mil(x.saldo):'–','<span class="chip '+cl+'">'+esc(x.estado)+'</span>'];}),[2,3,4])+'</div>';
- h+='<div class="card"><h2>💵 Últimos pagos</h2>'+tabla(['Fecha','Monto','Medio','Tipo'],f.pagos.map(function(p){return [esc(p.fecha),mil(p.monto),esc(p.medio),esc(p.tipo)];}),[1])+'</div>';
- if(f.obs&&f.obs.length)h+='<div class="card"><h2>🗒️ Últimas observaciones (CSA)</h2>'+tabla(['Fecha','Tipo','Detalle','Anotó'],f.obs.map(function(o){return [esc(o.fecha),esc(o.tipo),esc(o.detalle),esc(o.quien)];}))+'</div>';
- if(f.anotaciones&&f.anotaciones.length)h+='<div class="card"><h2>📝 Anotaciones de cobranza</h2>'+tabla(['Fecha','Quién','Anotación'],f.anotaciones.map(function(o){return [esc(o.fecha),esc(o.quien),esc(o.obs)];}))+'</div>';
- h+='<div style="text-align:center"><button class="btn gr" onclick="inicioAlumno();window.scrollTo(0,0)">🏠 Cerrar ficha</button></div>';
- el('app').innerHTML=h;window.scrollTo(0,0);}
+// ◀ Volver atrás con el gesto del celular (deslizar) o la flecha del navegador: cada pantalla queda en el historial
+var HIST=[],HIST_OK=!!(window.history&&history.pushState);
+function guardarPantalla(){if(!HIST_OK||!el('app'))return;var v=el('volver')?el('volver').style.display:'';
+ HIST.push({h:el('app').innerHTML,y:window.scrollY,v:v});if(HIST.length>30)HIST.shift();try{history.pushState({gauss:HIST.length},'');}catch(e){}}
+window.addEventListener('popstate',function(){if(typeof NAV!=='undefined')NAV++;var s=HIST.pop();
+ if(!s||s.v==='none'||s.v===''){HIST=[];inicio(true);return;}
+ el('app').innerHTML=s.h;if(el('volver'))el('volver').style.display=s.v;if(typeof msg==='function')msg('');try{if(typeof sbMarca==='function')sbMarca('');}catch(e){}
+ setTimeout(function(){window.scrollTo(0,s.y);},0);});
+function pantalla(h){guardarPantalla();el('volver').style.display='inline-block';msg('');el('app').innerHTML=h;window.scrollTo(0,0);}
 
-// ================= 📅 CÓMO VA EL MES =================
-var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-function opcionesMes(sel){var d=new Date(),o='';for(var i=0;i<12;i++){var y=d.getFullYear(),m=d.getMonth()+1,v=y+'-'+('0'+m).slice(-2);
-  o+='<option value="'+v+'"'+(v===sel?' selected':'')+'>'+MESES[m-1].charAt(0).toUpperCase()+MESES[m-1].slice(1)+' '+y+(i===0?' (este mes)':'')+'</option>';d.setMonth(d.getMonth()-1);}return o;}
-function verMes(mes){if(!mes){var d=new Date();mes=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2);}guardado('gaussJefeMes',mes);
- el('app').innerHTML='<div class="card"><div class="fila"><div><label>Mes</label><select onchange="verMes(this.value)">'+opcionesMes(mes)+'</select></div></div></div><div id="mesC"><div class="card">Calculando… (puede tardar unos segundos)</div></div>';
- rapido('jefeMes',{mes:mes},'jefeMes',mes,pintarMes,function(e){falla(e,'mesC');});}
-function pintarMes(X){if(TAB!=='mes')return;var h='',pv=X.nombrePrev;
- var res=X.cob.total-(X.gastos?X.gastos.total:0),cz=X.cobranza,pctC=cz.monto?Math.round((cz.aTiempo+cz.tarde)/cz.monto*100):null;
- h+='<div class="card"><h2>📅 '+esc(X.titulo)+(X.enCurso?' · hasta hoy ('+esc(X.corte)+')':'')+'</h2><div class="grid">'+
-  k('Cobrado',gs(X.cob.total),'',delta(X.cob.total,X.cobPrev,pv)+'<br>'+X.cob.n+' pagos')+
-  k('Gastos',X.gastos?gs(X.gastos.total):'–','',X.gastos?delta(X.gastos.total,X.gastos.prev,pv,true):'')+
-  k('Resultado (cobrado − gastos)',gs(res),res>=0?'g':'r')+
-  k('Cuotas del mes cobradas',pctC===null?'–':pctC+'%',pctC===null?'':(pctC>=80?'g':(pctC>=60?'y':'r')),'de '+gs(cz.monto)+' que vencían'+(cz.nPend?'<br>'+cz.nPend+' cuotas pendientes ('+gs(cz.pendiente)+')':''))+
-  k('Deuda vencida total',gs(X.deuda.monto),X.deuda.monto>0?'r':'g',X.deuda.n+' alumnos ('+X.deuda.nAct+' activos)<br>'+delta(X.deuda.monto,X.deudaPrev.monto,'fin de '+pv,true))+
-  k('Alumnos activos',X.activos,'',delta(X.activos,X.activosPrev,pv))+
-  k('Nuevos',X.nuevos,'',delta(X.nuevos,X.nuevosPrev,pv))+
-  k('Salieron',X.salieron,X.salieron?'y':'',delta(X.salieron,X.salieronPrev,pv,true)+(X.terminaron?'<br>terminaron: '+X.terminaron:''))+
-  k('Vence el mes que viene',gs(X.prox.monto),'',X.prox.n+' cuotas')+'</div></div>';
- var medios=Object.keys(X.cob.medio).filter(function(m){return X.cob.medio[m];}).map(function(m){return [esc(m),mil(X.cob.medio[m]),pc(X.cob.medio[m],X.cob.total)];});
- var de=[['Cuotas vencidas',X.cob.vencida],['Cuotas al día / adelantadas',X.cob.adelantado],['Matrículas',X.cob.matricula],['Multas',X.cob.multas],['Materiales (libros)',X.cob.materiales],['Otros',X.cob.otros],['Sin aplicar',X.cob.sinAplicar],['Devoluciones',X.cob.devol]]
-  .filter(function(x){return x[1];}).map(function(x){return [esc(x[0]),mil(x[1]),pc(x[1],X.cob.total)];});
- h+='<div class="card"><h2>💵 Qué se cobró</h2><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))"><div>'+tabla(['Concepto','Gs.','%'],de,[1,2])+'</div><div>'+tabla(['Medio','Gs.','%'],medios,[1,2])+
-  (X.cob.oficina.length>1?'<div style="margin-top:10px">'+tabla(['Dónde','Gs.'],X.cob.oficina.map(function(o){return [esc(o[0]),mil(o[1])];}),[1])+'</div>':'')+'</div></div></div>';
- if(X.gastos&&X.gastos.cat.length)h+='<div class="card"><h2>🧾 Gastos por categoría</h2>'+tabla(['Categoría','Gs.','%'],X.gastos.cat.map(function(c){return [esc(c[0]),mil(c[1]),pc(c[1],X.gastos.total)];}),[1,2])+'</div>';
- h+='<div class="card"><h2>🏦 Caja (cierres diarios)</h2>'+(X.caja.length?tabla(['N°','Día','Responsable','Efectivo','Transf.','POS','Total','Gastos ef.','Entregado','Queda'],
-  X.caja.map(function(c){return [c.pdf?'<a href="'+esc(c.pdf)+'" target="_blank">'+esc(c.num)+'</a>':esc(c.num),esc(c.fecha),esc(c.resp),mil(c.ef),mil(c.tr),mil(c.pos),'<b>'+mil(c.total)+'</b>',mil(c.gastos),c.entregado?mil(c.entregado):'–',mil(c.queda)];}),[3,4,5,6,7,8,9]):
-  '<div class="vacio">Todavía no hay cierres de caja este mes.</div>')+'</div>';
- h+='<div class="card"><h2>⏳ Antigüedad de la deuda</h2>'+tabla(['Atraso','Alumnos','Gs.'],X.antig.map(function(a){return [esc(a.etiqueta),a.n,mil(a.monto)];}),[1,2])+'</div>';
- h+='<div class="card"><h2>🏫 Por grupo</h2>'+tabla(['Grupo','Activos','Cobrado','Con deuda','Deuda','2+ cuotas'],X.grupos.map(function(g){
-  return [esc(g.nombre),g.activos+(g.anotados?' <small>(+'+g.anotados+')</small>':''),mil(g.cobrado),g.nDeuda||'–',g.deuda?mil(g.deuda):'–',g.dos||'–'];}),[1,2,3,4,5])+
-  '<div class="ayuda" style="margin-top:6px">(+n) = anotados que todavía no empezaron.</div></div>';
- if(X.dosOMas.length)h+='<div class="card"><h2>🚨 Alumnos con 2 o más cuotas vencidas</h2>'+tabla(['Alumno','Grupo','Cuotas','Deuda'],X.dosOMas.map(function(v){return [esc(v.nombre),esc(v.grupo),v.n,mil(v.deuda)];}),[2,3])+'</div>';
- if(X.motivos.length)h+='<div class="card"><h2>🚪 Motivos de salida</h2>'+tabla(['Motivo','Alumnos'],X.motivos.map(function(m){return [esc(m[0]),m[1]];}),[1])+'</div>';
- el('mesC').innerHTML=h;}
-function pc(a,b){return b?Math.round(a/b*100)+'%':'';}
+// ---------- INICIO ----------
+function inicio(desdeHist){if(!desdeHist)HIST=[];el('volver').style.display='none';msg('');window.scrollTo(0,0);
+ el('app').innerHTML='<div class="botones">'+
+  '<button class="bgrande" style="background:#c0392b" onclick="semanal()">📊 Resumen semanal<small>Académico + económico · sábado a viernes</small></button>'+
+  '<button class="bgrande" style="background:#1f4e79" onclick="especifico()">🎯 Resumen específico<small>Fechas y grupos a elección · por coordinador</small></button>'+
+  '<button class="bgrande" style="background:#6a1b9a" onclick="pdfNotas()">🖨️ PDF de notas<small>Un examen o todos, de un grupo</small></button>'+
+  '<button class="bgrande" style="background:#00838f" onclick="lista()">📋 Crear lista de llamado<small>Desde el celular</small></button>'+
+  '<button class="bgrande" style="background:#2e7d32" onclick="horario()">📥 Cargar horario de la semana<small>Excel de Carlos → exámenes al calendario + docente y materia en las listas FIUNA</small></button>'+
+  '<button class="bgrande" style="background:#455a64" onclick="historial()">📁 Historial<small>Lo último que generaste</small></button>'+
+  '</div><div class="card" style="margin-top:14px"><div class="auto"><div><b>⏰ Resumen semanal automático</b><div class="ayuda">Los viernes a las 19 h se generan solos los dos PDFs (sin mail). Abrís el panel y compartís.</div></div>'+
+  '<button class="sw off" id="swA" onclick="auto()">…</button></div></div>';
+ verAuto();}
+var AUTO=null;
+function verAuto(modo){var r={},n=0,fin=function(){if(++n<2)return;AUTO=r.a&&r.c;var b=el('swA');if(!b)return;
+  b.className='sw '+(AUTO?'on':'off');b.textContent=AUTO?'✅ Activado':(r.a||r.c?'⚠️ A medias':'Apagado');b.disabled=false;};
+ adm('franAuto',{modo:modo||'ver'},function(d){r.a=d.activo;fin();},function(e){r.a=false;fin();});
+ csa('franAuto',{modo:modo||'ver'},function(d){r.c=d.activo;fin();},function(e){r.c=false;fin();});}
+function auto(){var b=el('swA');b.disabled=true;b.textContent='…';verAuto(AUTO?'off':'on');}
 
-// ================= 🏫 GRUPOS Y SALAS =================
-var SUB=guardado('gaussJefeSub')||'resumen',DIA='',FILAS=[];
-function verGrupos(){el('app').innerHTML='<div class="card">Cargando grupos… (puede tardar unos segundos)</div>';
- rapido('jefeGrupos',{},'jefeGrupos','todo',function(d){GR=d;if(TAB==='grupos')pintarGrupos();},function(e){falla(e);},
-  function(D){GR=D;if(TAB==='grupos'&&SUB==='resumen')pintarGrupos();});}
-function pintarGrupos(){
- el('app').innerHTML='<div class="subtabs"><button class="btn'+(SUB==='resumen'?'':' gr')+'" onclick="sub(\'resumen\')">📊 Resumen de grupos</button>'+
-  '<button class="btn'+(SUB==='salas'?'':' gr')+'" onclick="sub(\'salas\')">🚪 Distribución de salas</button></div><div id="gC"></div>';
- if(SUB==='resumen')resumenGrupos();else salas();}
-function sub(s){SUB=s;guardado('gaussJefeSub',s);pintarGrupos();}
-function colorGrupo(g){var t=sa((g.nombre||'')+' '+(g.curso||'')).toUpperCase();
- if(/FIUNA/.test(t))return['#ff0000','#fff'];if(/POLI/.test(t))return['#6d5bff','#fff'];if(/UPTP/.test(t))return['#7030a0','#fff'];
- if(/QUIMIC/.test(t))return['#bdd7ee','#000'];if(/INGRESO/.test(t))return['#ffff00','#000'];if(/OMAPA/.test(t))return['#e2efda','#000'];
- if(/MEDIC/.test(t))return['#f8cbad','#000'];if(/ARQUI/.test(t))return['#c6e0b4','#000'];return['#e7e6e6','#000'];}
-function chipG(g){var c=colorGrupo(g);return '<span class="chip" style="background:'+c[0]+';color:'+c[1]+'">'+esc(g.nombre)+'</span>';}
-function asisTxt(a){return a?a.prom+' <small>(pico '+a.pico+')</small>':'–';}
-function resumenGrupos(){var G=GR.grupos,act=0,anot=0;G.forEach(function(g){act+=g.act;anot+=g.anot;});
- var h='<div class="card"><h2>🏫 Panorama</h2><div class="grid">'+k('Grupos',G.filter(function(g){return g.empezo;}).length,'',G.filter(function(g){return !g.empezo;}).length?G.filter(function(g){return !g.empezo;}).length+' por empezar':'')+
-  k('Alumnos activos',act,'',anot?anot+' anotados para otro grupo':'')+
-  Object.keys(GR.mods).map(function(m){return k(m,GR.mods[m].alumnos+' alumnos','',GR.mods[m].grupos+' grupos');}).join('')+'</div>'+
-  '<div class="ayuda" style="margin-top:8px">Presentes: promedio por clase de las últimas 4 semanas (y el pico), según las listas del CSA. Datos del '+esc(GR.actualizado)+'.</div></div>';
- var RS=GR.reservas||{},rk=Object.keys(RS).sort(function(a,b){return RS[b]-RS[a];}),rt=rk.reduce(function(t,x){return t+RS[x];},0);
- if(rt)h+='<div class="card" style="background:#f3eefc"><h2>📌 Reservas sin grupo · '+rt+'</h2><div class="ayuda" style="margin-bottom:6px">Pagaron (o anotaron) la matrícula para guardar lugar y todavía no tienen grupo.</div>'+
-  tabla(['Le interesa','Alumnos'],rk.map(function(x){return [esc(x),RS[x]];}),[1])+'</div>';
- h+='<div class="card"><h2>📊 Grupos</h2>'+tabla(['Grupo','Modalidad','Activos','Pres. L-V mañana','Pres. L-V tarde','Pres. sáb. mañana','Pres. sáb. tarde','🔴 🟡 🟢','Deuda'],G.map(function(g){var a=g.asis||{},s=g.sem;
-  return [chipG(g)+(g.empezo?'':'<br><small>empieza '+esc(g.inicio)+'</small>'),esc(g.mod),'<b>'+g.act+'</b>'+(g.anot?' <small>(+'+g.anot+')</small>':''),
-   asisTxt(a.semm),asisTxt(a.semt),asisTxt(a.sabm),asisTxt(a.sabt),s?s.r+' · '+s.y+' · '+s.g:'–',g.deuda?mil(g.deuda)+' <small>('+g.nDeuda+')</small>':'–'];}),[2,3,4,5,6,8])+'</div>';
- if(!GR.asisOk)h+='<div class="aviso">No pude leer la asistencia del CSA (revisá "Planilla CSA" en CONFIG).</div>';
- el('gC').innerHTML=h;}
+// ---------- PDFs: ver, descargar, compartir ----------
+function tarjeta(r,api){var id='p'+Math.random().toString(36).slice(2,8);
+ var cuando=r.t?new Date(r.t).toLocaleString('es-PY',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+ return '<div class="pdf"><b>'+(r.tipo==='Económico'?'💰 ':(r.tipo==='Lista'?'📋 ':'📘 '))+esc(r.nombre.replace(/\.pdf$/,''))+'</b><small>'+(r.ya?'Ya estaba generado · ':'')+esc(cuando)+'</small><br>'+
+  (r.url?'<a class="acc" style="background:#1f4e79" href="'+esc(r.url)+'" target="_blank">📂 Abrir</a>':
+  '<button class="acc" style="background:#1f4e79" onclick="archivo(\''+api+'\',\''+esc(r.id)+'\',\'ver\',this)">👁️ Ver</button>'+
+  '<button class="acc" style="background:#555" onclick="archivo(\''+api+'\',\''+esc(r.id)+'\',\'bajar\',this)">⬇️ Descargar</button>'+
+  '<button class="acc" style="background:#25d366" onclick="archivo(\''+api+'\',\''+esc(r.id)+'\',\'compartir\',this)">📲 Compartir</button>')+'<div id="'+id+'"></div></div>';}
+var CACHE_PDF={};
+function archivo(api,id,modo,b){var txt=b.textContent,ventana=null;b.disabled=true;b.textContent='…';
+ if(modo==='ver')ventana=window.open('','_blank');
+ var usar=function(d){b.disabled=false;b.textContent=txt;CACHE_PDF[id]=d;
+  var bin=atob(d.b64),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  var blob=new Blob([u],{type:d.mime||'application/pdf'}),url=URL.createObjectURL(blob);
+  if(modo==='ver'){if(ventana)ventana.location=url;else window.open(url,'_blank');return;}
+  if(modo==='compartir'){var f=null;try{f=new File([blob],d.nombre,{type:d.mime||'application/pdf'});}catch(e){}
+   if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:d.nombre}).catch(function(){});return;}
+   alert('Este navegador no puede compartir archivos directo: lo descargo y lo adjuntás en WhatsApp.');}
+  var a=document.createElement('a');a.href=url;a.download=d.nombre;document.body.appendChild(a);a.click();a.remove();};
+ if(CACHE_PDF[id]){usar(CACHE_PDF[id]);return;}
+ llamar(api==='csa'?API_CSA:API_ADM,'franArchivo',{id:id},usar,function(e){b.disabled=false;b.textContent=txt;if(ventana)ventana.close();alert('⚠️ '+(e.message||e));});}
 
-// ----- distribución de salas -----
-function esSab(g){var t=sa((g.nombre||'')+' '+(g.mod||'')+' '+(g.curso||'')).toUpperCase();return /\bCOL\b|COLEGIO|INGRESO|OMAPA/.test(t);}
-function gPorCod(c){return GR.grupos.filter(function(g){return g.cod===c;})[0];}
-function salas(){DIA=DIA||guardado('gaussJefeDia')||'Sábado';
- el('gC').innerHTML='<div class="card"><div class="fila"><div><label>Día</label><select id="sD" onchange="cambiarDia(this.value)">'+GR.dias.map(function(d){return '<option'+(d===DIA?' selected':'')+'>'+esc(d)+'</option>';}).join('')+'</select></div>'+
-  '<div><label>Fecha para el título <span class="ayuda">(opcional)</span></label><input type="date" id="sF" onchange="pintarTabla()"></div></div><div id="sInfo" class="ayuda" style="margin-top:8px"></div></div>'+
-  '<div class="card"><div id="sT"></div><div class="fila" style="margin-top:10px"><select id="sAdd" style="flex:1;min-width:180px"></select><button class="mini" onclick="agregarG()">➕ Agregar grupo</button></div>'+
-  '<div id="sChoque"></div><div class="fila" style="margin-top:14px"><button class="btn" id="sG" onclick="guardarSalas()">💾 Guardar distribución</button>'+
-  '<button class="btn rojo" id="sI" onclick="imagen()">📷 Descargar imagen</button></div><div id="sM" style="margin-top:8px"></div></div>';
- cambiarDia(DIA);}
-function proximaFecha(dia){var idx={'Lunes':1,'Martes':2,'Miércoles':3,'Jueves':4,'Viernes':5,'Sábado':6,'Lunes a viernes':1}[dia],d=new Date();
- for(var i=0;i<7;i++){if(d.getDay()===idx)break;d.setDate(d.getDate()+1);}
- return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
-function cambiarDia(d){DIA=d;guardado('gaussJefeDia',d);el('sF').value=proximaFecha(d);
- var D=GR.dist[d],base=D,info='';
- if(!D&&d!=='Sábado'&&d!=='Lunes a viernes'&&GR.dist['Lunes a viernes']){base=GR.dist['Lunes a viernes'];info='Arranca con la de "Lunes a viernes". Cambiá lo que sea distinto ese día y guardá.';}
- if(base){FILAS=base.filas.map(function(f){var g=gPorCod(f.cod)||{cod:f.cod,nombre:f.nombre};return {cod:f.cod,nombre:g.nombre||f.nombre,m:f.m,t:f.t};});
-  if(D)info='Guardada el '+esc(D.guardado)+'.';}
- else{var sab=d==='Sábado';FILAS=GR.grupos.filter(function(g){return (g.empezo||g.act>0)&&(sab?esSab(g):!esSab(g));}).map(function(g){return {cod:g.cod,nombre:g.nombre,m:'',t:''};});
-  info='Todavía no hay una distribución guardada para '+esc(d)+'. Puse los grupos que suelen venir ese día: sacá o agregá los que hagan falta.';}
- el('sInfo').innerHTML=info;pintarTabla();}
-function opSalas(sel){var ed={};GR.salas.forEach(function(s){(ed[s.edificio]=ed[s.edificio]||[]).push(s.sala);});
- return '<option value="">—</option>'+Object.keys(ed).map(function(e){return '<optgroup label="'+esc(e)+'">'+ed[e].map(function(s){return '<option'+(s===sel?' selected':'')+'>'+esc(s)+'</option>';}).join('')+'</optgroup>';}).join('');}
-function choques(){var c={m:{},t:{}},rep={m:{},t:{}};FILAS.forEach(function(f){['m','t'].forEach(function(tu){if(!f[tu])return;if(c[tu][f[tu]])rep[tu][f[tu]]=1;c[tu][f[tu]]=1;});});return rep;}
-function pintarTabla(){var sab=DIA==='Sábado',rep=choques();
- var h='<div class="scroll"><table><tr><th>#</th><th>Grupo</th><th class="n">Activos</th><th>Mañana</th><th>Tarde</th><th></th></tr>'+FILAS.map(function(f,i){
-  var g=gPorCod(f.cod)||{nombre:f.nombre,asis:{}},a=g.asis||{},am=a[sab?'sabm':'semm'],at=a[sab?'sabt':'semt'];
-  return '<tr><td>'+(i+1)+'<br><button class="mini" onclick="mover('+i+',-1)">▲</button></td><td>'+chipG(g)+'</td><td class="n">'+(g.act!=null?'<b>'+g.act+'</b>':'–')+'</td>'+
-   ['m','t'].map(function(tu){var x=tu==='m'?am:at;return '<td><select class="sel-sala'+(f[tu]&&rep[tu][f[tu]]?' junto':'')+'" onchange="FILAS['+i+'].'+tu+'=this.value;pintarTabla()">'+opSalas(f[tu])+'</select>'+
-    '<div class="ayuda">'+(x?'👥 '+x.prom+' · pico '+x.pico:'sin listas')+'</div></td>';}).join('')+
-   '<td><button class="mini" title="Sacar de este día" onclick="FILAS.splice('+i+',1);pintarTabla()">✕</button></td></tr>';}).join('')+'</table></div>'+
-  '<div class="ayuda" style="margin-top:6px">👥 = presentes por clase en ese turno (promedio y pico de las últimas 4 semanas, '+(sab?'sábados':'lunes a viernes')+'). "—" = ese grupo no tiene clase en ese turno.</div>';
- el('sT').innerHTML=h;
- var en={};FILAS.forEach(function(f){en[f.cod]=1;});
- el('sAdd').innerHTML='<option value="">Elegí un grupo para agregar…</option>'+GR.grupos.filter(function(g){return !en[g.cod];}).map(function(g){return '<option value="'+esc(g.cod)+'">'+esc(g.nombre)+'</option>';}).join('');
- var l=[];['m','t'].forEach(function(tu){Object.keys(rep[tu]).forEach(function(s){l.push('<b>'+esc(s)+'</b> a la '+(tu==='m'?'mañana':'tarde')+': '+FILAS.filter(function(f){return f[tu]===s;}).map(function(f){return esc(f.nombre);}).join(' y '));});});
- el('sChoque').innerHTML=l.length?'<div class="aviso">⚠️ Sala repetida — '+l.join(' · ')+'<br><span class="ayuda">Si esos grupos tienen la clase juntos, está bien; si no, cambiá una.</span></div>':'';
- el('sM').innerHTML='';}
-function mover(i,d){var j=i+d;if(j<0||j>=FILAS.length)return;var x=FILAS[i];FILAS[i]=FILAS[j];FILAS[j]=x;pintarTabla();}
-function agregarG(){var c=el('sAdd').value;if(!c)return;var g=gPorCod(c);FILAS.push({cod:c,nombre:g.nombre,m:'',t:''});pintarTabla();}
-function guardarSalas(){if(!FILAS.length)return;var b=el('sG');b.disabled=true;b.textContent='Guardando…';
- pedir('jefeGuardarSalas',{dia:DIA,filas:JSON.stringify(FILAS.map(function(f){return [f.cod,f.nombre,f.m,f.t];}))},function(r){GR.dist=r.dist;b.textContent='💾 Guardar distribución';
-  el('sM').innerHTML='<b style="color:#1b8a3a">✅ Guardada. Los otros jefes ya la ven.</b>';el('sInfo').innerHTML='Guardada el '+esc((r.dist[DIA]||{}).guardado||'')+'.';b.disabled=false;},
-  function(e){b.disabled=false;b.textContent='💾 Guardar distribución';falla(e,'sM');});}
-// imagen como la que se manda al WhatsApp
-function imagen(){var sab=DIA==='Sábado',W=760,rh=34,x0=20,cN=40,cG=300,cT=(W-2*x0-cN-cG)/2,top=20;
- var f=el('sF').value,ft='';if(f){var p=f.split('-');ft=' '+p[2]+'/'+p[1];}
- var titulo=(DIA==='Lunes a viernes'?'LUNES A VIERNES':DIA.toUpperCase())+ft;
- var H=top+44+rh*2+rh*FILAS.length+30,cv=document.createElement('canvas'),s=2;cv.width=W*s;cv.height=H*s;var c=cv.getContext('2d');c.scale(s,s);
- c.fillStyle='#fff';c.fillRect(0,0,W,H);c.textBaseline='middle';
- c.fillStyle='#201e1e';c.font='bold 20px Arial';c.textAlign='center';c.fillText('DISTRIBUCIÓN DE SALAS · '+titulo,W/2,top+16);
- var y=top+44;
- function celda(x,yy,w,h,txt,bg,fg,bold,al){c.fillStyle=bg||'#fff';c.fillRect(x,yy,w,h);c.strokeStyle='#000';c.lineWidth=1;c.strokeRect(x+.5,yy+.5,w,h);
-  if(txt!==''){c.fillStyle=fg||'#000';c.font=(bold?'bold ':'')+'16px Arial';c.textAlign=al||'left';c.fillText(txt,al==='center'?x+w/2:(al==='right'?x+w-8:x+8),yy+h/2+1);}}
- celda(x0,y,cN,rh*2,'','#fff');celda(x0+cN,y,cG,rh*2,'GRUPO','#fff','#000',true);celda(x0+cN+cG,y,cT*2,rh,DIA==='Lunes a viernes'?'LUNES A VIERNES':DIA.toUpperCase(),'#fff2a8','#000',true,'center');
- celda(x0+cN+cG,y+rh,cT,rh,'MAÑANA','#d9e2f3','#000',true,'center');celda(x0+cN+cG+cT,y+rh,cT,rh,'TARDE','#d9e2f3','#000',true,'center');y+=rh*2;
- FILAS.forEach(function(r,i){var g=gPorCod(r.cod)||{nombre:r.nombre},col=colorGrupo(g);
-  celda(x0,y,cN,rh,String(i+1),'#fff','#000',true,'right');celda(x0+cN,y,cG,rh,(g.nombre||r.nombre).toUpperCase(),col[0],col[1],true);
-  celda(x0+cN+cG,y,cT,rh,r.m?'SALA '+r.m:'—','#fff','#000',false,r.m?'left':'center');celda(x0+cN+cG+cT,y,cT,rh,r.t?'SALA '+r.t:'—','#fff','#000',false,r.t?'left':'center');y+=rh;});
- c.fillStyle='#888';c.font='12px Arial';c.textAlign='right';c.fillText('Cursillo Gauss',W-x0,y+16);
- var nombre='Salas '+titulo.replace(/\//g,'-')+'.png';
- cv.toBlob(function(b){var file=null;try{file=new File([b],nombre,{type:'image/png'});}catch(e){}
-  if(file&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:nombre}).catch(function(){});return;}
-  var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=nombre;document.body.appendChild(a);a.click();a.remove();
-  el('sM').innerHTML='<b style="color:#1b8a3a">✅ Imagen descargada: '+esc(nombre)+'</b>';},'image/png');}
+// ---------- 📊 RESUMEN SEMANAL ----------
+function sabVie(anterior){var d=new Date(),dow=d.getDay(),v=new Date(d);
+ v.setDate(d.getDate()+(dow===5?0:(dow===6||dow===0?-((dow+2)%7):5-dow))-(anterior?7:0));
+ var s=new Date(v);s.setDate(v.getDate()-6);var f=function(x){return ('0'+x.getDate()).slice(-2)+'/'+('0'+(x.getMonth()+1)).slice(-2);};return f(s)+' al '+f(v);}
+function semanal(){pantalla('<div class="card"><h2>📊 Resumen semanal</h2>'+
+  '<label>Semana</label><select id="sS"><option value="0">Esta semana · sábado '+sabVie(false).replace(' al ',' → viernes ')+'</option><option value="1">Semana anterior · '+sabVie(true)+'</option></select>'+
+  '<div class="ayuda" style="margin-top:6px">Si ya estaba generado (por ejemplo el automático del viernes), lo trae al instante.</div>'+
+  '<button class="btn" id="sB" onclick="genSemanal(0)">📊 Generar académico + económico</button><div id="sR"></div></div>'+
+  '<div class="card"><h2>🧪 Académico nuevo (prueba)</h2><div class="ayuda">Formato corto: una tabla por grupo. Se guarda en otra carpeta (RESÚMENES SEMANALES (PRUEBA)); el de siempre no cambia.</div>'+
+  '<button class="btn" id="sN" style="background:#6a1b9a" onclick="genNuevo()">🧪 Generar el académico nuevo</button><div id="sNR"></div></div>');}
+function genNuevo(){var b=el('sN');b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';el('sNR').innerHTML='';
+ csa('franSemanal',{anterior:el('sS').value,nuevo:'1'},function(r){b.disabled=false;b.textContent='🧪 Generar el académico nuevo';el('sNR').innerHTML=tarjeta(r,'csa');},
+  function(e){b.disabled=false;b.textContent='🧪 Generar el académico nuevo';falla(e,'sNR');});}
+function genSemanal(force){var b=el('sB'),ant=el('sS').value;b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';
+ el('sR').innerHTML='<div id="sA" class="pdf">📘 Académico: generando…</div><div id="sE" class="pdf">💰 Económico: generando…</div>';
+ var n=0,fin=function(){if(++n<2)return;b.disabled=false;b.textContent='📊 Generar académico + económico';
+  el('sR').insertAdjacentHTML('beforeend','<button class="btn gr" style="font-size:15px;padding:10px" onclick="genSemanal(1)">🔄 Volver a generar con los datos de ahora</button>');};
+ csa('franSemanal',{anterior:ant,force:force},function(r){el('sA').outerHTML=tarjeta(r,'csa');fin();},function(e){falla(e,'sA');fin();});
+ adm('franSemanal',{anterior:ant,force:force},function(r){el('sE').outerHTML=tarjeta(r,'adm');fin();},function(e){falla(e,'sE');fin();});}
 
-// ================= 📈 TENDENCIAS =================
-function verTend(){el('app').innerHTML='<div class="card">Calculando tendencias… (puede tardar unos segundos)</div>';
- rapido('jefeTendencias',{},'jefeTend','todo',pintarTend,function(e){falla(e);});}
-function pintarTend(T){if(TAB!=='tend')return;var S=T.semanas,maxA=Math.max.apply(null,S.map(function(s){return s.activos;}).concat([1]));
- var bar=function(v,max,col){return '<div class="bar"><i style="width:'+Math.round((v||0)/max*100)+'%;'+(col?'background:'+col:'')+'"></i></div>';};
- var h='<div class="card"><h2>📈 Últimas 12 semanas</h2>'+tabla(['Semana del','Activos','','Nuevos','Pases','Salieron','Asistencia',''],S.map(function(s){
-  return [esc(s.desde),'<b>'+s.activos+'</b>',bar(s.activos,maxA),s.nuevos||'–',s.pases||'–',s.salieron?'<span class="down">'+s.salieron+'</span>':'–',
-   s.asis===null?'–':s.asis+'%',s.asis===null?'':bar(s.asis,100,s.asis>=85?'#1b8a3a':(s.asis>=70?'#b7950b':'#c0392b'))];}),[1,3,4,5,6])+
-  '<div class="ayuda" style="margin-top:6px">Activos al final de cada semana · Nuevos = primera vez en Gauss · Pases = cambio de grupo o pase al intensivo · Asistencia = % de presentes en las listas del CSA.</div></div>';
- h+='<div class="card"><h2>🔴 Grupos que más preocupan</h2>'+tabla(['Grupo','🔴','🟡','🟢','% en rojo'],T.rojos.map(function(g){var t=g.r+g.y+g.g;return [esc(g.nombre),g.r,g.y,g.g,t?Math.round(g.r/t*100)+'%':'–'];}),[1,2,3,4])+'</div>';
- h+='<div class="card"><h2>🚪 Por qué se van (12 semanas)</h2>'+tabla(['Motivo','Alumnos'],T.motivos.map(function(m){return [esc(m[0]),m[1]];}),[1])+'</div>';
- el('app').innerHTML=h;}
+// ---------- 🎯 RESUMEN ESPECÍFICO ----------
+var SEL={},COORD='';
+function vigentes(){return GR.grupos.filter(function(g){return g.vigente||el('eTodos')&&el('eTodos').checked;});}
+function especifico(){SEL={};COORD='';
+ var coords={};GR.grupos.forEach(function(g){if(g.enc&&g.vigente)coords[g.enc]=1;});
+ var cursos={};GR.grupos.forEach(function(g){if(g.vigente)cursos[(g.curso||'Otros')+(g.mod?' '+g.mod:'')]=1;});
+ pantalla('<div class="card"><h2><span class="paso">1</span>¿Qué resumen?</h2>'+
+  '<label style="font-weight:normal"><input type="checkbox" id="eA" checked>📘 Académico</label>'+
+  '<label style="font-weight:normal"><input type="checkbox" id="eE">💰 Económico <span class="ayuda">(cobrado y deuda de esos grupos; sin gastos)</span></label></div>'+
+  '<div class="card"><h2><span class="paso">2</span>¿De qué grupos?</h2>'+
+  '<div class="ayuda">Por coordinador (marca sus grupos):</div><div>'+(Object.keys(coords).length?Object.keys(coords).sort().map(function(c){return '<span class="chip" data-c="'+esc(c)+'" onclick="porCoord(this)">'+esc(c)+'</span>';}).join(''):'<span class="ayuda">Cargá PROFESOR ENCARGADO en GRUPOS de Administración.</span>')+'</div>'+
+  '<div class="ayuda" style="margin-top:10px">Rápido por curso:</div><div>'+Object.keys(cursos).sort().map(function(c){return '<span class="chip" data-k="'+esc(c)+'" onclick="porCurso(this)">Todos '+esc(c)+'</span>';}).join('')+
+  '<span class="chip" onclick="SEL={};COORD=\'\';pintarGr()">✕ Ninguno</span></div>'+
+  '<div id="eG"></div><label style="font-weight:normal;margin-top:10px"><input type="checkbox" id="eTodos" onchange="pintarGr()">Mostrar también grupos que ya terminaron</label></div>'+
+  '<div class="card"><h2><span class="paso">3</span>¿Qué fechas?</h2><div id="eUlt"></div>'+
+  '<div class="fila"><div><label>Desde</label><input type="date" id="eD" value="'+isoMas(hoyIso(),-6)+'"></div><div><label>Hasta</label><input type="date" id="eH" value="'+hoyIso()+'"></div></div>'+
+  '<button class="btn" id="eB" onclick="genEsp()">🎯 Generar</button><div id="eR"></div></div>');
+ pintarGr();}
+function claveCurso(g){return (g.curso||'Otros')+(g.mod?' '+g.mod:'');}
+function pintarGr(){var por={};vigentes().forEach(function(g){(por[claveCurso(g)]=por[claveCurso(g)]||[]).push(g);});
+ el('eG').innerHTML=Object.keys(por).sort().map(function(k){return '<div class="gr-curso"><b>'+esc(k)+'</b><br>'+por[k].map(function(g){
+  return '<span class="gr-item'+(SEL[g.cod]?' on':'')+'" onclick="toggleG(\''+esc(g.cod)+'\')">'+(SEL[g.cod]?'☑️ ':'⬜ ')+esc(g.nombre)+'</span>';}).join('')+'</div>';}).join('');
+ [].forEach.call(document.querySelectorAll('.chip[data-c]'),function(c){c.className='chip'+(c.getAttribute('data-c')===COORD?' on':'');});
+ var n=Object.keys(SEL).length;el('eB').textContent='🎯 Generar'+(n?' ('+n+' grupo'+(n>1?'s':'')+')':' (todos los grupos)');}
+function toggleG(c){if(SEL[c])delete SEL[c];else SEL[c]=1;pintarGr();}
+function porCurso(ch){var k=ch.getAttribute('data-k');COORD='';vigentes().forEach(function(g){if(claveCurso(g)===k)SEL[g.cod]=1;});pintarGr();}
+function porCoord(ch){var c=ch.getAttribute('data-c');COORD=c;SEL={};GR.grupos.forEach(function(g){if(g.enc===c&&g.vigente)SEL[g.cod]=1;});
+ var u=(INFO.coords||{})[c];
+ if(u){el('eUlt').innerHTML='<div class="aviso">La última vez le generaste a <b>'+esc(c)+'</b> del '+fecha(u.desde)+' al '+fecha(u.hasta)+'. Te propongo seguir desde el '+fecha(isoMas(u.hasta,1))+'.</div>';
+  el('eD').value=isoMas(u.hasta,1);el('eH').value=hoyIso();}
+ else el('eUlt').innerHTML='<div class="ayuda">Primera vez para '+esc(c)+': elegí las fechas.</div>';
+ pintarGr();}
+function genEsp(){var A=el('eA').checked,E=el('eE').checked,r=el('eR'),d=el('eD').value,h=el('eH').value;
+ if(!A&&!E){r.innerHTML='<div class="err">Elegí académico, económico o los dos.</div>';return;}
+ if(!d||!h){r.innerHTML='<div class="err">Elegí las fechas.</div>';return;}
+ var cods=Object.keys(SEL),gs=GR.grupos.filter(function(g){return SEL[g.cod];});
+ var etiqueta=COORD?COORD:(cods.length===0?'':(cods.length<=3?gs.map(function(g){return g.nombre;}).join(', '):cods.length+' grupos'));
+ var b=el('eB');b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';
+ r.innerHTML=(A?'<div id="eRA" class="pdf">📘 Académico: generando…</div>':'')+(E?'<div id="eRE" class="pdf">💰 Económico: generando…</div>':'');
+ var n=0,tot=(A?1:0)+(E?1:0),fin=function(){if(++n<tot)return;b.disabled=false;pintarGr();};
+ if(A)csa('franAca',{desde:d,hasta:h,grupos:gs.map(function(g){return g.nombre;}).join('|'),etiqueta:etiqueta,coord:COORD},function(x){
+  el('eRA').outerHTML=tarjeta(x,'csa');if(COORD){INFO.coords=INFO.coords||{};INFO.coords[COORD]={desde:d,hasta:h};}fin();},function(e){falla(e,'eRA');fin();});
+ if(E)adm('franEco',{desde:d,hasta:h,grupos:cods.join(','),etiqueta:etiqueta},function(x){el('eRE').outerHTML=tarjeta(x,'adm');fin();},function(e){falla(e,'eRE');fin();});}
 
-// ================= 💳 CUOTERO =================
-var CQ=null,CQ_F=guardado('gaussCuotF')||'todos',CQ_G='',CQ_DEBEN=false,CQ_MONTOS=guardado('gaussCuotMontos')==='1';
-var CQ_COL={P:'#93c47d',V:'#e06666',Y:'#ffd966',E:'#f6b26b',F:'#ffffff',X:'#fff2cc',B:'#9fc5e8'};
-var CQ_TXT={P:'Pagado',V:'Vencida',Y:'Vencida (pagó una parte)',E:'En espera ⏳',F:'Por vencer',X:'Por vencer (pagó una parte)',B:'Beca / sin costo'};
-var MES3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-function verCuot(){el('app').innerHTML='<div class="card">Cargando el cuotero…</div>';
- rapido('jefeCuotero',{},'jefeCuotero','todo',function(d){CQ=d;if(TAB==='cuot')pintarCuot();},function(e){falla(e);});}
-function cqFiltrados(){var G=CQ.grupos;return CQ.alumnos.filter(function(x){var g=G[x.g]||{};
- if(CQ_F.indexOf('mod:')===0&&g.mod!==CQ_F.slice(4))return false;if(CQ_F.indexOf('cur:')===0&&g.curso!==CQ_F.slice(4))return false;
- if(CQ_G&&x.g!==CQ_G)return false;return true;});}
-function cqNum(l){var hoy=CQ.hoy,R={deuda:0,nDeuda:0,salio:0,nSalio:0,c1:0,c0:0,mM:0,mS:0,alDia:0,dos:0,esp:0,espM:0,v7:0,act:0};
- l.forEach(function(x){
-  if(x.a){R.act++;R.deuda+=x.d;if(x.d>0)R.nDeuda++;else R.alDia++;}else if(x.d>0){R.salio+=x.d;R.nSalio++;}
-  R.c1+=x.c1;R.c0+=x.c0;R.v7+=x.v7;
-  var c=x.m[hoy];if(c&&c[0]!=='B'){R.mM+=c[2];R.mS+=c[1];}
-  var nv=0,e=0;Object.keys(x.m).forEach(function(k){var y=x.m[k];if(y[0]==='V'||y[0]==='Y')nv++;if(y[0]==='E')e+=y[1];});
-  if(nv>=2&&x.a)R.dos++;if(e>0){R.esp++;R.espM+=e;}});
- return R;}
-function cqMesTxt(k,conAnio){var p=k.split('-');return MES3[Number(p[1])-1]+(conAnio?' '+p[0].slice(2):'');}
-function pintarCuot(){if(!CQ)return;var l=cqFiltrados(),R=cqNum(l),G=CQ.grupos;
- var mods={},curs={};Object.keys(G).forEach(function(g){if(G[g].mod)mods[G[g].mod]=1;if(G[g].curso)curs[G[g].curso]=1;});
- var opt=function(v,t){return '<option value="'+esc(v)+'"'+(CQ_F===v?' selected':'')+'>'+esc(t)+'</option>';};
- var grs=Object.keys(G).filter(function(g){var x=G[g];return CQ_F==='todos'||(CQ_F.indexOf('mod:')===0&&x.mod===CQ_F.slice(4))||(CQ_F.indexOf('cur:')===0&&x.curso===CQ_F.slice(4));})
-  .sort(function(a,b){return a.localeCompare(b,'es',{numeric:true});});
- if(CQ_G&&grs.indexOf(CQ_G)<0)CQ_G='';
- var pctMes=R.mM?Math.round((R.mM-R.mS)/R.mM*100):null,d=R.c1-R.c0;
- var h='<div class="card"><h2>💳 Cuotero <span class="ayuda" style="font-weight:normal">· al '+esc(CQ.dia)+'</span></h2><div class="grid">'+
-  k('Deuda vencida',gs(R.deuda),R.deuda>0?'r':'g',R.nDeuda+' de '+R.act+' alumnos activos')+
-  k('Cobrado este mes',gs(R.c1),'',d?'<span class="'+(d>0?'up':'down')+'">'+(d>0?'▲ ':'▼ ')+gs(Math.abs(d))+'</span> vs el mes pasado a esta fecha':'igual que el mes pasado')+
-  k('Cuotas de este mes',pctMes===null?'–':pctMes+'% cobrado',pctMes===null?'':(pctMes>=80?'g':(pctMes>=60?'y':'r')),R.mS?'faltan '+gs(R.mS):'')+
-  k('Al día · con deuda',R.alDia+' · '+R.nDeuda,'','alumnos activos')+
-  k('2 o más cuotas vencidas',R.dos,R.dos?'r':'')+
-  k('En espera ⏳',R.esp,'',R.esp?gs(R.espM):'')+
-  k('Vence en los próximos 7 días',gs(R.v7))+
-  k('Deuda de los que salieron',gs(R.salio),R.salio?'y':'',R.nSalio+' alumnos')+'</div></div>';
- h+='<div class="card"><div class="fila"><div style="flex:1;min-width:180px"><label>Ver</label><select style="width:100%" onchange="CQ_F=this.value;guardado(\'gaussCuotF\',CQ_F);CQ_G=\'\';pintarCuot()">'+
-  opt('todos','Todos')+'<optgroup label="Modalidad">'+Object.keys(mods).sort().map(function(m){return opt('mod:'+m,m);}).join('')+'</optgroup>'+
-  '<optgroup label="Curso">'+Object.keys(curs).sort().map(function(c){return opt('cur:'+c,c);}).join('')+'</optgroup></select></div>'+
-  '<div style="flex:1;min-width:180px"><label>Grupo</label><select style="width:100%" onchange="CQ_G=this.value;pintarCuot()"><option value="">Todos los grupos</option>'+
-  grs.map(function(g){return '<option'+(g===CQ_G?' selected':'')+'>'+esc(g)+'</option>';}).join('')+'</select></div></div>'+
-  '<div style="margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;font-size:14px">'+
-  '<label><input type="checkbox" style="width:auto;padding:0"'+(CQ_DEBEN?' checked':'')+' onchange="CQ_DEBEN=this.checked;pintarCuot()"> Solo los que deben</label>'+
-  '<label><input type="checkbox" style="width:auto;padding:0"'+(CQ_MONTOS?' checked':'')+' onchange="CQ_MONTOS=this.checked;guardado(\'gaussCuotMontos\',CQ_MONTOS?\'1\':\'0\');pintarCuot()"> Mostrar montos (en miles)</label></div></div>';
- h+='<div class="card" style="padding:10px"><div id="cqT"></div><div class="ayuda" style="margin-top:8px">'+
-  ['P','V','Y','E','F','B'].map(function(c){return '<span style="display:inline-block;width:12px;height:12px;border:1px solid #999;background:'+CQ_COL[c]+';vertical-align:middle"></span> '+CQ_TXT[c];}).join(' &nbsp; ')+
-  (CQ_MONTOS?'<br>Montos en miles: 700 = Gs. 700.000.':'')+'</div>'+
-  '<button class="btn" style="margin-top:10px" onclick="imagenCuot()">📲 Compartir imagen</button></div>';
- el('app').innerHTML=h;
- el('cqT').innerHTML=tablaCuot(l);}
-function cqMeses(l){var m={};l.forEach(function(x){Object.keys(x.m).forEach(function(k){m[k]=1;});});return Object.keys(m).sort();}
-function cqFilas(l){var out=[],porG={};l.forEach(function(x){(porG[x.g]=porG[x.g]||[]).push(x);});
- Object.keys(porG).sort(function(a,b){return a.localeCompare(b,'es',{numeric:true});}).forEach(function(g){
-  var act=porG[g].filter(function(x){return x.a&&(!CQ_DEBEN||x.d>0);}),sal=porG[g].filter(function(x){return !x.a&&x.d>0;});
-  if(!act.length&&!sal.length)return;out.push({grupo:g,n:act.length});
-  act.forEach(function(x){out.push({al:x});});sal.forEach(function(x){out.push({al:x,salio:true});});});
- return out;}
-function tablaCuot(l){var meses=cqMeses(l),filas=cqFilas(l);if(!filas.length)return '<div class="vacio">— nadie para mostrar —</div>';
- var dosAnios=meses.length&&meses[0].slice(0,4)!==meses[meses.length-1].slice(0,4),W=CQ_MONTOS?44:26;
- var h='<div class="scroll" style="max-height:70vh;overflow:auto"><table style="width:auto;border-collapse:separate;border-spacing:0;font-size:12px">'+
-  '<tr><th style="position:sticky;left:0;top:0;z-index:3;background:#d9e2f3;min-width:130px;max-width:150px">Alumno</th>'+
-  meses.map(function(k,i){var anio=dosAnios&&(i===0||k.slice(5)==='01');return '<th style="position:sticky;top:0;z-index:2;text-align:center;padding:3px 1px;font-size:11px;line-height:1.1;width:'+W+'px;min-width:'+W+'px;max-width:'+W+'px'+(k===CQ.hoy?';background:#ffe599':'')+'">'+cqMesTxt(k,false)+(anio?'<br><small style="font-weight:normal">'+k.slice(2,4)+'</small>':'')+'</th>';}).join('')+
-  '<th class="n" style="position:sticky;top:0;z-index:2">Debe'+(CQ_MONTOS?'':'')+'</th></tr>';
- filas.forEach(function(f){
-  if(f.grupo){h+='<tr><td colspan="'+(meses.length+2)+'" style="background:#201e1e;color:#fff;font-weight:bold;padding:5px 6px;position:sticky;left:0">'+esc(f.grupo)+' <span style="font-weight:normal;opacity:.75">· '+f.n+'</span></td></tr>';return;}
-  var x=f.al,nm='<td title="'+esc(x.n)+'" style="position:sticky;left:0;background:'+(f.salio?'#eee':'#fff')+';z-index:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;padding:3px 6px;border-bottom:1px solid #eee'+(f.salio?';color:#888':'')+'">'+esc(x.n)+'</td>';
-  if(f.salio){h+='<tr>'+nm+'<td colspan="'+meses.length+'" style="background:#eee;color:#888;font-style:italic;padding:3px 6px">salió</td><td class="n" style="background:#eee;color:#a61c1c;font-weight:bold;padding:3px 6px">'+mil(x.d/1000)+'</td></tr>';return;}
-  h+='<tr>'+nm+meses.map(function(k){var c=x.m[k];if(!c)return '<td style="background:#f3f3f3;border:1px solid #fff"></td>';
-   var t=CQ_MONTOS&&c[1]>0&&c[0]!=='F'?mil(c[1]/1000):'';
-   return '<td title="'+esc(cqMesTxt(k,true)+': '+CQ_TXT[c[0]]+(c[1]>0?' · debe '+gs(c[1]):''))+'" style="background:'+CQ_COL[c[0]]+';border:1px solid #fff;text-align:center;padding:3px 2px;font-size:11px">'+t+'</td>';}).join('')+
-   '<td class="n" style="padding:3px 6px;font-weight:bold;'+(x.d>0?'color:#a61c1c':'color:#1b5e20')+'">'+(x.d>0?mil(x.d/1000):'✓')+'</td></tr>';});
- // totales por mes: % cobrado de lo que ya venció
- var tot=meses.map(function(k){var M=0,S=0;l.forEach(function(x){var c=x.m[k];if(c&&c[0]!=='B'&&c[0]!=='F'&&c[0]!=='X'){M+=c[2];S+=c[1];}});return M?Math.round((M-S)/M*100):null;});
- h+='<tr><td style="position:sticky;left:0;background:#d9e2f3;font-weight:bold;padding:4px 6px">% cobrado</td>'+tot.map(function(p){return '<td style="background:#d9e2f3;text-align:center;font-size:10px;font-weight:bold;padding:4px 1px">'+(p===null?'':p+'%')+'</td>';}).join('')+'<td style="background:#d9e2f3"></td></tr>';
- return h+'</table></div>'+(CQ_MONTOS?'':'<div class="ayuda" style="margin-top:4px">"Debe" en miles: 4.200 = Gs. 4.200.000.</div>');}
-// imagen para WhatsApp (lo que se ve con el filtro elegido)
-function imagenCuot(){var l=cqFiltrados(),meses=cqMeses(l),filas=cqFilas(l);if(!filas.length)return;
- var cN=230,cw=CQ_MONTOS?46:28,rh=22,x0=14,W=x0*2+cN+cw*meses.length+70,H=60+rh*(filas.length+2)+30,s=2,cv=document.createElement('canvas');
- cv.width=W*s;cv.height=H*s;var c=cv.getContext('2d');c.scale(s,s);c.fillStyle='#fff';c.fillRect(0,0,W,H);c.textBaseline='middle';
- var tit='CUOTERO · '+(CQ_G||(CQ_F==='todos'?'TODOS':CQ_F.slice(4)))+' · al '+CQ.dia;
- c.fillStyle='#201e1e';c.font='bold 16px Arial';c.textAlign='left';c.fillText(tit,x0,22);
- var y=44,dosAnios=meses.length&&meses[0].slice(0,4)!==meses[meses.length-1].slice(0,4);
- c.font='bold 11px Arial';c.textAlign='center';meses.forEach(function(k,i){c.fillStyle=k===CQ.hoy?'#b45f06':'#333';c.fillText(cqMesTxt(k,dosAnios),x0+cN+cw*i+cw/2,y+rh/2);});
- c.textAlign='right';c.fillStyle='#333';c.fillText('Debe (mil)',W-x0,y+rh/2);y+=rh;
- filas.forEach(function(f){
-  if(f.grupo){c.fillStyle='#201e1e';c.fillRect(x0,y,W-2*x0,rh);c.fillStyle='#fff';c.font='bold 12px Arial';c.textAlign='left';c.fillText(f.grupo+' · '+f.n,x0+6,y+rh/2+1);y+=rh;return;}
-  var x=f.al;c.font='12px Arial';c.textAlign='left';c.fillStyle=f.salio?'#999':'#222';
-  var nom=x.n;while(c.measureText(nom).width>cN-10&&nom.length>4)nom=nom.slice(0,-2);if(nom!==x.n)nom+='…';c.fillText(nom,x0+4,y+rh/2+1);
-  if(f.salio){c.fillStyle='#eee';c.fillRect(x0+cN,y+1,cw*meses.length,rh-2);c.fillStyle='#999';c.font='italic 11px Arial';c.fillText('salió',x0+cN+6,y+rh/2+1);}
-  else meses.forEach(function(k,i){var v=x.m[k];c.fillStyle=v?CQ_COL[v[0]]:'#f3f3f3';c.fillRect(x0+cN+cw*i+1,y+1,cw-2,rh-2);
-   if(v&&v[0]==='F'){c.strokeStyle='#ccc';c.strokeRect(x0+cN+cw*i+1.5,y+1.5,cw-3,rh-3);}
-   if(CQ_MONTOS&&v&&v[1]>0&&v[0]!=='F'){c.fillStyle='#000';c.font='10px Arial';c.textAlign='center';c.fillText(mil(v[1]/1000),x0+cN+cw*i+cw/2,y+rh/2+1);}});
-  c.textAlign='right';c.font='bold 12px Arial';c.fillStyle=x.d>0?'#a61c1c':'#1b5e20';c.fillText(x.d>0?mil(x.d/1000):'✓',W-x0,y+rh/2+1);y+=rh;});
- c.fillStyle='#888';c.font='11px Arial';c.textAlign='left';c.fillText('Verde pagado · rojo vencida · amarillo pagó una parte · naranja en espera · blanco por vencer · celeste beca',x0,y+16);
- c.textAlign='right';c.fillText('Cursillo Gauss',W-x0,y+16);
- var nombre='Cuotero '+(CQ_G||(CQ_F==='todos'?'todos':CQ_F.slice(4)))+' '+CQ.dia.replace(/\//g,'-')+'.png';
- cv.toBlob(function(b){var file=null;try{file=new File([b],nombre,{type:'image/png'});}catch(e){}
-  if(file&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:nombre}).catch(function(){});return;}
-  var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=nombre;document.body.appendChild(a);a.click();a.remove();},'image/png');}
+// ---------- 🖨️ PDF DE NOTAS ----------
+function pdfNotas(){var seguir=function(){
+ pantalla('<div class="card"><h2>🖨️ PDF de notas de un grupo</h2>'+
+  '<label>Planilla</label><select id="nP" onchange="nGrupos()">'+PN.map(function(p,i){return '<option value="'+i+'">'+esc(p.nombre)+'</option>';}).join('')+'</select>'+
+  '<label>Grupo</label><select id="nG" onchange="nExs()"></select>'+
+  '<label>¿Qué exámenes?</label><select id="nM" onchange="nExs()"><option value="uno">Solo un examen</option><option value="todos">Todos los exámenes del grupo</option></select>'+
+  '<div id="nEw"><label>Examen</label><select id="nE"></select></div>'+
+  '<button class="btn" id="nB" onclick="nGenerar()">🖨️ Generar PDF</button><div id="nR"></div></div>');nGrupos();};
+ if(PN)seguir();else{pantalla('');msg('Cargando planillas de notas… (unos segundos)');var pl=function(){csa('notasDatos',{},function(d){PN=d;seguir();},function(e){falla(e);});};
+  sbLeer('csaNotas','todo',function(d){PN=d;seguir();csa('notasDatos',{},function(d2){PN=d2;},function(){});},pl);}}
+function nGrupos(){var p=PN[el('nP').value];el('nG').innerHTML=p.grupos.map(function(g,i){return '<option value="'+i+'">'+esc(g.nombre)+(g.ex.length?'':' (sin notas)')+'</option>';}).join('');nExs();}
+function nExs(){var g=PN[el('nP').value].grupos[el('nG').value],todos=el('nM').value==='todos';el('nR').innerHTML='';el('nEw').style.display=todos?'none':'block';
+ el('nE').innerHTML=g&&g.ex.length?g.ex.slice().reverse().map(function(e){return '<option value="'+e.col+'">'+esc(e.texto)+'</option>';}).join(''):'<option value="">— sin notas —</option>';}
+function nGenerar(){var p=PN[el('nP').value],g=p.grupos[el('nG').value],r=el('nR');
+ if(!g||!g.ex.length){r.innerHTML='<div class="err">Ese grupo todavía no tiene notas cargadas.</div>';return;}
+ var cols=el('nM').value==='todos'?g.ex.map(function(e){return e.col;}):[el('nE').value];
+ var b=el('nB');b.disabled=true;b.textContent='Generando…';
+ csa('pdfNotas',{archivo:p.id,hoja:g.nombre,cols:cols.join(',')},function(x){b.disabled=false;b.textContent='🖨️ Generar PDF';
+  r.innerHTML='<div class="pdf"><b>🖨️ '+esc(x.nombre)+'</b><a class="acc" style="background:#1f4e79" href="'+esc(x.ver)+'" target="_blank">👁️ Ver</a><a class="acc" style="background:#555" href="'+esc(x.bajar)+'" target="_blank">⬇️ Descargar</a></div>';},
+  function(e){b.disabled=false;b.textContent='🖨️ Generar PDF';falla(e,'nR');});}
+
+// ---------- 📋 LISTA DE LLAMADO ----------
+function lista(){var d=new Date();d.setDate(d.getDate()+((8-d.getDay())%7||7));var lunes=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+ pantalla('<div class="card"><h2>📋 Crear lista de llamado</h2>'+
+  '<label>Lista</label><select id="lL">'+INFO.listas.map(function(l){return '<option value="'+esc(l.nombre)+'">'+esc(l.nombre)+' ('+esc(String(l.tipo).toLowerCase())+')</option>';}).join('')+'</select>'+
+  '<label>Cualquier día de la semana <span class="ayuda">(o del mes, si es mensual)</span></label><input type="date" id="lF" value="'+lunes+'">'+
+  '<button class="btn" id="lB" onclick="crearL()">📋 Crear lista</button><div id="lR"></div></div>');}
+function crearL(){var b=el('lB');b.disabled=true;b.textContent='Creando… (puede tardar un minuto)';
+ csa('franCrearLista',{lista:el('lL').value,fecha:el('lF').value},function(r){b.disabled=false;b.textContent='📋 Crear lista';
+  el('lR').innerHTML='<div class="ok">✅ Lista creada</div>'+tarjeta({nombre:r.nombre,tipo:'Lista',url:r.url,t:Date.now()});},
+  function(e){b.disabled=false;b.textContent='📋 Crear lista';falla(e,'lR');});}
+
+// ---------- 📁 HISTORIAL ----------
+function historial(){pantalla('<div class="card"><h2>📁 Historial</h2><div id="hR">Cargando…</div></div>');
+ var todo=[],n=0,fin=function(){if(++n<2)return;todo.sort(function(a,b){return (b.t||0)-(a.t||0);});
+  el('hR').innerHTML=todo.length?todo.slice(0,30).map(function(x){return tarjeta(x,x.api);}).join(''):'<div class="ayuda">Todavía no generaste nada desde el panel.</div>';};
+ csa('franInfo',{},function(d){INFO=d;(d.hist||[]).forEach(function(x){x.api='csa';todo.push(x);});fin();},function(){fin();});
+ adm('franHist',{},function(d){(d.hist||[]).forEach(function(x){x.api='adm';todo.push(x);});fin();},function(){fin();});}
+
+// ---------- 📥 HORARIO SEMANAL DE CARLOS ----------
+function val(id){var e=el(id);return e?String(e.value||""):"";}
+var HOR=null;
+function postCSA(acc,params,ok,mal){var b={accion:acc,pin:PIN};for(var k in params)b[k]=params[k];
+ fetch(API_CSA,{method:'POST',body:JSON.stringify(b),credentials:'omit'}).then(function(r){return r.json();})
+ .then(function(d){if(d&&d.error)mal({message:d.error});else ok(d);})
+ .catch(function(){mal({message:'No pude conectar con el CSA. Revisá la conexión y probá de nuevo.'});});}
+function cargarXLSX(fn){if(window.XLSX){fn();return;}var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+ s.onload=fn;s.onerror=function(){msg('<span class="err">⚠️ No pude cargar el lector de Excel. Revisá la conexión.</span>');};document.head.appendChild(s);}
+function horario(){HOR=null;pantalla('<div class="card"><h2>📥 Cargar horario de la semana</h2>'+
+ '<div class="ayuda">Subí el Excel de Carlos. Se leen solo los grupos <b>FIUNA</b>: los <b>exámenes</b> van al 📅 calendario (y salen las alertas de ausencia), '+
+ 'TAREA / DESCANSO / terminar ejercicios quedan como <b>🚫 sin clase</b>, y en las listas de esa semana se completan solas las filas <b>DOCENTE</b> y <b>MATERIA</b>.</div>'+
+ '<label>Archivo de Excel</label><input type="file" id="hF" accept=".xlsx,.xls" onchange="leerHorario()">'+
+ '<div id="hR"></div></div>');}
+var MESES_H=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+function sinTilde(s){return String(s==null?'':s).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
+// "Octubre_26_al_31.xlsx" → lunes de esa semana
+function lunesDeArchivo(nombre){var n=sinTilde(nombre).replace(/_/g,' '),m=-1;MESES_H.forEach(function(x,i){if(n.indexOf(sinTilde(x))>=0)m=i;});
+ var d=(n.match(/(\d{1,2})/)||[])[1];if(m<0||!d)return '';var hoy=new Date(),y=hoy.getFullYear();if(m<hoy.getMonth()-6)y++;
+ var f=new Date(Date.UTC(y,m,Number(d))),w=f.getUTCDay();f=new Date(f.getTime()-((w+6)%7)*864e5);return f.toISOString().slice(0,10);}
+function lunesDeHoy(){var h=hoyIso(),p=h.split('-').map(Number),f=new Date(Date.UTC(p[0],p[1]-1,p[2])),w=f.getUTCDay();
+ return new Date(f.getTime()+(w===0?1:-(w-1))*864e5).toISOString().slice(0,10);}
+var DIAS_H=['LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO'];
+// Celda → {k: E examen | S sin clase | C clase, mat, prof}
+function celdaHorario(txt){var t=String(txt||'').replace(/\r/g,'').trim();if(!t)return null;var n=sinTilde(t);
+ if(/^(TAREA|DESCANSO|TERMINAR EJERCICIOS)/.test(n))return {k:'S',mat:'',prof:'',txt:t.replace(/\s+/g,' ')};
+ var mat=t.split('.')[0].trim(),prof='',m=t.match(/\s{3,}([^\s].*?)\s*$/);
+ if(m&&m[1].length<=25)prof=m[1].trim();
+ else{var partes=t.split('.').map(function(x){return x.trim();}).filter(function(x){return x;}),u=partes[partes.length-1]||'';
+  var w=u.split(/\s+/),ult=w.slice(-1)[0]||'';if(partes.length>1&&ult&&/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+$/.test(ult)&&!/^(Ejercicios|Examen|Teoria|Repaso|Capitulo|Rectas|Vectores|Triangulos|Principia|Generales|Trigo|Geo)$/i.test(ult))prof=ult;}
+ var ex=/\bEXAMEN\b/.test(n.replace(/PRE[\s-]*EXAMEN/g,''));   // "Miscelánea pre examen" no es examen
+ return {k:ex?'E':'C',mat:mat,prof:prof,txt:t.replace(/\s{2,}/g,' ').slice(0,120)};}
+function leerHorario(){var f=el('hF').files[0],r=el('hR');if(!f)return;r.innerHTML='<div class="ayuda">Leyendo el Excel…</div>';
+ cargarXLSX(function(){var fr=new FileReader();fr.onload=function(ev){try{
+  var wb=XLSX.read(new Uint8Array(ev.target.result),{type:'array'}),nom=wb.SheetNames.filter(function(s){return /HORARIO/i.test(s);})[0]||wb.SheetNames[0];
+  var A=XLSX.utils.sheet_to_json(wb.Sheets[nom],{header:1,defval:'',raw:false}),items=[],grupos={};
+  for(var i=0;i<A.length-3;i++){var fila=A[i];
+   for(var c=0;c<fila.length;c++){var g=sinTilde(fila[c]);if(!/^FIUNA (EXT|COL|INT)\b/.test(g))continue;
+    var dia=sinTilde((A[i+1]||[])[c]),d=-1;DIAS_H.forEach(function(x,k){if(dia.indexOf(x)===0)d=k;});if(d<0)continue;
+    [0,1].forEach(function(t){var x=celdaHorario((A[i+2+t]||[])[c]);if(!x)return;grupos[g]=1;
+     items.push({g:String(fila[c]).replace(/\s+/g,' ').trim(),d:d,t:t,k:x.k,mat:x.mat,prof:x.prof,txt:x.txt});});}}
+  if(!items.length){r.innerHTML='<div class="err">No encontré grupos FIUNA en la hoja "'+esc(nom)+'".</div>';return;}
+  HOR={items:items,archivo:f.name};var lu=lunesDeArchivo(f.name)||lunesDeHoy();
+  r.innerHTML='<div class="ok" style="margin-top:10px">Leí <b>'+items.length+' turnos</b> de '+Object.keys(grupos).length+' grupos FIUNA ('+items.filter(function(x){return x.k==='E';}).length+' con examen).</div>'+
+   '<label>Semana (lunes)</label><input type="date" id="hL" value="'+lu+'">'+
+   '<label style="font-weight:normal;margin-top:8px"><input type="checkbox" id="hP" style="width:auto"> Pisar el docente / materia que ya estén escritos en las listas</label>'+
+   '<button class="btn" id="hV" onclick="previaHorario()">👁️ Ver qué se va a cargar</button><div id="hPrev"></div>';
+ }catch(e){r.innerHTML='<div class="err">⚠️ No pude leer el archivo: '+esc(e.message||e)+'</div>';}};fr.readAsArrayBuffer(f);});}
+function datosHorario(){return {lunes:val('hL'),items:HOR.items};}
+function previaHorario(){var d=el('hPrev'),b=el('hV');if(!HOR)return;if(!val('hL')){d.innerHTML='<div class="err">Elegí la semana.</div>';return;}
+ b.disabled=true;b.textContent='Revisando… (unos segundos)';d.innerHTML='';
+ postCSA('franHorario',{datos:datosHorario(),confirmar:'0',pisar:el('hP').checked?'1':''},function(r){b.disabled=false;b.textContent='👁️ Ver qué se va a cargar';d.innerHTML=htmlHorario(r)+
+   '<button class="btn" style="background:#1b8a3a" id="hC" onclick="cargarHorario()">✅ Cargar en el calendario y las listas</button><div id="hM"></div>';},
+  function(e){b.disabled=false;b.textContent='👁️ Ver qué se va a cargar';falla(e,'hPrev');});}
+function lista2(t,l,col){return l&&l.length?'<div style="margin-top:8px;background:'+(col||'#fff2cc')+';border-radius:8px;padding:8px"><b>'+t+'</b><div style="font-size:14px">'+l.map(esc).join(' · ')+'</div></div>':'';}
+function htmlHorario(r){
+ return '<div class="card" style="margin-top:10px;background:#f7f9fc"><b>Semana del '+esc(r.semana)+'</b>'+
+  '<div style="margin-top:6px">📝 <b>'+r.examenes.length+' exámenes</b> al calendario'+(r.examenes.length?':':'')+'</div>'+
+  r.examenes.map(function(x){return '<div style="font-size:14px;margin-left:10px">• '+esc(x.g)+' · '+esc(x.dia)+' '+esc(x.turno)+' · <b>'+esc(x.mat)+'</b></div>';}).join('')+
+  '<div style="margin-top:6px">🚫 <b>'+r.sinClase+' turnos sin clase</b> (tarea, descanso, terminar ejercicios)</div>'+
+  '<div style="margin-top:6px">📋 <b>'+r.celdas+' casillas</b> de DOCENTE / MATERIA para completar en: '+(r.listas.length?esc(r.listas.join(', ')):(!r.celdas&&!(r.sinLista&&r.sinLista.length)?'<span style="color:#1b8a3a">✅ ninguna: las listas de esa semana ya estaban completas</span>':'<span class="err" style="display:inline">ninguna lista</span>'))+
+  (r.yaTenian?' <span class="ayuda">('+r.yaTenian+' ya tenían otro valor y no se tocan; tildá "pisar" para cambiarlas)</span>':'')+'</div>'+
+  '<div style="margin-top:6px">🙈 <b>'+(r.ocultar||0)+' turnos sin clase</b> se ocultan en las listas'+(r.mostrar?' · <b>'+r.mostrar+'</b> se vuelven a mostrar':'')+
+  ' <span class="ayuda">(no se borran: se ven tocando las flechitas ◀▶ del encabezado)</span></div>'+
+  lista2('⚠️ Turnos sin clase que ya tienen marcas P/A/J (no se ocultan):',r.conMarcas)+
+  lista2('⚠️ Grupos que no existen en el CSA (se saltean):',r.sinGrupo)+
+  lista2('⚠️ Grupos sin lista creada para esa semana (no se completa docente/materia):',r.sinLista)+
+  lista2('⚠️ Materias sin equivalencia (hoja MATERIAS, columnas H e I):',r.sinMateria)+
+  lista2('⚠️ Apodos de profes sin docente (hoja PROFES HORARIO):',r.sinProfe)+
+  (r.apodosNuevos&&r.apodosNuevos.length?'<div style="margin-top:8px;background:#eaf2fb;border-radius:8px;padding:8px"><b>👤 Apodos nuevos</b> (se agregan a PROFES HORARIO; revisá que estén bien):'+
+   r.apodosNuevos.map(function(a){return '<div style="font-size:14px">'+esc(a.apodo)+' → '+(a.docente?esc(a.docente):'<span style="color:#c0392b">sin adivinar: completalo en la hoja</span>')+'</div>';}).join('')+'</div>':'')+
+  lista2('Avisos:',r.avisos)+'</div>';}
+function cargarHorario(){var b=el('hC'),m=el('hM');if(!confirm('¿Cargar el horario de la semana en el calendario y las listas?'))return;
+ b.disabled=true;b.textContent='Cargando… (puede tardar un poco)';
+ postCSA('franHorario',{datos:datosHorario(),confirmar:'1',pisar:el('hP').checked?'1':''},function(r){
+   pantalla('<div class="card ok"><b style="font-size:19px">✅ Horario cargado</b>'+htmlHorario(r)+
+    '<div class="ayuda" style="margin-top:8px">Si volvés a cargar el horario de la misma semana, se reemplaza lo que se cargó antes en el calendario (no se duplica).</div>'+
+    '<button class="btn" onclick="inicio()">⬅ Volver al inicio</button></div>');},
+  function(e){b.disabled=false;b.textContent='✅ Cargar en el calendario y las listas';falla(e,'hM');});}
+
 </script></body></html>
