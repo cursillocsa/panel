@@ -1,75 +1,55 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Panel CSA · Gauss</title>
+<title>Panel de Fran · Gauss</title>
 <style>
-.cs-tb{width:100%;border-collapse:collapse;font-size:13px}.cs-tb th{background:#d9e2f3;text-align:left;padding:6px;white-space:nowrap}.cs-tb td{padding:6px;border-bottom:1px solid #eee;vertical-align:top}.cs-tb td.n,.cs-tb th.n{text-align:right;white-space:nowrap}
-.cs-res{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}.cs-k{background:#f3f5f9;border-radius:10px;padding:10px}.cs-k span{font-size:11px;color:#666;text-transform:uppercase;display:block}.cs-k b{font-size:19px}
-.cs-sem{display:flex;gap:6px;flex-wrap:wrap}.cs-sem button{flex:1;min-width:120px;border:1px solid #bbb;background:#fff;border-radius:18px;padding:8px 10px;font-size:14px;cursor:pointer;font-family:inherit}.cs-sem button.on{background:#1f4e79;color:#fff;border-color:#1f4e79}
-.cs-al{color:#1155cc;cursor:pointer;text-decoration:underline}
-
-:root{--rojo:#c0392b;--negro:#201e1e;--fondo:#f3f5f9;--azul:#1f4e79}
+:root{--rojo:#c0392b;--negro:#201e1e;--fondo:#f3f5f9;--azul:#1f4e79;--verde:#1b8a3a}
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:#222;font-size:16px}
-header{background:var(--azul);color:#fff;padding:14px 16px;border-bottom:4px solid var(--rojo);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
-header h1{margin:0;font-size:20px;flex:1}header h1 span{color:#ffd27a}
-#volver{display:none;background:#0d2f4f;color:#fff;border:0;border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
-main{padding:14px 16px 70px;max-width:860px;margin:0 auto}
+header{background:var(--negro);color:#fff;padding:14px 16px;border-bottom:4px solid var(--rojo);display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:20px;flex:1}header h1 span{color:#ff6b5e}
+#volver{display:none;background:#444;color:#fff;border:0;border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer}
+main{padding:14px 16px 70px;max-width:820px;margin:0 auto}
 .card{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .card h2{margin:0 0 10px;font-size:17px;color:var(--azul)}
 .botones{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
 .bgrande{display:block;text-align:left;border:0;border-radius:14px;padding:18px;font-size:19px;font-weight:bold;cursor:pointer;color:#fff;min-height:96px;font-family:inherit}
 .bgrande small{display:block;font-weight:normal;font-size:13px;opacity:.9;margin-top:6px}
 label{display:block;font-weight:bold;margin-top:12px;font-size:14px}
-label .req{color:var(--rojo)}
-input,select,textarea{width:100%;font-size:17px;padding:10px;border:1px solid #bbb;border-radius:8px;margin-top:4px;background:#fff;font-family:inherit}
-.fila2{display:flex;gap:12px}.fila2>div{flex:1;min-width:0}
-@media(max-width:600px){.fila2{flex-direction:column;gap:0}}
+input,select{width:100%;font-size:17px;padding:10px;border:1px solid #bbb;border-radius:8px;margin-top:4px;background:#fff;font-family:inherit}
+input[type=checkbox]{width:auto;transform:scale(1.3);margin:0 8px 0 0}
+.fila{display:flex;gap:12px}.fila>div{flex:1;min-width:0}
+@media(max-width:600px){.fila{flex-direction:column;gap:0}}
 .btn{display:block;width:100%;font-size:18px;padding:14px;background:var(--rojo);color:#fff;border:0;border-radius:12px;cursor:pointer;font-weight:bold;margin-top:16px;font-family:inherit}
 .btn:disabled{opacity:.6}.btn.az{background:var(--azul)}.btn.gr{background:#666}
-.acciones{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.acc{border:0;border-radius:20px;padding:9px 14px;font-size:14px;font-weight:bold;color:#fff;cursor:pointer;font-family:inherit}
 .ayuda{color:#777;font-size:13px;font-weight:normal}
 .err{color:var(--rojo);font-weight:bold;margin-top:10px}
-.res div{padding:11px 12px;border:1px solid #eee;border-radius:8px;margin-top:6px;cursor:pointer}
-.res div:hover{background:#e8f0fe}.res small{color:#777}
-.aviso{background:#fff2cc;border-radius:8px;padding:10px;margin-top:10px;font-size:14px}
-.ok{background:#d9ead3;border-radius:12px;padding:16px}
-.ok b.big{font-size:20px;display:block;margin-bottom:6px}
 #msg{color:#666;text-align:center;margin-top:30px}
+.pdf{border:1px solid #e3e3e3;border-radius:12px;padding:12px;margin-top:10px}
+.pdf b{display:block;font-size:15px}.pdf small{color:#777}
+.acc{display:inline-block;border:0;border-radius:18px;padding:8px 14px;font-size:14px;font-weight:bold;color:#fff;cursor:pointer;margin:8px 6px 0 0;font-family:inherit;text-decoration:none}
+.chip{display:inline-block;border:1px solid #bbb;border-radius:18px;padding:7px 12px;margin:4px 6px 0 0;font-size:14px;cursor:pointer;background:#fff;user-select:none}
+.chip.on{background:var(--azul);color:#fff;border-color:var(--azul)}
+.gr-curso{margin-top:10px}.gr-curso b{font-size:13px;color:#555}
+.gr-item{display:inline-flex;align-items:center;border:1px solid #ddd;border-radius:8px;padding:6px 10px;margin:4px 6px 0 0;font-size:14px;cursor:pointer;background:#fff}
+.gr-item.on{background:#e8f0fe;border-color:var(--azul)}
 .paso{display:inline-block;background:var(--azul);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-right:6px;font-size:14px}
-.elegido{background:#e8f0fe;border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.mini{font-size:14px;padding:7px 12px;border:0;border-radius:8px;background:#666;color:#fff;cursor:pointer}
-.nom{font-size:21px;font-weight:bold;margin:0}
-.sub{color:#555;margin-top:4px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
-.k{background:#f3f5f9;border-radius:8px;padding:8px}
-.k b{display:block;font-size:19px;margin-top:2px}
-.k span{font-size:11px;color:#666;text-transform:uppercase}
-.dato{display:flex;gap:6px;padding:4px 0;border-bottom:1px solid #f0f0f0}
-.dato span{color:#666;min-width:130px;font-size:13px}
-.sem{font-size:30px}
-.r{background:#f4cccc}.y{background:#fff2cc}.g{background:#d9ead3}.gris{color:#999}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#d9e2f3;text-align:left;padding:5px;position:sticky;top:0}
-td{padding:5px;border-bottom:1px solid #eee;vertical-align:top}
-tr.clic{cursor:pointer}tr.clic:hover td{background:#e8f0fe}
-.wa{display:inline-block;background:#25d366;color:#fff;text-decoration:none;padding:7px 12px;border-radius:18px;margin:6px 6px 0 0;font-weight:bold;font-size:13px}
-.vacio{color:#999;font-style:italic}
+.aviso{background:#fff2cc;border-radius:8px;padding:10px;margin-top:10px;font-size:14px}
+.ok{background:#d9ead3;border-radius:8px;padding:10px;margin-top:10px;font-size:14px}
+.auto{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sw{border:0;border-radius:18px;padding:8px 14px;font-weight:bold;cursor:pointer;font-family:inherit}
+.sw.on{background:var(--verde);color:#fff}.sw.off{background:#ddd;color:#333}
 header h1 span.tit{color:inherit}h1 .tit{cursor:pointer;-webkit-tap-highlight-color:transparent}h1 .tit:active{opacity:.6}
 </style></head><body>
-<header><h1><span class="tit" onclick="if(LISTA&&LISTA.length)inicio()" title="Ir al inicio">🎓 Panel CSA <span>Gauss</span></span></h1><button id="volver" onclick="inicio()">⬅ Inicio</button></header>
+<header><h1><span class="tit" onclick="if(GR&&INFO)inicio()" title="Ir al inicio">🧑‍💻 Panel de Fran <span>Gauss</span></span></h1><button id="volver" onclick="inicio()">⬅ Inicio</button></header>
 <main><div id="app"></div><div id="msg">Cargando…</div></main>
 <script>
-// ===== Links de las dos aplicaciones web =====
-var API_CSA='https://script.google.com/macros/s/AKfycbxkJKfreWnlk8OZjS18maXcKNO4UblFEiaOwcBpe2VZYm5fs3CmlKEjwNqETak_ObJa/exec';   // ← el link de la aplicación web del CSA (termina en /exec)
 var API_ADM='https://script.google.com/macros/s/AKfycbzPNqOlPMgP1lme__szBCxU4kzz7fSJ3PxLxUZu_CcywI5ftsESe6e7hL63z1Xp7M6U/exec';
-
-var PIN='';try{PIN=localStorage.getItem('gaussPinCSA')||localStorage.getItem('gaussPin')||'';}catch(e){}
-var LISTA=[],FC=null,FI=null,FB=null,PICK=null,PICK_CB=null,ACTUAL=null;
+var API_CSA='https://script.google.com/macros/s/AKfycbxkJKfreWnlk8OZjS18maXcKNO4UblFEiaOwcBpe2VZYm5fs3CmlKEjwNqETak_ObJa/exec';
+var PIN='';try{PIN=localStorage.getItem('gaussPinFran')||'';}catch(e){}
+var GR=null,INFO=null,PN=null;
 // ⚡ Supabase: copia rápida (solo lectura). Si falla o no está, se usa la planilla como siempre.
 var SB_URL='https://heycvwxaewjbwbusddqg.supabase.co',SB_KEY='sb_publishable_MpClcQrbgiAtqcsaa5js3w_XCYqHztI';
-var NAV=0,TOCADO=false,NUEVO=null;
 function sbLeer(tipo,clave,ok,mal){
  if(!PIN){mal();return;}
  var hecho=false,to=setTimeout(function(){if(!hecho){hecho=true;mal();}},4000);
@@ -78,72 +58,38 @@ function sbLeer(tipo,clave,ok,mal){
  .then(function(r){return r.json();})
  .then(function(d){if(hecho)return;hecho=true;clearTimeout(to);if(d&&d.datos)ok(d.datos,d.t);else mal();})
  .catch(function(){if(hecho)return;hecho=true;clearTimeout(to);mal();});}
-function estable(o){if(Array.isArray(o))return '['+o.map(estable).join(',')+']';
- if(o&&typeof o==='object')return '{'+Object.keys(o).filter(function(k){return k!=='_ms'&&k!=='_total'&&o[k]!==undefined;}).sort()
-  .map(function(k){return JSON.stringify(k)+':'+estable(o[k]);}).join(',')+'}';
- return JSON.stringify(o);}
-function haceCuanto(t){var m=Math.round((Date.now()-new Date(t).getTime())/60000);return isNaN(m)?'':(m<1?'recién':m<60?'hace '+m+' min':'hace '+Math.round(m/60)+' h');}
-function sbMarca(h){var m=el('sbMarca');if(!m){m=document.createElement('div');m.id='sbMarca';m.style.cssText='font-size:12px;color:#777;text-align:center;margin:0 0 8px';
-  var a=el('app');a.parentNode.insertBefore(m,a);}m.innerHTML=h||'';}
-// Muestra la copia de Supabase al instante y después confirma con la planilla.
-// "refresco" (opcional): qué hacer con los datos nuevos de la planilla (si no, se vuelve a usar "ok").
-function rapido(acc,params,tipo,clave,ok,mal,refresco){
- var n=++NAV;sbMarca('');
- sbLeer(tipo,clave,function(d,t){
-  if(n!==NAV)return;TOCADO=false;ok(d);sbMarca('⚡ Vista rápida · confirmando con la planilla…');
-  pedir(acc,params,function(D){
-   if(n!==NAV)return;
-   if(estable(D)===estable(d)){sbMarca('✅ Confirmado con la planilla');setTimeout(function(){if(n===NAV)sbMarca('');},2500);return;}
-   var aplicar=function(){var y=window.scrollY;(refresco||ok)(D);window.scrollTo(0,y);sbMarca('');};
-   if(!TOCADO||refresco){aplicar();return;}
-   NUEVO=aplicar;sbMarca('<b style="color:#b45f06">🔄 La planilla tiene datos más nuevos.</b> <button onclick="NUEVO()" style="font-size:12px">Actualizar</button>');
-  },function(e){if(n!==NAV)return;if(String(e.message||'').indexOf('PIN:')>=0){mal(e);return;}
-   sbMarca('<span style="color:#c0392b">⚠️ No se pudo confirmar con la planilla (se ve la vista rápida).</span>');});
- },function(){if(n===NAV)pedir(acc,params,function(D){if(n===NAV)ok(D);},function(e){if(n===NAV)mal(e);});});}
-function numBusca(q,nums){var d=String(q).replace(/\D/g,'');if(d.length<4||/[a-záéíóúñ]/i.test(q))return false;d=d.replace(/^595/,'').replace(/^0+/,'');if(d.length<3)return false;
- return String(nums||'').split(' ').some(function(t){return t&&t.indexOf(d)>=0;});}   // 🔎 buscar por CI o celular
 function el(i){return document.getElementById(i);}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function sa(s){return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
-function gs(n){n=Number(n)||0;return 'Gs. '+Math.round(n).toLocaleString('es-PY');}
-function num(s){return Number(String(s).replace(/[^0-9]/g,''))||0;}
-function fmt(i){var n=num(i.value);i.value=n?n.toLocaleString('es-PY'):(/0/.test(i.value)?'0':'');}   // se puede escribir 0
-function fecha(iso){if(!iso)return '';var p=iso.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
-function hoyIso(){var d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
-function guardado(k,v){try{if(v===undefined)return localStorage.getItem(k)||'';localStorage.setItem(k,v);}catch(e){return '';}}
 function msg(t){el('msg').innerHTML=t||'';}
-function nombreDe(a){return String(a[0]).split(' · ').slice(1).join(' · ')||a[0];}
-
-function llamar(api,donde,acc,params,ok,mal){
+function guardado(k,v){try{if(v===undefined)return localStorage.getItem(k)||'';localStorage.setItem(k,v);}catch(e){return '';}}
+function hoyIso(){var d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
+function isoMas(iso,n){var p=iso.split('-').map(Number),d=new Date(Date.UTC(p[0],p[1]-1,p[2]+n));return d.toISOString().slice(0,10);}
+function fecha(iso){if(!iso)return '';var p=iso.split('-');return p[2]+'/'+p[1];}
+function llamar(api,acc,params,ok,mal){
  var q='accion='+acc+'&pin='+encodeURIComponent(PIN);
  for(var k in params)q+='&'+k+'='+encodeURIComponent(params[k]==null?'':params[k]);
  fetch(api+'?'+q,{credentials:'omit'}).then(function(r){return r.json();})
- .then(function(d){if(d&&d.error)mal({message:d.error,adm:donde==='adm'});else ok(d);})
- .catch(function(){mal({message:'No pude conectar con '+(donde==='adm'?'Administración':'el CSA')+'. Revisá la conexión y probá de nuevo.'});});}
-function pedir(acc,params,ok,mal){
- if(API_CSA.indexOf('PEGAR')===0){mal({message:'Falta pegar el link del CSA en este archivo (línea API_CSA).'});return;}
- llamar(API_CSA,'csa',acc,params,ok,mal);}
-function pedirAdm(acc,params,ok,mal){llamar(API_ADM,'adm',acc,params,ok,mal);}
+ .then(function(d){if(d&&d.error)mal({message:d.error});else ok(d);})
+ .catch(function(){mal({message:'No pude conectar ('+(api===API_CSA?'CSA':'Administración')+'). Revisá la conexión y probá de nuevo.'});});}
+function adm(a,p,ok,mal){llamar(API_ADM,a,p,ok,mal);}
+function csa(a,p,ok,mal){llamar(API_CSA,a,p,ok,mal);}
 function falla(e,dest){var m=String(e.message||e);
- if(m.indexOf('PIN:')>=0){
-  if(e.adm)m='Administración no aceptó el PIN. Falta cargar el "PIN de CSA" en CONFIG de Administración (con la misma clave que este panel).';
-  else{pedirPin(m.replace(/^.*PIN:\s*/,''));return true;}}
- if(dest)el(dest).innerHTML='<div class="err">⚠️ '+esc(m)+'</div>';else msg('<span class="err">⚠️ '+esc(m)+'</span>');return false;}
+ if(m.indexOf('PIN:')>=0&&!dest){pedirPin(m.replace(/^.*PIN:\s*/,''));return;}
+ m=m.replace(/^.*PIN:\s*/,'PIN: ');
+ if(dest&&el(dest))el(dest).innerHTML='<div class="err">⚠️ '+esc(m)+'</div>';else msg('<span class="err">⚠️ '+esc(m)+'</span>');}
 function pedirPin(m){el('volver').style.display='none';msg('');
- el('app').innerHTML='<div class="card" style="text-align:center"><h2>🔒 Panel CSA</h2><div style="margin-bottom:10px;color:'+(m.indexOf('Ingres')===0?'#555':'#c0392b')+'">'+esc(m)+'</div>'+
- '<input id="pin" type="password" inputmode="numeric" placeholder="PIN" style="font-size:22px;width:180px;text-align:center"><br><button class="btn" style="width:auto;display:inline-block;padding:12px 34px" onclick="entrar()">Entrar</button></div>';
+ el('app').innerHTML='<div class="card" style="text-align:center"><h2>🔒 Panel de Fran</h2><div style="margin-bottom:10px;color:'+(m.indexOf('Ingres')===0?'#555':'#c0392b')+'">'+esc(m)+'</div>'+
+ '<input id="pin" type="password" placeholder="PIN" style="font-size:22px;width:180px;text-align:center"><br><button class="btn" style="width:auto;display:inline-block;padding:12px 34px" onclick="entrar()">Entrar</button></div>';
  var i=el('pin');i.focus();i.onkeydown=function(ev){if(ev.key==='Enter')entrar();};}
-function entrar(){PIN=el('pin').value.trim();guardado('gaussPinCSA',PIN);cargar();}
-
-function cargar(){el('app').innerHTML='';msg('Cargando alumnos…');
- function listo(){inicio();cargarAlertas();cargarCal();cargarExamenes();cargarNuevos();var pl=function(){pedir('formCSA',{},function(d){FC=d;},function(){});};
-  sbLeer('csaForm','todo',function(d){if(d.hoy){var x=new Date();d.hoy=new Date(x.getTime()-x.getTimezoneOffset()*60000).toISOString().slice(0,10);}FC=d;pl();},pl);}
- sbLeer('csaLista','todo',function(l){LISTA=l;listo();
-   pedir('lista',{},function(l2){LISTA=l2;},function(e){if(String(e.message||'').indexOf('PIN:')>=0)falla(e);});},
-  function(){pedir('lista',{},function(l){LISTA=l;listo();},function(e){falla(e);});});}
-el('app').addEventListener('input',function(){TOCADO=true;});
+function entrar(){PIN=el('pin').value.trim();guardado('gaussPinFran',PIN);cargar();}
+function cargar(){el('app').innerHTML='';msg('Cargando…');
+ var listo=0,fin=function(){if(++listo===2)inicio();};
+ // copia rápida de Supabase; después se confirma con las planillas sin hacer esperar
+ var gP=function(cb){adm('franGrupos',{},function(d){GR=d;if(cb)cb();},function(e){if(cb)falla(e);else if(String(e.message||'').indexOf('PIN:')>=0)falla(e);});};
+ var iP=function(cb){csa('franInfo',{},function(d){INFO=d;if(cb)cb();},function(e){if(cb)falla(e);});};
+ sbLeer('franGrupos','todo',function(d){GR=d;fin();gP();},function(){gP(fin);});
+ sbLeer('franInfo','todo',function(d){INFO=d;fin();iP();},function(){iP(fin);});}
 cargar();
-function conFC(fn){if(FC)fn();else{msg('Cargando…');pedir('formCSA',{},function(d){FC=d;msg('');fn();},function(e){falla(e);});}}
 
 // ◀ Volver atrás con el gesto del celular (deslizar) o la flecha del navegador: cada pantalla queda en el historial
 var HIST=[],HIST_OK=!!(window.history&&history.pushState);
@@ -153,697 +99,230 @@ window.addEventListener('popstate',function(){if(typeof NAV!=='undefined')NAV++;
  if(!s||s.v==='none'||s.v===''){HIST=[];inicio(true);return;}
  el('app').innerHTML=s.h;if(el('volver'))el('volver').style.display=s.v;if(typeof msg==='function')msg('');try{if(typeof sbMarca==='function')sbMarca('');}catch(e){}
  setTimeout(function(){window.scrollTo(0,s.y);},0);});
-function pantalla(h){guardarPantalla();NAV++;sbMarca('');el('volver').style.display='inline-block';msg('');el('app').innerHTML=h;window.scrollTo(0,0);}
-function hecho(t,botones){pantalla('<div class="card ok"><b class="big">✅ '+t+'</b>'+botones+
- '<button class="btn gr" onclick="inicio()">⬅ Volver al inicio</button></div>');}
-function botonPerfil(){return ACTUAL?'<button class="btn az" onclick="perfil(\''+esc(ACTUAL[1])+'\')">👤 Volver al perfil de '+esc(nombreDe(ACTUAL))+'</button>':'';}
+function pantalla(h){guardarPantalla();el('volver').style.display='inline-block';msg('');el('app').innerHTML=h;window.scrollTo(0,0);}
 
 // ---------- INICIO ----------
-function inicio(desdeHist){if(!desdeHist)HIST=[];NAV++;sbMarca('');el('volver').style.display='none';msg('');window.scrollTo(0,0);ACTUAL=null;
- el('app').innerHTML='<div id="avisoNuevos"></div><div id="avisosCal"></div>'+
-  '<div class="card" style="padding:10px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap"><button class="btn" id="bAct" style="width:auto;margin:0;padding:10px 16px;background:#00838f" onclick="actualizarCambios()">🔄 Actualizar cambios</button>'+
-  '<span class="ayuda" id="actTxt" style="flex:1;min-width:160px"></span></div><div class="botones">'+
-  '<button class="bgrande" style="background:#1f4e79" onclick="buscarPerfil()">👤 Perfil del alumno<small>Asistencia, notas, seguimiento · informe para padres</small></button>'+
-  '<button class="bgrande" id="bAlr" style="background:#b71c1c" onclick="alertas()">'+txtBotonAlr()+'</button>'+
-  '<button class="bgrande" id="bExa" style="background:#6a1b9a" onclick="examenes()">'+txtBotonExa()+'</button>'+
-  '<button class="bgrande" style="background:#1565c0" onclick="calendario()">📅 Calendario<small>Exámenes, días de lluvia, sin clase y otras actividades de la semana</small></button>'+
-  '<button class="bgrande" style="background:#00838f" onclick="listaGrupo()">📊 Resumen de grupo<small>Semáforo, asistencia, notas y deuda de cada alumno</small></button>'+
-  '<button class="bgrande" style="background:#c0392b" onclick="pdfNotas()">🖨️ PDF de notas<small>Notas de un grupo: un examen o todos</small></button>'+
-  '<button class="bgrande" style="background:#2e7d32" onclick="justificativo()">🩺 Justificativo<small>Cuando avisan que faltó o va a faltar</small></button>'+
-  '<button class="bgrande" style="background:#ad1457" onclick="observacion()">📝 Anotar observación<small>Seguimiento, conducta, citación, algo positivo…</small></button>'+
-  '<button class="bgrande" style="background:#e65100" onclick="contacto()">📞 Registrar contacto<small>Hablé con el alumno o con su familia</small></button>'+
-  '<button class="bgrande" style="background:#6a1b9a" onclick="cambiarGrupo()">🔄 Cambiar de grupo<small>Pasar a un alumno a otro grupo</small></button>'+
-  '<button class="bgrande" style="background:#455a64" onclick="baja()">🚪 Salió del grupo<small>Cuando un alumno deja el cursillo</small></button>'+
-  '<button class="bgrande" style="background:#00695c" onclick="linksListas()">🔗 Links de listas y notas<small>Lista semanal y carga de notas de un grupo: abrir o copiar el link</small></button>'+
-  '<button class="bgrande" style="background:#37474f" onclick="cargasSemana()">📒 Cargas de la semana<small>Observaciones, contactos, justificativos… de sábado a viernes</small></button>'+
-  '</div><div class="ayuda" style="text-align:center;margin-top:16px">'+LISTA.length+' alumnos · datos del CSA (se actualizan solos cada hora, o tocá Actualizar cambios)</div>';pintarAvisos();pintarNuevos();actVer();}
-// 🔄 Actualizar cambios: corre ya la actualización del CSA (justificativos, listas, asistencia, notas)
-var ACT_ULT=0,ACT_BUS=false;
-function actHace(t){if(!t)return 'sin dato';var m=Math.round((Date.now()-t)/60000);return m<1?'recién':m<60?'hace '+m+' min':'hace '+Math.round(m/60)+' h';}
-function actVer(){pedir('actUlt',{},function(d){ACT_ULT=d.ult||0;var e=el('actTxt');if(e)e.textContent='Última actualización: '+actHace(ACT_ULT);},function(){});}
-function actualizarCambios(){if(ACT_BUS)return;ACT_BUS=true;var b=el('bAct'),t=el('actTxt');
- if(b){b.disabled=true;b.textContent='⏳ Actualizando…';}if(t)t.textContent='Puede tardar 1 o 2 minutos. No cierres la pantalla.';
- function fin(){ACT_BUS=false;var b2=el('bAct');if(b2){b2.disabled=false;b2.textContent='🔄 Actualizar cambios';}}
- pedir('actualizar',{},function(d){fin();ACT_ULT=d.ult||Date.now();var t2=el('actTxt');
-   if(d.ocupado){if(t2)t2.innerHTML='<span style="color:#b45f06">⏳ Ya se está actualizando (otra persona o el automático). Probá de nuevo en 1 minuto.</span>';return;}
-   if(t2)t2.innerHTML='<span style="color:#1b8a3a">✅ '+(d.reciente?'Ya estaba actualizado ('+actHace(ACT_ULT)+')':'Actualizado recién')+'.</span> Si abrís un perfil, ya ves lo nuevo.';
-   pedir('lista',{},function(l){LISTA=l;},function(){});cargarNuevos();},
-  function(e){fin();if(falla(e))return;var t3=el('actTxt');if(t3)t3.innerHTML='<span class="err">⚠️ '+esc(String(e.message||e))+'</span>';});}
-// 🆕 nombres que un profe escribió en una lista y no están en Administración (los resuelve la secretaría)
-var NUEVOS=null,NUEVOS_AB=false;
-function cargarNuevos(){pedir('nuevos',{},function(d){NUEVOS=d.lista||[];pintarNuevos();},function(){});}
-function pintarNuevos(){var b=el('avisoNuevos');if(!b)return;if(!NUEVOS||!NUEVOS.length){b.innerHTML='';return;}
- b.innerHTML='<div class="card" style="border-left:6px solid #6fa8dc;background:#eef5fc;cursor:pointer" onclick="NUEVOS_AB=!NUEVOS_AB;pintarNuevos()">'+
-  '<b>🆕 Hay '+NUEVOS.length+' nombre'+(NUEVOS.length>1?'s':'')+' nuevo'+(NUEVOS.length>1?'s':'')+' en las listas que no '+(NUEVOS.length>1?'están':'está')+' en Administración.</b>'+
-  '<div class="ayuda">La secretaría tiene que revisar su situación de inscripción. En las listas se ven en celeste. '+(NUEVOS_AB?'(tocá para cerrar)':'(tocá para ver)')+'</div>'+
-  (NUEVOS_AB?NUEVOS.map(function(x){return '<div style="margin-top:6px;padding-top:6px;border-top:1px solid #cfe2f3"><b>'+esc(x.nombre)+'</b> · '+esc(x.grupo)+' <span class="ayuda">· desde el '+esc(x.desde)+(x.enc?' · encargado: '+esc(x.enc):'')+'</span>'+(x.url?' <a href="'+esc(x.url)+'" target="_blank" onclick="event.stopPropagation()" style="color:#1565c0;font-size:14px">📋 Ver en la lista</a>':'')+'</div>';}).join(''):'')+'</div>';}
+function inicio(desdeHist){if(!desdeHist)HIST=[];el('volver').style.display='none';msg('');window.scrollTo(0,0);
+ el('app').innerHTML='<div class="botones">'+
+  '<button class="bgrande" style="background:#c0392b" onclick="semanal()">📊 Resumen semanal<small>Académico + económico · sábado a viernes</small></button>'+
+  '<button class="bgrande" style="background:#1f4e79" onclick="especifico()">🎯 Resumen específico<small>Fechas y grupos a elección · por coordinador</small></button>'+
+  '<button class="bgrande" style="background:#6a1b9a" onclick="pdfNotas()">🖨️ PDF de notas<small>Un examen o todos, de un grupo</small></button>'+
+  '<button class="bgrande" style="background:#00838f" onclick="lista()">📋 Crear lista de llamado<small>Desde el celular</small></button>'+
+  '<button class="bgrande" style="background:#2e7d32" onclick="horario()">📥 Cargar horario de la semana<small>Excel de Carlos → exámenes al calendario + docente y materia en las listas FIUNA</small></button>'+
+  '<button class="bgrande" style="background:#455a64" onclick="historial()">📁 Historial<small>Lo último que generaste</small></button>'+
+  '</div><div class="card" style="margin-top:14px"><div class="auto"><div><b>⏰ Resumen semanal automático</b><div class="ayuda">Los viernes a las 19 h se generan solos los dos PDFs (sin mail). Abrís el panel y compartís.</div></div>'+
+  '<button class="sw off" id="swA" onclick="auto()">…</button></div></div>';
+ verAuto();}
+var AUTO=null;
+function verAuto(modo){var r={},n=0,fin=function(){if(++n<2)return;AUTO=r.a&&r.c;var b=el('swA');if(!b)return;
+  b.className='sw '+(AUTO?'on':'off');b.textContent=AUTO?'✅ Activado':(r.a||r.c?'⚠️ A medias':'Apagado');b.disabled=false;};
+ adm('franAuto',{modo:modo||'ver'},function(d){r.a=d.activo;fin();},function(e){r.a=false;fin();});
+ csa('franAuto',{modo:modo||'ver'},function(d){r.c=d.activo;fin();},function(e){r.c=false;fin();});}
+function auto(){var b=el('swA');b.disabled=true;b.textContent='…';verAuto(AUTO?'off':'on');}
 
-// ---------- 📅 CALENDARIO ----------
-var CAL=null,CAL_OFF=0,CAL_ED=null;
-var CAL_TIPO={'Examen':['📝','#6a1b9a','#efe3f7'],'Lluvia':['🌧️','#1565c0','#e3f0fc'],'Sin clase':['🚫','#616161','#eeeeee'],'Otro':['📌','#e65100','#fff0e0']};
-var DSEM=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-function isoMas(iso,n){return isoMenos(iso,-n);}
-function dowIso(iso){var q=iso.split('-').map(Number);return new Date(Date.UTC(q[0],q[1]-1,q[2])).getUTCDay();}
-function ddmmIso(iso){var p=iso.split('-');return p[2]+'/'+p[1];}
-// lunes de la semana que se muestra: el domingo ya muestra la semana que empieza
-function calLunes(){var h=(CAL&&CAL.hoy)||hoyIso(),d=dowIso(h),l=d===0?isoMas(h,1):isoMenos(h,d-1);return isoMas(l,7*CAL_OFF);}
-function calTxt(x){var t=CAL_TIPO[x.tipo]||CAL_TIPO.Otro;
- return t[0]+' '+(x.tipo==='Examen'?'Examen '+esc(x.materia):x.tipo==='Otro'?esc(x.nombre):x.tipo==='Lluvia'?'Día de lluvia':'Sin clase')+
-  ' · '+esc(x.grupos.join(', '));}
-function cargarCal(){var pon=function(d){CAL=d;pintarAvisos();};
- sbLeer('csaCal','todo',function(d){pon(d);pedir('calendario',{},pon,function(){});},function(){pedir('calendario',{},pon,function(){});});}
-// Avisos en el inicio: hoy y los próximos 6 días
-var AVISOS_AB=false;
-function pintarAvisos(){var b=el('avisosCal');if(!b||!CAL)return;var h=CAL.hoy,fin=isoMas(h,6);
- var l=CAL.items.filter(function(x){return x.iso>=h&&x.iso<=fin&&(x.tipo!=='Sin clase'||x.grupos.indexOf('Todos')>=0);});
- if(!l.length){b.innerHTML='';return;}
- var ex=l.filter(function(x){return x.tipo==='Examen';}).length,hoy=l.filter(function(x){return x.iso===h;}).length;
- b.innerHTML='<div class="card" style="border-left:6px solid #1565c0;cursor:pointer" onclick="AVISOS_AB=!AVISOS_AB;pintarAvisos()">'+
-  '<b>📅 Próximos días · '+l.length+' actividad'+(l.length>1?'es':'')+'</b>'+
-  '<div class="ayuda">'+(ex?ex+(ex>1?' exámenes':' examen'):'sin exámenes')+(hoy?' · '+hoy+' hoy':'')+' '+(AVISOS_AB?'(tocá para cerrar)':'(tocá para ver)')+'</div>'+
-  (AVISOS_AB?l.map(function(x){var t=CAL_TIPO[x.tipo]||CAL_TIPO.Otro;
-   return '<div style="margin-top:6px;padding:6px 8px;border-radius:8px;background:'+t[2]+'"><b>'+(x.iso===h?'HOY':DSEM[x.dow].slice(0,3)+' '+esc(x.fecha))+'</b> · '+
-    (x.turno==='Todo el día'?'todo el día':x.turno==='Mañana'?'☀️ mañana':'🌙 tarde')+'<br>'+calTxt(x)+(x.nota?' <span class="ayuda">· '+esc(x.nota)+'</span>':'')+'</div>';}).join('')+
-   '<div style="margin-top:8px"><button class="mini" onclick="event.stopPropagation();calendario()">📅 Abrir el calendario</button></div>':'')+'</div>';}
-function calendario(){pantalla('<div class="card">Cargando calendario…</div>');
- rapido('calendario',{},'csaCal','todo',function(d){CAL=d;pintarCal();},function(e){falla(e);});}
-function calMover(n){CAL_OFF=n===0?0:CAL_OFF+n;pintarCal();window.scrollTo(0,0);}
-function pintarCal(){if(!CAL)return;var lun=calLunes(),sab=isoMas(lun,5),hoy=CAL.hoy;
- var h='<div class="card"><h2>📅 Calendario</h2><div style="font-size:17px;font-weight:bold;text-align:center">Semana del '+ddmmIso(lun)+' al '+ddmmIso(sab)+(CAL_OFF===0?' <span class="ayuda">(esta semana)</span>':'')+'</div>'+
-  '<div style="display:flex;gap:6px;margin-top:10px"><button class="mini" style="flex:1;padding:11px" onclick="calMover(-1)">◀ Anterior</button>'+
-  '<button class="mini" style="flex:1;padding:11px;background:#1565c0" onclick="calMover(0)">Hoy</button>'+
-  '<button class="mini" style="flex:1;padding:11px" onclick="calMover(1)">Siguiente ▶</button></div>'+
-  '<div class="ayuda" style="margin-top:8px">📝 Examen: el que falta a la lista de ese turno sale en "Ausencias en exámenes". 🌧️ Lluvia y 🚫 Sin clase: la lista se llama igual, pero ese turno no cuenta para nada (% de asistencia, faltas seguidas, resumen).</div></div>';
- for(var i=0;i<6;i++){var iso=isoMas(lun,i),es=iso===hoy,del=CAL.items.filter(function(x){return x.iso===iso;});
-  var turno=function(t,ic){var l=del.filter(function(x){return x.turno===t;});
-   return '<div style="display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-top:1px solid #eee"><div style="min-width:78px;font-weight:bold;color:#555">'+ic+' '+t+'</div><div style="flex:1">'+
-    l.map(itemCal).join('')+'<button class="mini" style="background:#e8f0fe;color:#1565c0;padding:6px 10px;margin-top:'+(l.length?'4px':'0')+'" onclick="formCal(\''+iso+'\',\''+t+'\')">＋ Agregar</button></div></div>';};
-  var td=del.filter(function(x){return x.turno==='Todo el día';});
-  h+='<div class="card" style="'+(es?'border:2px solid #1565c0;':'')+'padding-bottom:6px"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:17px">'+DSEM[(i+1)%7].toUpperCase()+' '+ddmmIso(iso)+'</b>'+
-   (es?'<span style="background:#1565c0;color:#fff;border-radius:10px;padding:2px 9px;font-size:12px">HOY</span>':'')+'</div>'+
-   (td.length?'<div style="padding:6px 0">'+td.map(itemCal).join('')+'</div>':'')+
-   turno('Mañana','☀️')+turno('Tarde','🌙')+'</div>';}
- el('app').innerHTML=h;}
-function itemCal(x){var t=CAL_TIPO[x.tipo]||CAL_TIPO.Otro,k=CAL.items.indexOf(x);
- return '<div onclick="formCal(null,null,'+k+')" style="cursor:pointer;background:'+t[2]+';border-left:4px solid '+t[1]+';border-radius:8px;padding:7px 9px;margin-bottom:4px;font-size:14px">'+
-  (x.turno==='Todo el día'?'<span class="ayuda">Todo el día · </span>':'')+calTxt(x)+
-  (x.nota?'<div class="ayuda">'+esc(x.nota)+'</div>':'')+
-  (x.tipo==='Examen'&&x.aus!==null&&x.aus!==undefined?'<div style="margin-top:3px;font-weight:bold;color:'+(x.aus?'#b71c1c':'#1b8a3a')+'">'+(x.aus?x.aus+' ausente'+(x.aus>1?'s':'')+' → ver':'✓ Sin ausentes (según la lista)')+'</div>':'')+'</div>';}
-// formulario: nuevo (iso, turno) o editar (k = índice en CAL.items)
-function formCal(iso,turno,k){var x=k!==undefined?CAL.items[k]:null;
- CAL_ED={id:x?x.id:'',tipo:x?x.tipo:'Examen',grupos:x?x.grupos.slice():[]};
- conFC(function(){var tipos=['Examen','Lluvia','Sin clase','Otro'];
-  var h='<div class="card"><h2>'+(x?'✏️ Editar actividad':'＋ Agregar actividad')+'</h2>'+
-   (x&&x.tipo==='Examen'&&x.aus?'<button class="btn" style="background:#6a1b9a;margin-top:0" onclick="examenes()">📝 Ver los '+x.aus+' ausentes</button>':'')+
-   '<label>Tipo</label><div id="cfTipos" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">'+tipos.map(function(t){return '<button class="mini" data-t="'+t+'" onclick="calTipo(\''+t+'\')">'+CAL_TIPO[t][0]+' '+t+'</button>';}).join('')+'</div>'+
-   '<div class="fila2"><div><label>Día</label><input type="date" id="cfF" value="'+esc(x?x.iso:iso)+'"></div>'+
-   '<div><label>Turno</label><select id="cfT">'+['Mañana','Tarde','Todo el día'].map(function(t){return '<option'+(t===(x?x.turno:turno)?' selected':'')+'>'+t+'</option>';}).join('')+'</select></div></div>'+
-   '<label>Grupo(s) <span class="req">*</span></label><div id="cfG" style="margin-top:4px"></div>'+
-   '<div id="cfMat"><label>Materia <span class="req">*</span></label><select id="cfM"></select></div>'+
-   '<div id="cfNom"><label>Nombre de la actividad <span class="req">*</span></label><input id="cfN" placeholder="ej. Charla de la FIUNA" value="'+esc(x?x.nombre:'')+'"></div>'+
-   '<label>Nota <span class="ayuda">(opcional)</span></label><input id="cfO" value="'+esc(x?x.nota:'')+'" placeholder="ej. aula 3, traer calculadora">'+
-   '<label>¿Quién lo carga?</label><select id="cfY">'+op(FC.profes,(x&&x.por)||quienSoy())+'</select>'+
-   '<button class="btn" onclick="guardarCal()">💾 Guardar</button>'+
-   (x?'<button class="btn gr" onclick="borrarCal()">🗑️ Borrar actividad</button>':'')+
-   '<button class="btn gr" style="background:#999" onclick="pintarCalVolver()">Cancelar</button><div id="cfMsg"></div></div>';
-  pantalla(h);calTipo(CAL_ED.tipo,x?x.materia:'');});}
-function pintarCalVolver(){NAV++;el('volver').style.display='inline-block';pintarCal();window.scrollTo(0,0);}
-function calTipo(t,mat){CAL_ED.tipo=t;
- [].forEach.call(document.querySelectorAll('#cfTipos button'),function(b){var on=b.getAttribute('data-t')===t,c=CAL_TIPO[b.getAttribute('data-t')];b.style.background=on?c[1]:c[2];b.style.color=on?'#fff':c[1];b.style.padding='10px 13px';});
- el('cfMat').style.display=t==='Examen'?'':'none';el('cfNom').style.display=t==='Otro'?'':'none';
- if(t!=='Examen'&&!CAL_ED.grupos.length&&(t==='Lluvia'||t==='Sin clase'))CAL_ED.grupos=['Todos'];
- if(t==='Examen')CAL_ED.grupos=CAL_ED.grupos.filter(function(g){return g!=='Todos';});
- pintarGruposCal(mat);}
-function pintarGruposCal(mat){var gs=(CAL&&CAL.grupos)||FC.grupos||[],sel=CAL_ED.grupos,todos=sel.indexOf('Todos')>=0;
- var chk=function(g,txt){var on=g==='Todos'?todos:(!todos&&sel.indexOf(g)>=0);
-  return '<label style="display:flex;align-items:center;gap:8px;font-weight:normal;margin:0;padding:7px 4px;border-bottom:1px solid #f0f0f0"><input type="checkbox" style="width:22px;height:22px;margin:0" '+(on?'checked':'')+' onchange="calGrupo(\''+esc(g).replace(/'/g,"\\'")+'\',this.checked)">'+txt+'</label>';};
- el('cfG').innerHTML=(CAL_ED.tipo!=='Examen'?chk('Todos','<b>Todos los grupos</b>'):'')+gs.map(function(g){return chk(g,esc(g));}).join('');
- // materias: las de los grupos elegidos
- var M={};(todos?gs:sel).forEach(function(g){((CAL&&CAL.materias&&CAL.materias[g])||[]).forEach(function(m){M[m]=1;});});
- var ms=Object.keys(M),cur=mat!==undefined?mat:val('cfM');if(cur&&ms.indexOf(cur)<0)ms.push(cur);
- el('cfM').innerHTML='<option value="">'+(sel.length?'Elegí la materia':'Primero elegí el grupo')+'</option>'+ms.map(function(m){return '<option'+(m===cur?' selected':'')+'>'+esc(m)+'</option>';}).join('');}
-function calGrupo(g,on){var s=CAL_ED.grupos;
- if(g==='Todos')CAL_ED.grupos=on?['Todos']:[];
- else{s=s.filter(function(x){return x!=='Todos'&&x!==g;});if(on)s.push(g);CAL_ED.grupos=s;}
- pintarGruposCal();}
-function guardarCal(){var m=el('cfMsg'),t=CAL_ED.tipo,q=val('cfY');
- if(!val('cfF')){m.innerHTML='<div class="err">Falta el día.</div>';return;}
- if(!CAL_ED.grupos.length){m.innerHTML='<div class="err">Elegí al menos un grupo.</div>';return;}
- if(t==='Examen'&&!val('cfM')){m.innerHTML='<div class="err">Elegí la materia del examen.</div>';return;}
- if(t==='Otro'&&!val('cfN').trim()){m.innerHTML='<div class="err">Escribí el nombre de la actividad.</div>';return;}
- if(q)guardado('gaussCsaYo',q);m.innerHTML='<div class="ayuda">Guardando…</div>';
- pedir('calGuardar',{id:CAL_ED.id,tipo:t,fecha:val('cfF'),turno:val('cfT'),grupos:CAL_ED.grupos.join('|'),materia:t==='Examen'?val('cfM'):'',
-  nombre:t==='Otro'?val('cfN').trim():'',nota:val('cfO').trim(),quien:q},function(){
-   var d=val('cfF'),lun=calLunes();CAL_OFF+=Math.floor(((Date.parse(d)-Date.parse(lun))/864e5)/7);
-   pedir('calendario',{},function(D){CAL=D;pintarCalVolver();},function(){pintarCalVolver();});},function(e){falla(e,'cfMsg');});}
-function borrarCal(){var m=el('cfMsg');if(!CAL_ED.id)return;
- if(!el('cfBorra')){m.innerHTML='<div class="aviso" id="cfBorra">¿Seguro que querés borrar esta actividad? <button class="mini" style="background:#c0392b" onclick="borrarCal()">Sí, borrar</button></div>';return;}
- m.innerHTML='<div class="ayuda">Borrando…</div>';
- pedir('calBorrar',{id:CAL_ED.id},function(){pedir('calendario',{},function(D){CAL=D;pintarCalVolver();},function(){pintarCalVolver();});},function(e){falla(e,'cfMsg');});}
+// ---------- PDFs: ver, descargar, compartir ----------
+function tarjeta(r,api){var id='p'+Math.random().toString(36).slice(2,8);
+ var cuando=r.t?new Date(r.t).toLocaleString('es-PY',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+ return '<div class="pdf"><b>'+(r.tipo==='Económico'?'💰 ':(r.tipo==='Lista'?'📋 ':'📘 '))+esc(r.nombre.replace(/\.pdf$/,''))+'</b><small>'+(r.ya?'Ya estaba generado · ':'')+esc(cuando)+'</small><br>'+
+  (r.url?'<a class="acc" style="background:#1f4e79" href="'+esc(r.url)+'" target="_blank">📂 Abrir</a>':
+  '<button class="acc" style="background:#1f4e79" onclick="archivo(\''+api+'\',\''+esc(r.id)+'\',\'ver\',this)">👁️ Ver</button>'+
+  '<button class="acc" style="background:#555" onclick="archivo(\''+api+'\',\''+esc(r.id)+'\',\'bajar\',this)">⬇️ Descargar</button>'+
+  '<button class="acc" style="background:#25d366" onclick="archivo(\''+api+'\',\''+esc(r.id)+'\',\'compartir\',this)">📲 Compartir</button>')+'<div id="'+id+'"></div></div>';}
+var CACHE_PDF={};
+function archivo(api,id,modo,b){var txt=b.textContent,ventana=null;b.disabled=true;b.textContent='…';
+ if(modo==='ver')ventana=window.open('','_blank');
+ var usar=function(d){b.disabled=false;b.textContent=txt;CACHE_PDF[id]=d;
+  var bin=atob(d.b64),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  var blob=new Blob([u],{type:d.mime||'application/pdf'}),url=URL.createObjectURL(blob);
+  if(modo==='ver'){if(ventana)ventana.location=url;else window.open(url,'_blank');return;}
+  if(modo==='compartir'){var f=null;try{f=new File([blob],d.nombre,{type:d.mime||'application/pdf'});}catch(e){}
+   if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:d.nombre}).catch(function(){});return;}
+   alert('Este navegador no puede compartir archivos directo: lo descargo y lo adjuntás en WhatsApp.');}
+  var a=document.createElement('a');a.href=url;a.download=d.nombre;document.body.appendChild(a);a.click();a.remove();};
+ if(CACHE_PDF[id]){usar(CACHE_PDF[id]);return;}
+ llamar(api==='csa'?API_CSA:API_ADM,'franArchivo',{id:id},usar,function(e){b.disabled=false;b.textContent=txt;if(ventana)ventana.close();alert('⚠️ '+(e.message||e));});}
 
-// ---------- 📝 AUSENCIAS EN EXÁMENES ----------
-var EXA=null,EXA_G='',EXA_V=[],EXA_AB={},EXA_D='',EXA_H='';
-function exaRango(){var hoy=(EXA&&EXA.hoy)||hoyIso();return [EXA_D||isoMenos(hoy,7),EXA_H||hoy];}
-function exaEnRango(x){var r=exaRango();return !x.iso||(x.iso>=r[0]&&x.iso<=r[1]);}
-function cargarExamenes(){var pon=function(d){EXA=d;var b=el('bExa');if(b)b.innerHTML=txtBotonExa();};
- sbLeer('csaExam','todo',function(d){pon(d);pedir('examenes',{},pon,function(){});},function(){pedir('examenes',{},pon,function(){});});}
-function txtBotonExa(){var l=EXA?EXA.alertas.filter(function(x){return !x.justificado&&exaEnRango(x);}):[],a=l.filter(function(x){return x.atrasada;}).length;
- return '📝 Ausencias en exámenes'+(EXA?' <span style="background:#fff;color:#6a1b9a;border-radius:12px;padding:1px 9px;font-size:15px">'+l.length+'</span>':'')+
-  '<small>Últimos 7 días · los que no vinieron a rendir'+(a?' · ⚠️ '+a+' atrasada'+(a>1?'s':''):'')+'</small>';}
-function examenes(){pantalla('<div class="card">Cargando ausencias en exámenes…</div>');
- rapido('examenes',{},'csaExam','todo',function(d){EXA=d;pintarExa();},function(e){falla(e);});}
-function pintarExa(){if(!EXA)return;var L=EXA.alertas.filter(exaEnRango),R=exaRango(),grupos={};L.forEach(function(x){grupos[x.grupo]=1;});
- var l=L.filter(function(x){return !EXA_G||x.grupo===EXA_G;}).sort(function(a,b){return (a.justificado?1:0)-(b.justificado?1:0)||(b.atrasada?1:0)-(a.atrasada?1:0)||(a.iso<b.iso?1:a.iso>b.iso?-1:0)||a.alumno.localeCompare(b.alumno,'es');});
- var pend=L.filter(function(x){return !x.justificado;}).length;
- var h='<div class="card"><h2>📝 Ausencias en exámenes · '+pend+' pendiente'+(pend===1?'':'s')+'</h2>'+
-  '<div class="ayuda">Sale apenas se carga la lista del turno del examen (si el examen está en el 📅 calendario) o cuando se cargan las notas con <b>A</b>. Faltar a un examen ya es alerta. '+
-  '<b>Atrasada</b> = más de '+(EXA.horas||48)+' h sin que nadie intente contactar. Con 🩺 justificativo no cuenta como pendiente.</div>'+
-  '<div class="fila2" style="margin-top:8px"><div><label>Desde</label><input type="date" value="'+R[0]+'" onchange="EXA_D=this.value;pintarExa()"></div>'+
-  '<div><label>Hasta</label><input type="date" value="'+R[1]+'" onchange="EXA_H=this.value;pintarExa()"></div></div>'+
-  '<div class="ayuda" style="margin-top:4px">Por defecto, los exámenes de los últimos 7 días.</div>'+
-  '<div style="margin-top:8px"><select onchange="EXA_G=this.value;pintarExa()"><option value="">Todos los grupos</option>'+
-  Object.keys(grupos).sort(function(a,b){return a.localeCompare(b,'es',{numeric:true});}).map(function(g){return '<option'+(g===EXA_G?' selected':'')+'>'+esc(g)+'</option>';}).join('')+'</select></div>'+
-  '<button class="mini" style="margin-top:8px;background:#1565c0;padding:9px 12px" onclick="calendario()">📅 Ir al calendario</button></div>';
- if(!l.length)h+='<div class="card"><div class="vacio">✓ Nadie faltó a un examen (con este filtro).</div></div>';
- l.forEach(function(x,i){var k='ex'+i,ab=!!EXA_AB[x.clave];
-  h+='<div class="card'+(x.atrasada?' r':'')+'" style="'+(x.justificado?'opacity:.75;background:#f3f5f9':'')+'"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div>'+
-   '<b style="font-size:16px'+(x.id?';cursor:pointer;text-decoration:underline':'')+'"'+(x.id?' onclick="perfil(\''+esc(x.id)+'\')"':'')+'>'+esc(x.alumno)+'</b>'+
-   '<div class="sub">'+esc(x.grupo)+(x.enc?' · encargado: '+esc(x.enc):'')+'</div></div>'+
-   '<div>'+(x.justificado?'<span style="background:#2e7d32;color:#fff;border-radius:10px;padding:3px 9px;font-size:12px">🩺 justificado</span>':'<span style="background:#6a1b9a;color:#fff;border-radius:10px;padding:3px 9px;font-size:12px">No vino a rendir</span>')+
-   (x.atrasada?' <span style="background:#7f0000;color:#fff;border-radius:10px;padding:3px 9px;font-size:12px">⚠️ atrasada</span>':'')+'</div></div>'+
-   '<div style="margin-top:6px"><b>📝 '+esc(x.materia||'Examen')+'</b> · '+esc(x.diaTxt)+(x.turno&&x.turno!=='Todo el día'?' · '+esc(x.turno.toLowerCase()):'')+'</div>'+
-   (x.nota?'<div class="ayuda" style="margin-top:4px">📝 '+esc(x.nota)+'</div>':'')+
-   '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+
-   (x.waAl?'<a class="wa" href="'+esc(x.waAl)+'" target="_blank">📲 Alumno</a>':(x.sinCel?'<span class="ayuda">📵 sin cel. alumno</span>':''))+
-   (x.waRe?'<a class="wa" style="background:#128c7e" href="'+esc(x.waRe)+'" target="_blank">📲 Responsable'+(x.resp?' ('+esc(x.resp.split(' ')[0])+')':'')+'</a>':(x.sinCelR?'<span class="ayuda">📵 sin cel. resp.</span>':''))+
-   (x.justificado?'<button class="mini" style="background:#2e7d32;color:#fff;padding:8px 12px" onclick="formExa('+i+',1)">✔ Visto, cerrar</button>'
-    :'<button class="mini" style="background:#1b8a3a;color:#fff;padding:8px 12px" onclick="formExa('+i+')">✔ Contactamos / 📵 No respondió</button>')+'</div>'+
-   '<div style="margin-top:8px"><a href="javascript:void 0" style="color:#1565c0;font-size:14px;text-decoration:none" onclick="verMasExa('+i+')">'+(ab?'▾ Ver menos':'▸ Ver más')+'</a></div>'+
-   (ab?'<div style="background:#f3f5f9;border-radius:8px;padding:10px;margin-top:6px;font-size:14px">'+
-     '<div><b>Se detectó por:</b> '+esc(x.origen==='calendario'?'el calendario y la lista del turno':x.origen==='notas'?'las notas (cargaron A)':'el calendario y las notas')+'</div>'+
-     (x.justificado?'<div style="margin-top:4px"><b>🩺</b> Tiene la falta justificada ese día.</div>':'')+
-     '<div style="margin-top:4px"><b>Fecha:</b> '+esc(fecha(x.iso))+'</div></div>':'')+
-   '<div id="'+k+'f"></div></div>';});
- el('app').innerHTML=h;EXA_V=l;}
-function verMasExa(i){var x=EXA_V[i];if(!x)return;if(EXA_AB[x.clave])delete EXA_AB[x.clave];else EXA_AB[x.clave]=1;var y=window.scrollY;pintarExa();window.scrollTo(0,y);}
-function formExa(i,cerrar){var x=EXA_V[i],d=el('ex'+i+'f');if(!x||!d)return;
- conFC(function(){d.innerHTML='<div style="background:#f3f5f9;border-radius:8px;padding:10px;margin-top:8px">'+
-  (cerrar?'<div class="ayuda">Tiene justificativo: se cierra sin contactar.</div>':
-   '<div class="fila2"><div><label>¿Con quién?</label><select id="exQ'+i+'"><option value="alumno">Alumno</option><option value="responsable">Responsable</option><option value="ambos">Los dos</option></select></div>'+
-   '<div><label>¿Quién contactó?</label><select id="exY'+i+'">'+op(FC.profes,quienSoy())+'</select></div></div>'+
-   '<label>¿Qué dijo? <span class="ayuda">(para "Ya nos contactamos")</span></label><input id="exN'+i+'" placeholder="ej. estuvo enfermo, trae certificado">')+
-  (cerrar?'<label>¿Quién lo cierra?</label><select id="exY'+i+'">'+op(FC.profes,quienSoy())+'</select>':'')+
-  '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">'+
-  (cerrar?'<button class="btn" style="width:auto;padding:10px 16px;background:#2e7d32" onclick="marcarExa('+i+',\'cerrar\')">✔ Cerrar</button>':
-   '<button class="btn" style="width:auto;padding:10px 16px" onclick="marcarExa('+i+',\'contactado\')">✔ Ya nos contactamos</button>'+
-   '<button class="btn gr" style="width:auto;padding:10px 16px;background:#666" onclick="marcarExa('+i+',\'norespondio\')">📵 No respondió</button>')+
-  '</div><div id="exM'+i+'"></div></div>';});}
-function marcarExa(i,accion){var x=EXA_V[i],m=el('exM'+i);if(!x)return;var nota=val('exN'+i).trim(),quien=val('exY'+i);
- if(accion==='contactado'&&!nota){m.innerHTML='<div class="err">Escribí qué te dijeron (una nota corta).</div>';return;}
- if(quien)guardado('gaussCsaYo',quien);m.innerHTML='<div class="ayuda">Guardando…</div>';
- pedir('examenMarcar',{clave:x.clave,que:accion,aquien:val('exQ'+i),nota:nota,quien:quien,alumno:x.alumno,grupo:x.grupo,examen:(x.materia||'examen')+' del '+x.diaTxt},function(){
-  if(accion!=='norespondio')EXA.alertas=EXA.alertas.filter(function(a){return a.clave!==x.clave;});
-  else{x.intentado=true;x.atrasada=false;x.nota=(x.nota?x.nota+' · ':'')+'📵 No respondió ('+(quien||'CSA')+')';}
-  var y=window.scrollY;pintarExa();window.scrollTo(0,y);},function(e){falla(e,'exM'+i);});}
+// ---------- 📊 RESUMEN SEMANAL ----------
+function sabVie(anterior){var d=new Date(),dow=d.getDay(),v=new Date(d);
+ v.setDate(d.getDate()+(dow===5?0:(dow===6||dow===0?-((dow+2)%7):5-dow))-(anterior?7:0));
+ var s=new Date(v);s.setDate(v.getDate()-6);var f=function(x){return ('0'+x.getDate()).slice(-2)+'/'+('0'+(x.getMonth()+1)).slice(-2);};return f(s)+' al '+f(v);}
+function semanal(){pantalla('<div class="card"><h2>📊 Resumen semanal</h2>'+
+  '<label>Semana</label><select id="sS"><option value="0">Esta semana · sábado '+sabVie(false).replace(' al ',' → viernes ')+'</option><option value="1">Semana anterior · '+sabVie(true)+'</option></select>'+
+  '<div class="ayuda" style="margin-top:6px">Si ya estaba generado (por ejemplo el automático del viernes), lo trae al instante.</div>'+
+  '<button class="btn" id="sB" onclick="genSemanal(0)">📊 Generar académico + económico</button><div id="sR"></div></div>'+
+  '<div class="card"><h2>🧪 Académico nuevo (prueba)</h2><div class="ayuda">Formato corto: una tabla por grupo. Se guarda en otra carpeta (RESÚMENES SEMANALES (PRUEBA)); el de siempre no cambia.</div>'+
+  '<button class="btn" id="sN" style="background:#6a1b9a" onclick="genNuevo()">🧪 Generar el académico nuevo</button><div id="sNR"></div></div>');}
+function genNuevo(){var b=el('sN');b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';el('sNR').innerHTML='';
+ csa('franSemanal',{anterior:el('sS').value,nuevo:'1'},function(r){b.disabled=false;b.textContent='🧪 Generar el académico nuevo';el('sNR').innerHTML=tarjeta(r,'csa');},
+  function(e){b.disabled=false;b.textContent='🧪 Generar el académico nuevo';falla(e,'sNR');});}
+function genSemanal(force){var b=el('sB'),ant=el('sS').value;b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';
+ el('sR').innerHTML='<div id="sA" class="pdf">📘 Académico: generando…</div><div id="sE" class="pdf">💰 Económico: generando…</div>';
+ var n=0,fin=function(){if(++n<2)return;b.disabled=false;b.textContent='📊 Generar académico + económico';
+  el('sR').insertAdjacentHTML('beforeend','<button class="btn gr" style="font-size:15px;padding:10px" onclick="genSemanal(1)">🔄 Volver a generar con los datos de ahora</button>');};
+ csa('franSemanal',{anterior:ant,force:force},function(r){el('sA').outerHTML=tarjeta(r,'csa');fin();},function(e){falla(e,'sA');fin();});
+ adm('franSemanal',{anterior:ant,force:force},function(r){el('sE').outerHTML=tarjeta(r,'adm');fin();},function(e){falla(e,'sE');fin();});}
 
-// ---------- BUSCADOR DE ALUMNO (paso 1 de cada botón) ----------
-function buscadorHtml(tit){return '<div class="card"><h2><span class="paso">1</span>'+esc(tit)+'</h2><div id="pbox">'+
- '<input id="pq" placeholder="Escribí apellido, nombre o ID…" oninput="pfiltrar()" autocomplete="off"><div id="pres" class="res"></div></div></div>';}
-function pfiltrar(){var q=sa(el('pq').value.trim()),r=el('pres');if(q.length<2){r.innerHTML='';return;}
- var p=q.split(/\s+/),h=LISTA.filter(function(x){var t=sa(x[0]+' '+x[2]);return p.every(function(w){return t.indexOf(w)>=0;})||numBusca(q,x[5]);}).slice(0,25);
- r.innerHTML=h.length?h.map(function(x){return '<div onclick="pelegir(\''+esc(x[1])+'\')">'+esc(x[4])+' <b>'+esc(nombreDe(x))+'</b><br><small>'+esc(x[1])+' · '+esc(x[2])+' · '+esc(x[3])+'</small></div>';}).join(''):'<div class="vacio">No hay coincidencias</div>';}
-function alumno(id){return LISTA.filter(function(x){return x[1]===id;})[0];}
-function pelegir(id){var a=alumno(id);if(!a)return;PICK=a;
- el('pbox').innerHTML='<div class="elegido"><div>'+esc(a[4])+' <b>'+esc(nombreDe(a))+'</b><br><small>'+esc(a[1])+' · '+esc(a[2])+' · '+esc(a[3])+'</small></div>'+
-  '<button class="mini" onclick="pcambiar()">Cambiar</button></div>';
- if(PICK_CB)PICK_CB(a);}
-function pcambiar(){PICK=null;el('pbox').innerHTML='<input id="pq" placeholder="Escribí apellido, nombre o ID…" oninput="pfiltrar()" autocomplete="off"><div id="pres" class="res"></div>';
- var s=el('app').children;for(var i=1;i<s.length;i++)s[i].innerHTML='';el('pq').focus();}
-// abre un formulario: si viene desde el perfil, el alumno ya queda elegido
-function abrir(tit,cont,cb,id){PICK=null;PICK_CB=cb;pantalla(buscadorHtml(tit)+'<div id="'+cont+'"></div>');
- if(id)pelegir(id);else el('pq').focus();}
-
-// ---------- 👤 PERFIL ----------
-function buscarPerfil(){abrir('¿Qué alumno?','pf',function(a){perfil(a[1]);});}
-function k(t,v,cl){return '<div class="k '+(cl||'')+'"><span>'+esc(t)+'</span><b>'+esc(v===''||v==null?'–':v)+'</b></div>';}
-function f(t,v){return v===''||v==null?'':'<div class="dato"><span>'+esc(t)+'</span><div>'+esc(v)+'</div></div>';}
-function pct(v){var n=parseFloat(v);return isNaN(n)?'':(n<70?'r':(n<85?'y':'g'));}
-function colorRes(s){s=String(s);return s==='Presente'?'g':(s==='Ausente'?'r':(s==='Justificado'||/tard|retir/i.test(s)?'y':''));}
-function tabla(tit,enc,filas,colNota,D,extra){
- var h='<div class="card"><h2>'+tit+'</h2>';
- if(!filas.length)return h+'<div class="vacio">— sin registros —</div>'+(extra||'')+'</div>';
- h+='<div style="overflow-x:auto"><table><tr>'+enc.map(function(e){return '<th>'+esc(e)+'</th>';}).join('')+'</tr>';
- filas.forEach(function(r){h+='<tr>'+r.map(function(c,i){var cl='';
-  if(i===colNota&&c!==''){cl=c<D.notaBaja?'r':(c<D.notaMedia?'y':'g');c=Math.round(c);}
-  if(enc[i]==='RESULTADO'&&enc[1]==='TURNO')cl=colorRes(c);
-  return '<td class="'+cl+'">'+esc(c)+'</td>';}).join('')+'</tr>';});
- return h+'</table></div>'+(extra||'')+'</div>';}
-function perfil(id){var a0=alumno(id);ACTUAL=a0||ACTUAL;pantalla('');msg('Cargando perfil…');
- rapido('ficha',{id:id},'csaFicha',id,pintarPerfil,function(e){falla(e);});}
-function pintarPerfil(D){var a=D.a,id=a['ID'];msg('');
- var nom=String(a['ALUMNO']).split(' · ').slice(1).join(' · ');
- var sc=a['🚦']==='🔴'?'r':(a['🚦']==='🟡'?'y':(a['🚦']==='🟢'?'g':''));
- var B=function(c,t,fn){return '<button class="acc" style="background:'+c+'" onclick="'+fn+'(\''+esc(id)+'\')">'+t+'</button>';};
- var h='<div class="card '+sc+'"><div style="display:flex;gap:12px;align-items:center"><div class="sem">'+esc(a['🚦']||'')+'</div><div><p class="nom">'+esc(nom)+'</p>'+
-  '<div class="sub">'+esc(id)+' · '+esc(a['GRUPO'])+' · '+esc(a['MODALIDAD'])+' · '+esc(a['ESTADO'])+'</div></div></div>'+
-  (a['MOTIVOS']?'<div style="margin-top:8px"><b>Motivos:</b> '+esc(a['MOTIVOS'])+'</div>':'')+
-  (a['ALERTA']?'<div><b>Alerta:</b> '+esc(a['ALERTA'])+'</div>':'')+
-  (a['SEGUIMIENTO']?'<div><b>Seguimiento:</b> '+esc(a['SEGUIMIENTO'])+'</div>':'')+
-  '<div class="acciones">'+B('#1f4e79','📋 Toda la asistencia','asistencia')+B('#2e7d32','🩺 Justificativo','justificativo')+
-  B('#ad1457','📝 Observación','observacion')+B('#e65100','📞 Contacto','contacto')+B('#c0392b','📄 Informe padres','irInforme')+
-  B('#6a1b9a','🔄 Cambiar grupo','cambiarGrupo')+B('#455a64','🚪 Salió','baja')+'</div></div>';
- h+='<div class="card"><h2>📇 Datos</h2>'+f('Prof. encargado',a['PROF. ENCARGADO'])+f('Historial de grupos',a['HISTORIAL DE GRUPOS'])+
-  f('Celular',a['CELULAR'])+f('Responsable',a['RESPONSABLE'])+f('Cel. responsable',a['CEL. RESPONSABLE'])+
-  (a['WA ALUMNO']?'<a class="wa" href="'+esc(a['WA ALUMNO'])+'" target="_blank">📲 WhatsApp alumno</a>':'')+
-  (a['WA RESPONSABLE']?'<a class="wa" href="'+esc(a['WA RESPONSABLE'])+'" target="_blank">📲 WhatsApp responsable</a>':'')+'</div>';
- h+='<div class="card"><h2>📅 Asistencia</h2><div class="grid">'+
-  k('Total',a['% ASIST. TOTAL'],pct(a['% ASIST. TOTAL']))+k('Últimos 7 días',a['% ÚLTIMOS 7 DÍAS'],pct(a['% ÚLTIMOS 7 DÍAS']))+
-  k('Últimos 15 días',a['% ÚLTIMOS 15 DÍAS'],pct(a['% ÚLTIMOS 15 DÍAS']))+k('Últimos 30 días',a['% ÚLTIMOS 30 DÍAS'],pct(a['% ÚLTIMOS 30 DÍAS']))+
-  k('Faltas esta semana',a['FALTAS ESTA SEMANA'])+k('Tardes (30 días)',a['TARDES 30 DÍAS'])+k('Retiros (30 días)',a['RETIROS 30 DÍAS'])+
-  k('Última vez que vino',a['ÚLTIMA VEZ QUE VINO'])+k('Última ausencia',a['ÚLTIMA AUSENCIA'])+'</div>'+
-  '<div class="sub" style="margin-top:8px;font-size:13px">Turnos: '+esc(a['TURNOS'])+' · Presente '+esc(a['PRESENTE'])+' · Tarde '+esc(a['LLEGÓ TARDE'])+
-  ' · Se retiró '+esc(a['SE RETIRÓ'])+' · Justificado '+esc(a['JUSTIFICADO'])+' · Ausente '+esc(a['AUSENTE'])+'</div></div>';
- var deu=parseFloat(a['DEUDA'])||0;
- h+='<div class="card"><h2>📝 Exámenes y 💰 pagos</h2><div class="grid">'+
-  k('Promedio exámenes',a['PROMEDIO EXÁMENES']===''?'':Math.round(a['PROMEDIO EXÁMENES']))+k('Tendencia',a['TENDENCIA'])+
-  k('Deuda vencida',deu?gs(deu):'0',deu>0?'r':'g')+k('Pagos vencidos',a['PAGOS VENCIDOS'])+k('Último contacto',a['ÚLTIMO CONTACTO'])+'</div></div>';
- h+=tabla('📝 Últimos exámenes',['FECHA','EXAMEN','GRUPO','PUNTAJE','DE','NOTA'],D.examenes,5,D);
- h+=tabla('📋 Últimas asistencias',['FECHA','TURNO','RESULTADO','GRUPO','DOCENTE'],D.asistencia,-1,D,
-  '<button class="btn az" style="margin-top:10px;font-size:15px;padding:10px" onclick="asistencia(\''+esc(id)+'\')">📋 Ver toda la asistencia</button>');
- h+=tabla('🗒️ Observaciones',['FECHA','TIPO','DETALLE','RES.','PRÓXIMO PASO','ANOTÓ'],D.obs,-1,D);
- h+=tabla('✏️ Observaciones de los profes',['SEMANA','GRUPO','OBSERVACIÓN'],D.obsProfes,-1,D);
- h+=tabla('📞 Contactos',['FECHA','A QUIÉN','MOTIVO','NOTA'],D.contactos,-1,D);
- h+=tabla('🩺 Justificativos',['DESDE','HASTA','MOTIVO','QUIÉN','A QUIÉN'],D.justif,-1,D);
- h+='<div class="card" id="cInf"><h2>📄 Informe para padres (PDF)</h2>'+
-  '<div class="ayuda" style="margin-bottom:6px">Arma el mismo PDF que el menú del CSA y lo deja listo para mandar por WhatsApp.</div>'+
-  '<label>¿Qué va en el informe?</label><div class="fila2" style="gap:6px">'+
-  [['iA','asis','📅 Asistencia'],['iE','ex','📝 Exámenes'],['iP','pagos','💰 Pagos']].map(function(x){return '<label style="font-weight:normal;margin-top:6px"><input type="checkbox" id="'+x[0]+'" data-s="'+x[1]+'" checked style="width:auto;transform:scale(1.3);margin-right:8px">'+x[2]+'</label>';}).join('')+'</div>'+
-  '<label>Seguimiento para los padres <span class="ayuda">(tildá solo lo que quieras que lean)</span></label>'+
-  ((D.seg||[]).length?'<div style="max-height:260px;overflow:auto;border:1px solid #ddd;border-radius:8px;padding:4px 8px;margin-top:4px">'+D.seg.map(function(x){
-   return '<label style="font-weight:normal;margin:6px 0;display:flex;gap:8px;align-items:flex-start"><input type="checkbox" class="sg" value="'+esc(x.k)+'" style="width:auto;transform:scale(1.3);margin-top:3px">'+
-    '<span><b>'+esc(x.fecha)+' · '+esc(x.tipo)+':</b> '+esc(x.texto)+'</span></label>';}).join('')+'</div>':'<div class="vacio">No tiene observaciones ni contactos.</div>')+
-  '<label>Comentario del encargado <span class="ayuda">(opcional)</span></label>'+
-  '<textarea id="com" rows="3" placeholder="Comentario del encargado (opcional)"></textarea>'+
-  '<button class="btn" id="bInf" onclick="informe(\''+esc(id)+'\')">📄 Generar PDF</button><div id="resInf" style="margin-top:10px"></div></div>';
- h+='<div class="vacio" style="text-align:center;font-size:12px">Datos del CSA · se actualizan cada hora.</div>';
- el('app').innerHTML=h;window.scrollTo(0,0);}
-function irInforme(){var c=el('cInf');if(c){c.scrollIntoView({behavior:'smooth'});el('com').focus();}}
-function informe(id){var b=el('bInf'),r=el('resInf');b.disabled=true;b.textContent='Generando… (unos segundos)';r.innerHTML='';
- var sec=[].slice.call(document.querySelectorAll('#cInf input[data-s]')).filter(function(x){return x.checked;}).map(function(x){return x.getAttribute('data-s');});
- var seg=[].slice.call(document.querySelectorAll('#cInf .sg')).filter(function(x){return x.checked;}).map(function(x){return x.value;});
- pedir('informe',{id:id,comentario:el('com').value,sec:sec.join(','),seg:seg.join(',')},function(x){b.disabled=false;b.textContent='📄 Generar PDF';
-  r.innerHTML='✅ Listo: '+esc(x.nombre)+'<br><a class="wa" style="background:#1f4e79" href="'+esc(x.ver)+'" target="_blank">👁️ Ver PDF</a>'+
-   '<a class="wa" style="background:#555" href="'+esc(x.bajar)+'" target="_blank">⬇️ Descargar</a>'+
-   (x.wa?'<a class="wa" href="'+esc(x.wa)+'" target="_blank">📲 WhatsApp responsable</a>':'<div class="vacio">Sin celular del responsable cargado.</div>')+
-   '<div class="ayuda" style="margin-top:6px">Descargá el PDF y adjuntalo en el chat que se abre.</div>';},
-  function(e){b.disabled=false;b.textContent='📄 Generar PDF';falla(e,'resInf');});}
-
-// ---------- 🚨 ALERTAS DE ASISTENCIA ----------
-var ALR=null,ALR_T=guardado('gaussAlrTipo')||'todas',ALR_G='',ALR_D='',ALR_H='',ALR_E='pend',ALR_Q='';
-if(ALR_T==='No inscripto')ALR_T='todas';
-// fecha de la alerta (dd/mm) → aaaa-mm-dd (si el mes es posterior al de hoy, es del año anterior)
-function alrIso(x){var hoy=(ALR&&ALR.hoy)||hoyIso(),p=String(x.fecha||'').split('/');if(p.length<2)return '';var y=Number(hoy.slice(0,4));
- if(Number(p[1])>Number(hoy.slice(5,7)))y--;return y+'-'+('0'+p[1]).slice(-2)+'-'+('0'+p[0]).slice(-2);}
-function isoMenos(iso,n){var q=iso.split('-').map(Number),d=new Date(Date.UTC(q[0],q[1]-1,q[2]-n));return d.toISOString().slice(0,10);}
-function alrRango(){var hoy=(ALR&&ALR.hoy)||hoyIso();return [ALR_D||isoMenos(hoy,7),ALR_H||hoy];}
-function alrEnRango(x){var r=alrRango(),i=alrIso(x);return !i||(i>=r[0]&&i<=r[1]);}
-function cargarAlertas(){var pon=function(d){ALR=d;var b=el('bAlr');if(b)b.innerHTML=txtBotonAlr();};
- sbLeer('csaAlertas','todo',function(d){pon(d);pedir('alertas',{},pon,function(){});},function(){pedir('alertas',{},pon,function(){});});}
-function txtBotonAlr(){var l7=ALR?ALR.alertas.filter(function(x){return alrEnRango(x)&&(x.estado||'pend')==='pend';}):[],n=ALR?l7.length:null,a=l7.filter(function(x){return x.atrasada;}).length;
- return '🚨 Alertas de asistencia'+(n===null?'':' <span style="background:#fff;color:#c0392b;border-radius:12px;padding:1px 9px;font-size:15px">'+n+'</span>')+
-  '<small>Últimos 7 días · faltas seguidas y asistencia baja'+(a?' · ⚠️ '+a+' atrasada'+(a>1?'s':''):'')+'</small>';}
-function alertas(){pantalla('<div class="card">Cargando alertas…</div>');
- rapido('alertas',{},'csaAlertas','todo',function(d){ALR=d;pintarAlertas();},function(e){falla(e);});}
-function pintarAlertas(){if(!ALR)return;var L0=ALR.alertas.filter(alrEnRango),R=alrRango();
- var foco=document.activeElement&&document.activeElement.id==='alrQ',q=sa(ALR_Q.trim());
- var ord={'Ambos':0,'Faltas seguidas':1,'Asistencia baja':2};
- var porTG=function(x){return (ALR_T==='todas'||x.tipo===ALR_T)&&(!ALR_G||x.grupo===ALR_G);};
- var cnt={pend:0,esp:0,posp:0};L0.filter(porTG).forEach(function(x){cnt[x.estado||'pend']++;});
- var l;
- if(q.length>=2){var p=q.split(/\s+/);   // 🔎 busca en todas: pendientes, esperando y pospuestas, de cualquier fecha
-  l=ALR.alertas.filter(function(x){var t=sa(x.alumno+' '+x.id);return p.every(function(w){return t.indexOf(w)>=0;})||numBusca(ALR_Q,(alumno(x.id)||[])[5]);});}
- else l=L0.filter(function(x){return porTG(x)&&(x.estado||'pend')===ALR_E;});
- l.sort(function(a,b){return (ord[a.tipo]===undefined?3:ord[a.tipo])-(ord[b.tipo]===undefined?3:ord[b.tipo])||b.n-a.n||(a.pct===null?999:a.pct)-(b.pct===null?999:b.pct)||a.alumno.localeCompare(b.alumno,'es');});
- // resumen por encargado: solo las pendientes (lo que falta abrir y escribir)
- var porEnc={};L0.filter(function(x){return (x.estado||'pend')==='pend';}).forEach(function(x){var k=x.enc||'Sin encargado',e=porEnc[k]||(porEnc[k]={p:0,a:0});e.p++;if(x.atrasada)e.a++;});
- var grupos={};L0.forEach(function(x){grupos[x.grupo]=1;});
- var tipos=[['todas','Todas'],['Faltas seguidas','Faltas seguidas'],['Asistencia baja','Asistencia baja'],['Ambos','Ambos']];
- var chip=function(v,t,on,fn){return '<button class="mini" style="'+(on?'background:#c0392b;color:#fff':'background:#f4cccc;color:#990000')+'" onclick="'+fn+'">'+t+'</button>';};
- var pest=[['pend','🔴 Pendientes',cnt.pend,'#c0392b'],['esp','📵 Esperando respuesta',cnt.esp,'#5d4037'],['posp','⏸️ Pospuestas',cnt.posp,'#455a64']];
- var h='<div class="card"><h2>🚨 Alertas de asistencia · '+cnt.pend+' pendientes</h2>'+
-  '<input id="alrQ" placeholder="🔎 Buscar alumno: nombre, ID, cédula o celular…" value="'+esc(ALR_Q)+'" oninput="ALR_Q=this.value;pintarAlertas()" autocomplete="off" style="margin-bottom:8px">'+
-  '<div style="display:flex;gap:6px;flex-wrap:wrap">'+pest.map(function(t){var on=ALR_E===t[0]&&q.length<2;
-   return '<button class="mini" style="padding:9px 12px;font-size:14px;'+(on?'background:'+t[3]+';color:#fff':'background:#eee;color:#333')+'" onclick="ALR_E=\''+t[0]+'\';ALR_Q=\'\';pintarAlertas()">'+t[1]+' <b>'+t[2]+'</b></button>';}).join('')+'</div>'+
-  '<div class="fila2" style="margin-top:8px"><div><label>Desde</label><input type="date" value="'+R[0]+'" onchange="ALR_D=this.value;pintarAlertas()"></div>'+
-  '<div><label>Hasta</label><input type="date" value="'+R[1]+'" onchange="ALR_H=this.value;pintarAlertas()"></div></div>'+
-  '<div class="ayuda" style="margin-top:6px">Por defecto, los últimos 7 días. <b>🔴 Pendientes</b> = nadie la abrió todavía. <b>📵 Esperando respuesta</b> = ya se contactó y falta la respuesta (si el alumno falta otra vez, vuelve a pendientes). '+
-  '<b>⏸️ Pospuestas</b> = vuelven solas a los 3 días. <b>Atrasada</b> = pendiente hace más de '+(ALR.horas||48)+' h. Las de faltas seguidas se cierran solas cuando el alumno vuelve. <b>Asistencia baja</b> se revisa cada 2 semanas desde que empieza el grupo. <b>Ambos</b> = el mismo alumno con las dos alertas (una sola tarjeta).</div>'+
-  '<div style="overflow-x:auto;margin-top:8px"><table><tr><th>ENCARGADO</th><th>PENDIENTES</th><th>ATRASADAS</th></tr>'+
-  Object.keys(porEnc).sort(function(a,b){return porEnc[b].p-porEnc[a].p;}).map(function(k){return '<tr><td>'+esc(k)+'</td><td>'+porEnc[k].p+'</td><td class="'+(porEnc[k].a?'r':'')+'">'+(porEnc[k].a||'–')+'</td></tr>';}).join('')+'</table></div>'+
-  '<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">'+tipos.map(function(t){return chip(t[0],t[1],ALR_T===t[0],"ALR_T='"+t[0]+"';guardado('gaussAlrTipo',ALR_T);pintarAlertas()");}).join('')+'</div>'+
-  '<div class="fila2" style="margin-top:8px"><div><select onchange="ALR_G=this.value;pintarAlertas()"><option value="">Todos los grupos</option>'+
-  Object.keys(grupos).sort(function(a,b){return a.localeCompare(b,'es',{numeric:true});}).map(function(g){return '<option'+(g===ALR_G?' selected':'')+'>'+esc(g)+'</option>';}).join('')+'</select></div>'+
-  '<div></div></div></div>';
- if(q.length>=2)h+='<div class="ayuda" style="margin:0 4px 8px">🔎 '+l.length+' resultado'+(l.length===1?'':'s')+' para "'+esc(ALR_Q)+'" (en pendientes, esperando y pospuestas)</div>';
- if(!l.length)h+='<div class="card"><div class="vacio">'+(q.length>=2?'No hay alertas de ese alumno.':'✓ No hay alertas acá con este filtro.')+'</div></div>';
- l.forEach(function(x,i){var k='al'+i,fs=x.tipo==='Faltas seguidas'||x.tipo==='Ambos',ab=!!ALR_AB[x.clave],es=x.estado||'pend';
-  var estado=fs?(x.volvio?'<span style="color:#1b8a3a;font-weight:bold">✅ Volvió el '+esc(x.volvio)+'</span>'
-     :(x.volvio===undefined?'':'<span style="color:#b71c1c;font-weight:bold">⏳ Todavía no volvió</span>'+(x.ultVino?' <span class="ayuda">· vino por última vez el '+esc(x.ultVino)+'</span>':'')))
-   :(x.ultVino?'<span class="ayuda">Última vez que vino: '+esc(x.ultVino)+'</span>':'');
-  var badgeE=es==='esp'?'<span class="badge" style="background:#5d4037;color:#fff;border-radius:10px;padding:3px 9px;font-size:12px">📵 esperando respuesta</span>'
-   :es==='posp'?'<span class="badge" style="background:#455a64;color:#fff;border-radius:10px;padding:3px 9px;font-size:12px">⏸️ pospuesta hasta el '+esc(x.pospHasta)+'</span>'
-   :(x.volvioAFaltar?'<span class="badge" style="background:#e65100;color:#fff;border-radius:10px;padding:3px 9px;font-size:12px">🔁 volvió a faltar</span>':'');
-  h+='<div class="card'+(x.atrasada?' r':'')+'" id="'+k+'" style="'+(es==='posp'?'opacity:.8;background:#f3f5f7':es==='esp'?'background:#fbf7f4':'')+'"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div>'+
-   '<b style="font-size:16px'+(x.id?';cursor:pointer;text-decoration:underline':'')+'"'+(x.id?' onclick="perfil(\''+esc(x.id)+'\')"':'')+'>'+esc(x.alumno)+'</b>'+
-   '<div class="sub">'+esc(x.grupo)+(x.enc?' · encargado: '+esc(x.enc):'')+' · '+esc(x.fecha)+'</div></div>'+
-   '<div><span class="badge" style="background:#c0392b;color:#fff;border-radius:10px;padding:3px 9px;font-size:12px">'+esc(x.tipo==='Ambos'?'Faltas seguidas + asistencia baja':x.tipo)+(x.n?' · '+x.n+' seguidas':'')+(x.pct!==null&&x.pct!==undefined&&x.tipo!=='Faltas seguidas'?' · '+x.pct+'%':'')+'</span>'+
-   (badgeE?' '+badgeE:'')+(x.atrasada?' <span class="badge" style="background:#7f0000;color:#fff;border-radius:10px;padding:3px 9px;font-size:12px">⚠️ atrasada</span>':'')+'</div></div>'+
-   (estado?'<div style="margin-top:6px">'+estado+'</div>':'')+((!fs||!estado)?'<div style="margin-top:6px">'+esc(x.detalle)+'</div>':'')+
-   (x.tipo==='Ambos'&&x.pct!==null&&x.pct!==undefined?'<div style="margin-top:4px">📉 Asistencia de <b>'+x.pct+'%</b> en las últimas 2 semanas</div>':'')+
-   (x.nota?'<div class="ayuda" style="margin-top:4px">📝 '+esc(x.nota)+'</div>':'')+
-   '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+
-   (x.waAl?'<a class="wa" href="'+esc(x.waAl)+'" target="_blank">📲 Alumno</a>':(x.sinCel?'<span class="ayuda" title="Falta el celular del alumno">📵 sin cel. alumno</span>':''))+
-   (x.waRe?'<a class="wa" style="background:#128c7e" href="'+esc(x.waRe)+'" target="_blank">📲 Responsable'+(x.resp?' ('+esc(x.resp.split(' ')[0])+')':'')+'</a>':(x.sinCelR?'<span class="ayuda" title="Falta el celular del responsable">📵 sin cel. resp.</span>':''))+
-   '<button class="mini" style="background:#1b8a3a;color:#fff;padding:8px 12px" onclick="formContacte('+i+')">📞 Ya contacté</button>'+
-   '<button class="mini" style="background:#1565c0;color:#fff;padding:8px 12px" onclick="formRespuesta('+i+')">💬 Cargar respuesta'+(es==='esp'?' del alumno':'')+'</button>'+
-   (es!=='posp'?'<button class="mini" style="background:#455a64;color:#fff;padding:8px 12px" onclick="posponerAlerta('+i+',this)">⏸️ Posponer 3 días</button>':'')+
-   (fs?'<button class="mini" style="background:'+(x.volvio?'#2e7d32':'#888')+';color:#fff;padding:8px 12px" onclick="formVolvio('+i+')">✅ Volvió solo, cerrar</button>':'')+'</div>'+
-   '<div style="margin-top:8px"><a href="javascript:void 0" style="color:#1565c0;font-size:14px;text-decoration:none" onclick="verMasAlr('+i+')">'+(ab?'▾ Ver menos':'▸ Ver más')+'</a></div>'+
-   (ab?masAlr(x):'')+
-   '<div id="'+k+'f"></div></div>';});
- el('app').innerHTML=h;ALR_VISTA=l;
- if(foco){var qi=el('alrQ');qi.focus();try{qi.setSelectionRange(qi.value.length,qi.value.length);}catch(e){}}}
-// ⏸️ Posponer: la burbuja se va 3 días (no vuelve antes aunque el alumno falte)
-function posponerAlerta(i,btn){var x=ALR_VISTA[i];if(!x)return;
- if(!confirm('¿Posponer 3 días la alerta de '+x.alumno+'?\nVuelve sola a Pendientes dentro de 3 días si todavía no se resolvió.'))return;
- btn.disabled=true;btn.textContent='Guardando…';
- pedir('alertaMarcar',{clave:x.clave,otras:otras(x),que:'posponer',quien:quienSoy()},function(r){
-  x.estado='posp';x.atrasada=false;x.pospHasta=r.hasta||'';x.nota=(x.nota?x.nota+' · ':'')+'⏸️ Pospuesta hasta el '+(r.hasta||'')+' ('+(quienSoy()||'CSA')+')';
-  var b=el('bAlr');if(b)b.innerHTML=txtBotonAlr();var y=window.scrollY;pintarAlertas();window.scrollTo(0,y);},
-  function(e){btn.disabled=false;btn.textContent='⏸️ Posponer 3 días';falla(e,'al'+i+'f');});}
-var ALR_VISTA=[],ALR_AB={};
-function otras(x){return (x.claves||[]).filter(function(k){return k!==x.clave;}).join(',');}   // tarjeta "Ambos": las dos alertas se mueven juntas
-function verMasAlr(i){var x=ALR_VISTA[i];if(!x)return;if(ALR_AB[x.clave])delete ALR_AB[x.clave];else ALR_AB[x.clave]=1;var y=window.scrollY;pintarAlertas();window.scrollTo(0,y);}
-// lo que se despliega con "▸ Ver más"
-function masAlr(x){var col={P:['#1b8a3a','vino'],T:['#e0a800','tarde/retiro'],J:['#1565c0','justificado'],A:['#c0392b','faltó'],L:['#9e9e9e','lluvia / sin clase (no cuenta)']},fila=function(ic,tit,txt){return '<div style="margin-top:6px"><b>'+ic+' '+tit+':</b> '+txt+'</div>';};
- var h='<div style="background:#f3f5f9;border-radius:8px;padding:10px;margin-top:6px;font-size:14px">';
- if(x.faltoDias)h+=fila('📅','Faltó',esc(x.faltoDias));
- else if(x.detalle)h+=fila('📅','Detalle',esc(x.detalle));
- if(x.dias15&&x.dias15.length){
-  h+='<div style="margin-top:6px"><b>🗓️ Últimos 15 días'+(x.p15!==null&&x.p15!==undefined?' · '+x.p15+'% asistencia':'')+':</b></div><div style="display:flex;gap:3px;flex-wrap:wrap;margin-top:4px">'+
-   x.dias15.map(function(d){var c=col[d.r]||col.A;return '<span title="'+c[1]+'" style="background:'+c[0]+';color:#fff;border-radius:6px;padding:2px 6px;font-size:12px">'+esc(d.d)+'</span>';}).join('')+'</div>'+
-   '<div class="ayuda" style="margin-top:3px">verde vino · amarillo tarde/retiro · azul justificado · rojo faltó · gris lluvia/sin clase</div>';}
- else if(x.p15!==null&&x.p15!==undefined)h+=fila('🗓️','Asistencia 15 días',x.p15+'%');
- if(x.obsProf)h+=fila('👩‍🏫','Lo último que anotó el profe',esc(x.obsProf));
- if(x.jus&&x.jus.length)h+=fila('🩺','Justificativo',x.jus.map(esc).join('<br>'));
- h+=fila('📞','Contactos anteriores',x.contAnt&&x.contAnt.length?x.contAnt.map(esc).join('<br>'):'<span class="ayuda">ninguno</span>');
- if(x.nMes)h+='<div class="ayuda" style="margin-top:2px">'+(x.nMes>1?'<b style="color:#b71c1c">'+x.nMes+'.ª alerta de este mes</b>':'1.ª alerta de este mes')+'</div>';
- if(x.examen!==''&&x.examen!==undefined||x.prom!==''&&x.prom!==undefined)h+=fila('📝','Último examen',(x.examen!==''&&x.examen!==undefined?esc(x.examen):'–')+' · promedio '+(x.prom!==''&&x.prom!==undefined?esc(x.prom):'–'));
- if(x.dias15===undefined)h+='<div class="ayuda" style="margin-top:6px">Más datos aparecen con la próxima actualización.</div>';
- return h+'</div>';}
-function formVolvio(i){var x=ALR_VISTA[i],d=el('al'+i+'f');if(!x||!d)return;
- conFC(function(){d.innerHTML='<div style="background:#eef7ee;border-radius:8px;padding:10px;margin-top:8px">'+
-  '<div class="ayuda">Se cierra la alerta sin contactar porque el alumno ya volvió.'+(x.volvio?'':' <b>Ojo:</b> todavía no figura que haya vuelto en las listas.')+'</div>'+
-  '<div class="fila2" style="margin-top:6px"><div><label>¿Quién la cierra?</label><select id="avY'+i+'">'+op(FC.profes,quienSoy())+'</select></div>'+
-  '<div style="display:flex;align-items:flex-end"><button class="btn" style="width:auto;padding:10px 16px;background:#2e7d32" onclick="marcarVolvio('+i+')">✅ Cerrar alerta</button></div></div><div id="avM'+i+'"></div></div>';});}
-function marcarVolvio(i){var x=ALR_VISTA[i],m=el('avM'+i);if(!x)return;var quien=val('avY'+i);if(quien)guardado('gaussCsaYo',quien);
- m.innerHTML='<div class="ayuda">Guardando…</div>';
- pedir('alertaMarcar',{clave:x.clave,otras:otras(x),que:'volvio',quien:quien},function(){
-  ALR.alertas=ALR.alertas.filter(function(a){return a.clave!==x.clave;});var b=el('bAlr');if(b)b.innerHTML=txtBotonAlr();
-  var y=window.scrollY;pintarAlertas();window.scrollTo(0,y);},function(e){falla(e,'avM'+i);});}
-function val(id){var e=el(id);return e?e.value:"";}
-// 📞 Ya contacté: quién contactó + qué se dijo → pasa a "Esperando respuesta" (vuelve a pendientes si el alumno falta otra vez)
-function formContacte(i){var x=ALR_VISTA[i],d=el('al'+i+'f');if(!x||!d)return;
- conFC(function(){d.innerHTML='<div style="background:#eef7ee;border-radius:8px;padding:10px;margin-top:8px">'+
-  '<div class="fila2"><div><label>¿A quién le escribiste / llamaste?</label><select id="afQ'+i+'"><option value="alumno">Alumno</option><option value="responsable">Responsable</option><option value="ambos">Los dos</option></select></div>'+
-  '<div><label>¿Quién contactó?</label><select id="afY'+i+'">'+op(FC.profes,quienSoy())+'</select></div></div>'+
-  '<label>¿Qué le dijiste? <span class="ayuda">(opcional)</span></label><input id="afN'+i+'" placeholder="ej. le escribí por WhatsApp, todavía no lee">'+
-  '<div class="ayuda" style="margin-top:6px">La tarjeta pasa a <b>📵 Esperando respuesta</b>.</div>'+
-  '<div style="margin-top:8px"><button class="btn" style="width:auto;padding:10px 16px" onclick="marcarAlerta('+i+',\'contacte\')">📞 Guardar y pasar a Esperando respuesta</button></div><div id="afM'+i+'"></div></div>';});}
-// 💬 Cargar respuesta: ya se habló con el alumno / responsable → se anota lo que dijo y se cierra la tarjeta (las dos alertas si es "Ambos")
-function formRespuesta(i){var x=ALR_VISTA[i],d=el('al'+i+'f');if(!x||!d)return;
- conFC(function(){d.innerHTML='<div style="background:#eef3fb;border-radius:8px;padding:10px;margin-top:8px">'+
-  '<div class="fila2"><div><label>¿Quién respondió?</label><select id="afQ'+i+'"><option value="alumno">Alumno</option><option value="responsable">Responsable</option><option value="ambos">Los dos</option></select></div>'+
-  '<div><label>¿Quién habló con él?</label><select id="afY'+i+'">'+op(FC.profes,quienSoy())+'</select></div></div>'+
-  '<label>¿Qué respondió?</label><input id="afN'+i+'" placeholder="ej. estuvo enfermo, vuelve el sábado">'+
-  '<div class="ayuda" style="margin-top:6px">Se cierra la alerta'+(x.tipo==='Ambos'?' (las dos: faltas seguidas y asistencia baja)':'')+'.</div>'+
-  '<div style="margin-top:8px"><button class="btn" style="width:auto;padding:10px 16px;background:#1565c0" onclick="marcarAlerta('+i+',\'contactado\')">✔ Guardar respuesta y cerrar</button></div><div id="afM'+i+'"></div></div>';});}
-function marcarAlerta(i,accion){var x=ALR_VISTA[i],m=el('afM'+i);if(!x)return;var nota=val('afN'+i).trim(),quien=val('afY'+i);
- if(accion==='contactado'&&!nota){m.innerHTML='<div class="err">Escribí qué respondió (una nota corta).</div>';return;}
- if(quien)guardado('gaussCsaYo',quien);
- m.innerHTML='<div class="ayuda">Guardando…</div>';
- pedir('alertaMarcar',{clave:x.clave,otras:otras(x),que:accion,aquien:val('afQ'+i),nota:nota,quien:quien},function(){
-  if(accion==='contactado')ALR.alertas=ALR.alertas.filter(function(a){return a.clave!==x.clave;});
-  else{x.intentado=true;x.atrasada=false;x.estado='esp';x.volvioAFaltar=false;x.pospHasta='';x.nota=(x.nota?x.nota+' · ':'')+'📞 Contactó'+(nota?': '+nota:'')+' ('+(quien||'CSA')+')';}
-  var b=el('bAlr');if(b)b.innerHTML=txtBotonAlr();var y=window.scrollY;pintarAlertas();window.scrollTo(0,y);},function(e){falla(e,'afM'+i);});}
-
-// ---------- 📋 TODA LA ASISTENCIA ----------
-function asistencia(id){var a=alumno(id);if(a)ACTUAL=a;pantalla('');msg('Cargando toda la asistencia…');
- rapido('asistencia',{id:id},'csaAsis',id,function(D){msg('');
-  var h='<div class="card"><h2>📋 Asistencia completa · '+esc(a?nombreDe(a):id)+'</h2>'+
-   '<button class="mini" style="background:#1f4e79" onclick="perfil(\''+esc(id)+'\')">👤 Volver al perfil</button></div>';
-  h+='<div class="card"><h2>Por mes</h2>'+(D.meses.length?'<div style="overflow-x:auto"><table><tr><th>MES</th><th>TURNOS</th><th>PRESENTE</th><th>JUSTIF.</th><th>AUSENTE</th><th>%</th></tr>'+
-   D.meses.map(function(m){var p=m.t?Math.round(m.p/m.t*100):0;return '<tr><td>'+esc(m.mes)+'</td><td>'+m.t+'</td><td>'+m.p+'</td><td>'+m.j+'</td><td class="'+(m.a?'r':'')+'">'+m.a+'</td><td class="'+pct(p)+'">'+p+'%</td></tr>';}).join('')+
-   '</table></div>':'<div class="vacio">— sin registros —</div>')+'</div>';
-  h+='<div class="card"><h2>Día por día ('+D.filas.length+' turnos)</h2>'+(D.filas.length?'<div style="overflow-x:auto"><table><tr><th>FECHA</th><th>TURNO</th><th>RESULTADO</th><th>GRUPO</th><th>DOCENTE</th></tr>'+
-   D.filas.map(function(r){return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td class="'+colorRes(r[2])+'">'+esc(r[2])+'</td><td>'+esc(r[3])+'</td><td>'+esc(r[4])+'</td></tr>';}).join('')+
-   '</table></div>':'<div class="vacio">— sin registros —</div>')+'</div>';
-  el('app').innerHTML=h;window.scrollTo(0,0);},function(e){falla(e);});}
-
-// ---------- 📋 LISTA DE UN GRUPO ----------
-function listaGrupo(){conFC(function(){
- pantalla('<div class="card"><h2>📊 Resumen de grupo</h2><select id="lg" onchange="verGrupo()"><option value="">Elegí el grupo…</option>'+
-  FC.grupos.map(function(g){return '<option'+(g===guardado('gaussCsaGrupo')?' selected':'')+'>'+esc(g)+'</option>';}).join('')+'</select></div><div id="lgT"></div>');
- if(el('lg').value)verGrupo();});}
-function verGrupo(){var g=el('lg').value,t=el('lgT');if(!g){t.innerHTML='';return;}guardado('gaussCsaGrupo',g);
- t.innerHTML='<div class="card">Cargando…</div>';
- rapido('grupo',{grupo:g},'csaGrupo',g,function(D){GRP_D=D;GRP_G=g;pintarGrupoCSA();},function(e){falla(e,'lgT');});}
-// orden del resumen de grupo: por defecto por apellido; los que salieron siempre al final
-var GRP_D=null,GRP_G='',GRP_ORD=guardado('gaussCsaGrpOrd')||'apellido';
-var GRP_OPC=[['apellido','Apellido'],['sem','Semáforo'],['asis','Asistencia'],['deuda','Deuda'],['faltas','Faltas semana'],['prom','Prom. exámenes']];
-function ordGrupo(o){GRP_ORD=o;guardado('gaussCsaGrpOrd',o);pintarGrupoCSA();}
-function pintarGrupoCSA(){var D=GRP_D,g=GRP_G,t=el('lgT');if(!D||!t)return;var n={r:0,y:0,g:0};
- D.filas.forEach(function(x){if(x.sem==='🔴')n.r++;else if(x.sem==='🟡')n.y++;else if(x.sem==='🟢')n.g++;});
- var num=function(v,vac){return v===''||v===null||v===undefined||isNaN(Number(v))?vac:Number(v);},sem={'🔴':0,'🟡':1,'🟢':2};
- var cmp={apellido:function(){return 0;},sem:function(a,b){return (sem[a.sem]===undefined?3:sem[a.sem])-(sem[b.sem]===undefined?3:sem[b.sem]);},
-  asis:function(a,b){return num(a.d15,999)-num(b.d15,999)||num(a.d30,999)-num(b.d30,999);},deuda:function(a,b){return (b.deuda||0)-(a.deuda||0);},
-  faltas:function(a,b){return num(b.faltas,0)-num(a.faltas,0);},prom:function(a,b){return num(a.prom,999)-num(b.prom,999);}}[GRP_ORD]||function(){return 0;};
- var filas=D.filas.slice().sort(function(a,b){var sa=/sali/i.test(a.estado)?1:0,sb=/sali/i.test(b.estado)?1:0;return sa-sb||cmp(a,b)||a.nombre.localeCompare(b.nombre,'es');});
- var pc=function(v){return v===''||v===undefined||v===null?'–':v+'%';};
- t.innerHTML='<div class="card"><h2>'+esc(g)+' · '+D.filas.length+' alumnos</h2><div class="sub">🔴 '+n.r+' · 🟡 '+n.y+' · 🟢 '+n.g+' — tocá un alumno para ver su perfil</div>'+
-  '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="ayuda">Ordenar por:</span>'+GRP_OPC.map(function(o){
-   return '<button class="mini" style="'+(GRP_ORD===o[0]?'background:#1f4e79;color:#fff':'background:#e8eef6;color:#1f4e79')+'" onclick="ordGrupo(\''+o[0]+'\')">'+o[1]+'</button>';}).join('')+'</div>'+
-  '<div style="overflow-x:auto;margin-top:8px"><table><tr><th></th><th>ALUMNO</th><th>15 DÍAS</th><th>30 DÍAS</th><th>FALTAS SEMANA</th><th>PROM. EXÁMENES</th><th>DEUDA</th></tr>'+
-  filas.map(function(x){var sal=/sali/i.test(x.estado);
-   return '<tr class="clic'+(sal?' gris':'')+'" onclick="perfil(\''+esc(x.id)+'\')" title="'+esc(x.motivos)+'"><td>'+esc(x.sem)+'</td><td><b>'+esc(x.nombre)+'</b>'+(sal?' <small>(salió)</small>':'')+
-    (x.motivos?'<br><small style="color:#777">'+esc(x.motivos)+'</small>':'')+'</td>'+
-    '<td class="'+pct(x.d15)+'">'+pc(x.d15)+'</td><td class="'+pct(x.d30)+'">'+pc(x.d30)+'</td>'+
-    '<td class="'+(Number(x.faltas)>0?'r':'')+'">'+esc(x.faltas||0)+'</td>'+
-    '<td class="'+(x.prom===''?'':(x.prom<D.notaBaja?'r':(x.prom<D.notaMedia?'y':'g')))+'">'+(x.prom===''?'–':x.prom)+'</td>'+
-    '<td class="'+(x.deuda>0?'r':'')+'">'+(x.deuda>0?gs(x.deuda):'–')+'</td></tr>';}).join('')+'</table></div></div>';}
-
-// ---------- 🔗 LINKS DE LISTAS SEMANALES Y CARGA DE NOTAS ----------
-var LK=[];
-function linksListas(){conFC(function(){var g0=guardado('gaussCsaLk');
- pantalla('<div class="card"><h2>🔗 Links de listas y notas</h2><label>Grupo</label><select id="lkG" onchange="lkVer(0)">'+
-  '<option value=""></option>'+(FC.grupos||[]).map(function(g){return '<option'+(g===g0?' selected':'')+'>'+esc(g)+'</option>';}).join('')+'</select>'+
-  '<div id="lkR" style="margin-top:10px"><div class="ayuda">Elegí un grupo para ver sus links.</div></div></div>');
- if(g0&&(FC.grupos||[]).indexOf(g0)>=0)lkVer(0);});}
-function lkFila(t,sub,url,extra){var i=LK.push(url)-1;
- return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid #eee"><div><b>'+t+'</b>'+(sub?'<div class="ayuda">'+sub+'</div>':'')+'</div>'+
-  '<div style="display:flex;gap:6px"><a class="wa" style="background:#1f4e79;text-decoration:none" href="'+esc(url)+'" target="_blank">Abrir</a>'+
-  '<button class="wa" style="background:#555;border:0" onclick="lkCopiar('+i+',this)">Copiar link</button></div></div>';}
-function lkCopiar(i,b){var u=LK[i],ok=function(){var t=b.textContent;b.textContent='✅ Copiado';setTimeout(function(){b.textContent=t;},1500);};
- try{navigator.clipboard.writeText(u).then(ok,function(){lkViejo(u,ok);});}catch(e){lkViejo(u,ok);}}
-function lkViejo(u,ok){var t=document.createElement('textarea');t.value=u;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok();}catch(e){}document.body.removeChild(t);}
-function lkVer(todas){var g=val('lkG'),r=el('lkR');if(!g){r.innerHTML='<div class="ayuda">Elegí un grupo para ver sus links.</div>';return;}
- guardado('gaussCsaLk',g);r.innerHTML='<div class="ayuda">Buscando los links… (la primera vez puede tardar unos segundos)</div>';
- pedir('linksListas',{grupo:g,todas:todas?'1':''},function(D){LK=[];if(val('lkG')!==g)return;
-  var h='<h3 style="margin:6px 0">📝 Carga de notas</h3>'+(D.notas.length?D.notas.map(function(n){return lkFila('📝 '+esc(n.nombre),(n.activa?'Año en curso':'Año cerrado')+' · pestaña de '+esc(D.grupo),n.url);}).join(''):'<div class="ayuda">Todavía no hay planilla de notas para este grupo.</div>');
-  h+='<h3 style="margin:14px 0 6px">📋 Listas semanales</h3>'+(D.listas.length?D.listas.map(function(l){return lkFila((l.actual?'⭐ ':'')+esc(l.desde+' al '+l.hasta+' '+l.anio),(l.actual?'Esta semana · ':'')+esc(l.nombre),l.url);}).join(''):'<div class="ayuda">Todavía no hay listas creadas para este grupo.</div>');
-  if(D.hayMas)h+='<button class="btn gr" onclick="lkVer(1)">Ver las '+D.hayMas+' anteriores</button>';
-  r.innerHTML=h;},function(e){falla(e,'lkR');});}
+// ---------- 🎯 RESUMEN ESPECÍFICO ----------
+var SEL={},COORD='';
+function vigentes(){return GR.grupos.filter(function(g){return g.vigente||el('eTodos')&&el('eTodos').checked;});}
+function especifico(){SEL={};COORD='';
+ var coords={};GR.grupos.forEach(function(g){if(g.enc&&g.vigente)coords[g.enc]=1;});
+ var cursos={};GR.grupos.forEach(function(g){if(g.vigente)cursos[(g.curso||'Otros')+(g.mod?' '+g.mod:'')]=1;});
+ pantalla('<div class="card"><h2><span class="paso">1</span>¿Qué resumen?</h2>'+
+  '<label style="font-weight:normal"><input type="checkbox" id="eA" checked>📘 Académico</label>'+
+  '<label style="font-weight:normal"><input type="checkbox" id="eE">💰 Económico <span class="ayuda">(cobrado y deuda de esos grupos; sin gastos)</span></label></div>'+
+  '<div class="card"><h2><span class="paso">2</span>¿De qué grupos?</h2>'+
+  '<div class="ayuda">Por coordinador (marca sus grupos):</div><div>'+(Object.keys(coords).length?Object.keys(coords).sort().map(function(c){return '<span class="chip" data-c="'+esc(c)+'" onclick="porCoord(this)">'+esc(c)+'</span>';}).join(''):'<span class="ayuda">Cargá PROFESOR ENCARGADO en GRUPOS de Administración.</span>')+'</div>'+
+  '<div class="ayuda" style="margin-top:10px">Rápido por curso:</div><div>'+Object.keys(cursos).sort().map(function(c){return '<span class="chip" data-k="'+esc(c)+'" onclick="porCurso(this)">Todos '+esc(c)+'</span>';}).join('')+
+  '<span class="chip" onclick="SEL={};COORD=\'\';pintarGr()">✕ Ninguno</span></div>'+
+  '<div id="eG"></div><label style="font-weight:normal;margin-top:10px"><input type="checkbox" id="eTodos" onchange="pintarGr()">Mostrar también grupos que ya terminaron</label></div>'+
+  '<div class="card"><h2><span class="paso">3</span>¿Qué fechas?</h2><div id="eUlt"></div>'+
+  '<div class="fila"><div><label>Desde</label><input type="date" id="eD" value="'+isoMas(hoyIso(),-6)+'"></div><div><label>Hasta</label><input type="date" id="eH" value="'+hoyIso()+'"></div></div>'+
+  '<button class="btn" id="eB" onclick="genEsp()">🎯 Generar</button><div id="eR"></div></div>');
+ pintarGr();}
+function claveCurso(g){return (g.curso||'Otros')+(g.mod?' '+g.mod:'');}
+function pintarGr(){var por={};vigentes().forEach(function(g){(por[claveCurso(g)]=por[claveCurso(g)]||[]).push(g);});
+ el('eG').innerHTML=Object.keys(por).sort().map(function(k){return '<div class="gr-curso"><b>'+esc(k)+'</b><br>'+por[k].map(function(g){
+  return '<span class="gr-item'+(SEL[g.cod]?' on':'')+'" onclick="toggleG(\''+esc(g.cod)+'\')">'+(SEL[g.cod]?'☑️ ':'⬜ ')+esc(g.nombre)+'</span>';}).join('')+'</div>';}).join('');
+ [].forEach.call(document.querySelectorAll('.chip[data-c]'),function(c){c.className='chip'+(c.getAttribute('data-c')===COORD?' on':'');});
+ var n=Object.keys(SEL).length;el('eB').textContent='🎯 Generar'+(n?' ('+n+' grupo'+(n>1?'s':'')+')':' (todos los grupos)');}
+function toggleG(c){if(SEL[c])delete SEL[c];else SEL[c]=1;pintarGr();}
+function porCurso(ch){var k=ch.getAttribute('data-k');COORD='';vigentes().forEach(function(g){if(claveCurso(g)===k)SEL[g.cod]=1;});pintarGr();}
+function porCoord(ch){var c=ch.getAttribute('data-c');COORD=c;SEL={};GR.grupos.forEach(function(g){if(g.enc===c&&g.vigente)SEL[g.cod]=1;});
+ var u=(INFO.coords||{})[c];
+ if(u){el('eUlt').innerHTML='<div class="aviso">La última vez le generaste a <b>'+esc(c)+'</b> del '+fecha(u.desde)+' al '+fecha(u.hasta)+'. Te propongo seguir desde el '+fecha(isoMas(u.hasta,1))+'.</div>';
+  el('eD').value=isoMas(u.hasta,1);el('eH').value=hoyIso();}
+ else el('eUlt').innerHTML='<div class="ayuda">Primera vez para '+esc(c)+': elegí las fechas.</div>';
+ pintarGr();}
+function genEsp(){var A=el('eA').checked,E=el('eE').checked,r=el('eR'),d=el('eD').value,h=el('eH').value;
+ if(!A&&!E){r.innerHTML='<div class="err">Elegí académico, económico o los dos.</div>';return;}
+ if(!d||!h){r.innerHTML='<div class="err">Elegí las fechas.</div>';return;}
+ var cods=Object.keys(SEL),gs=GR.grupos.filter(function(g){return SEL[g.cod];});
+ var etiqueta=COORD?COORD:(cods.length===0?'':(cods.length<=3?gs.map(function(g){return g.nombre;}).join(', '):cods.length+' grupos'));
+ var b=el('eB');b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';
+ r.innerHTML=(A?'<div id="eRA" class="pdf">📘 Académico: generando…</div>':'')+(E?'<div id="eRE" class="pdf">💰 Económico: generando…</div>':'');
+ var n=0,tot=(A?1:0)+(E?1:0),fin=function(){if(++n<tot)return;b.disabled=false;pintarGr();};
+ if(A)csa('franAca',{desde:d,hasta:h,grupos:gs.map(function(g){return g.nombre;}).join('|'),etiqueta:etiqueta,coord:COORD},function(x){
+  el('eRA').outerHTML=tarjeta(x,'csa');if(COORD){INFO.coords=INFO.coords||{};INFO.coords[COORD]={desde:d,hasta:h};}fin();},function(e){falla(e,'eRA');fin();});
+ if(E)adm('franEco',{desde:d,hasta:h,grupos:cods.join(','),etiqueta:etiqueta},function(x){el('eRE').outerHTML=tarjeta(x,'adm');fin();},function(e){falla(e,'eRE');fin();});}
 
 // ---------- 🖨️ PDF DE NOTAS ----------
-var PN=null;
 function pdfNotas(){var seguir=function(){
  pantalla('<div class="card"><h2>🖨️ PDF de notas de un grupo</h2>'+
   '<label>Planilla</label><select id="nP" onchange="nGrupos()">'+PN.map(function(p,i){return '<option value="'+i+'">'+esc(p.nombre)+'</option>';}).join('')+'</select>'+
   '<label>Grupo</label><select id="nG" onchange="nExs()"></select>'+
   '<label>¿Qué exámenes?</label><select id="nM" onchange="nExs()"><option value="uno">Solo un examen</option><option value="todos">Todos los exámenes del grupo</option></select>'+
   '<div id="nEw"><label>Examen</label><select id="nE"></select></div>'+
-  '<button class="btn" id="nB" onclick="nGenerar()">🖨️ Generar PDF</button><div id="nR" style="margin-top:10px"></div></div>');
- var g=guardado('gaussCsaNotas').split('|');if(g[0]&&PN[g[0]])el('nP').value=g[0];nGrupos();if(g[1]&&el('nG').options[g[1]])el('nG').value=g[1];nExs();};
- if(PN)seguir();else{msg('Cargando planillas de notas… (puede tardar unos segundos)');
-  var pl=function(){pedir('notasDatos',{},function(d){PN=d;msg('');seguir();},function(e){falla(e);});};
-  sbLeer('csaNotas','todo',function(d){PN=d;msg('');seguir();pedir('notasDatos',{},function(d2){PN=d2;},function(){});},pl);}}
+  '<button class="btn" id="nB" onclick="nGenerar()">🖨️ Generar PDF</button><div id="nR"></div></div>');nGrupos();};
+ if(PN)seguir();else{pantalla('');msg('Cargando planillas de notas… (unos segundos)');var pl=function(){csa('notasDatos',{},function(d){PN=d;seguir();},function(e){falla(e);});};
+  sbLeer('csaNotas','todo',function(d){PN=d;seguir();csa('notasDatos',{},function(d2){PN=d2;},function(){});},pl);}}
 function nGrupos(){var p=PN[el('nP').value];el('nG').innerHTML=p.grupos.map(function(g,i){return '<option value="'+i+'">'+esc(g.nombre)+(g.ex.length?'':' (sin notas)')+'</option>';}).join('');nExs();}
-function nExs(){var g=PN[el('nP').value].grupos[el('nG').value],todos=el('nM').value==='todos';el('nR').innerHTML='';
- el('nEw').style.display=todos?'none':'block';
- el('nE').innerHTML=g&&g.ex.length?g.ex.slice().reverse().map(function(e){return '<option value="'+e.col+'">'+esc(e.texto)+'</option>';}).join(''):'<option value="">— sin notas cargadas —</option>';}
+function nExs(){var g=PN[el('nP').value].grupos[el('nG').value],todos=el('nM').value==='todos';el('nR').innerHTML='';el('nEw').style.display=todos?'none':'block';
+ el('nE').innerHTML=g&&g.ex.length?g.ex.slice().reverse().map(function(e){return '<option value="'+e.col+'">'+esc(e.texto)+'</option>';}).join(''):'<option value="">— sin notas —</option>';}
 function nGenerar(){var p=PN[el('nP').value],g=p.grupos[el('nG').value],r=el('nR');
  if(!g||!g.ex.length){r.innerHTML='<div class="err">Ese grupo todavía no tiene notas cargadas.</div>';return;}
  var cols=el('nM').value==='todos'?g.ex.map(function(e){return e.col;}):[el('nE').value];
- guardado('gaussCsaNotas',el('nP').value+'|'+el('nG').value);
- var b=el('nB');b.disabled=true;b.textContent='Generando… (unos segundos)';r.innerHTML='';
- pedir('pdfNotas',{archivo:p.id,hoja:g.nombre,cols:cols.join(',')},function(x){b.disabled=false;b.textContent='🖨️ Generar PDF';
-  r.innerHTML='✅ '+esc(x.nombre)+'<br><a class="wa" style="background:#1f4e79" href="'+esc(x.ver)+'" target="_blank">👁️ Ver PDF</a>'+
-   '<a class="wa" style="background:#555" href="'+esc(x.bajar)+'" target="_blank">⬇️ Descargar</a>'+
-   '<div class="ayuda" style="margin-top:6px">Queda guardado en la carpeta PDF NOTAS, al lado de la planilla de notas.</div>';},
+ var b=el('nB');b.disabled=true;b.textContent='Generando…';
+ csa('pdfNotas',{archivo:p.id,hoja:g.nombre,cols:cols.join(',')},function(x){b.disabled=false;b.textContent='🖨️ Generar PDF';
+  r.innerHTML='<div class="pdf"><b>🖨️ '+esc(x.nombre)+'</b><a class="acc" style="background:#1f4e79" href="'+esc(x.ver)+'" target="_blank">👁️ Ver</a><a class="acc" style="background:#555" href="'+esc(x.bajar)+'" target="_blank">⬇️ Descargar</a></div>';},
   function(e){b.disabled=false;b.textContent='🖨️ Generar PDF';falla(e,'nR');});}
 
-// ---------- opciones ----------
-function op(l,sel){return '<option value=""></option>'+(l||[]).map(function(x){return '<option'+(x===sel?' selected':'')+'>'+esc(x)+'</option>';}).join('');}
-function quienSoy(){return guardado('gaussCsaYo');}
-function otroBoton(t,fn){return '<button class="btn az" onclick="'+fn+'()">'+t+'</button>'+botonPerfil();}
+// ---------- 📋 LISTA DE LLAMADO ----------
+function lista(){var d=new Date();d.setDate(d.getDate()+((8-d.getDay())%7||7));var lunes=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+ pantalla('<div class="card"><h2>📋 Crear lista de llamado</h2>'+
+  '<label>Lista</label><select id="lL">'+INFO.listas.map(function(l){return '<option value="'+esc(l.nombre)+'">'+esc(l.nombre)+' ('+esc(String(l.tipo).toLowerCase())+')</option>';}).join('')+'</select>'+
+  '<label>Cualquier día de la semana <span class="ayuda">(o del mes, si es mensual)</span></label><input type="date" id="lF" value="'+lunes+'">'+
+  '<button class="btn" id="lB" onclick="crearL()">📋 Crear lista</button><div id="lR"></div></div>');}
+function crearL(){var b=el('lB');b.disabled=true;b.textContent='Creando… (puede tardar un minuto)';
+ csa('franCrearLista',{lista:el('lL').value,fecha:el('lF').value},function(r){b.disabled=false;b.textContent='📋 Crear lista';
+  el('lR').innerHTML='<div class="ok">✅ Lista creada</div>'+tarjeta({nombre:r.nombre,tipo:'Lista',url:r.url,t:Date.now()});},
+  function(e){b.disabled=false;b.textContent='📋 Crear lista';falla(e,'lR');});}
 
-// ---------- 🩺 JUSTIFICATIVO ----------
-function justificativo(id){conFC(function(){abrir('¿De qué alumno?','ju',function(){
- el('ju').innerHTML='<div class="card"><h2><span class="paso">2</span>Justificativo</h2>'+
-  '<div class="fila2"><div><label>Desde <span class="req">*</span></label><input type="date" id="jD" value="'+FC.hoy+'"></div>'+
-  '<div><label>Turno</label><select id="jDT">'+op(FC.turnos)+'</select></div></div>'+
-  '<div class="fila2"><div><label>Hasta <span class="ayuda">(vacío = el mismo día)</span></label><input type="date" id="jH"></div>'+
-  '<div><label>Turno</label><select id="jHT">'+op(FC.turnos)+'</select></div></div>'+
-  '<div class="ayuda">Turno vacío = el día entero.</div>'+
-  '<label>Motivo <span class="req">*</span></label><input id="jM" placeholder="ej. dolor de cabeza, viaje, turno médico…">'+
-  '<div class="fila2"><div><label>¿Quién justificó?</label><select id="jQ">'+op(FC.quien)+'</select></div>'+
-  '<div><label>¿A quién avisó?</label><select id="jA">'+op(FC.aquien,quienSoy())+'</select></div></div>'+
-  '<label>Comprobante <span class="ayuda">(opcional: link de la foto, certificado…)</span></label><input id="jC">'+
-  '<button class="btn" id="jB" onclick="guardarJus()">🩺 Guardar justificativo</button><div id="jMsg"></div></div>';},id);});}
-function guardarJus(){var a=PICK,m=el('jMsg');
- if(!el('jD').value){m.innerHTML='<div class="err">Falta DESDE.</div>';return;}
- if(!el('jM').value.trim()){m.innerHTML='<div class="err">Falta el motivo.</div>';return;}
- if(el('jA').value)guardado('gaussCsaYo',el('jA').value);
- var b=el('jB');b.disabled=true;b.textContent='Guardando…';ACTUAL=a;
- pedir('justificativo',{id:a[1],desde:el('jD').value,dT:el('jDT').value,hasta:el('jH').value,hT:el('jHT').value,motivo:el('jM').value,
-   quien:el('jQ').value,aquien:el('jA').value,comp:el('jC').value},function(r){
-   hecho('Justificativo de '+esc(r.nombre)+' guardado.<br><span style="font-weight:normal;font-size:15px">Las faltas de esos días pasan a "Justificado" en la próxima actualización del CSA (cada hora).</span>',otroBoton('🩺 Cargar otro','justificativo'));},
-  function(e){b.disabled=false;b.textContent='🩺 Guardar justificativo';falla(e,'jMsg');});}
+// ---------- 📁 HISTORIAL ----------
+function historial(){pantalla('<div class="card"><h2>📁 Historial</h2><div id="hR">Cargando…</div></div>');
+ var todo=[],n=0,fin=function(){if(++n<2)return;todo.sort(function(a,b){return (b.t||0)-(a.t||0);});
+  el('hR').innerHTML=todo.length?todo.slice(0,30).map(function(x){return tarjeta(x,x.api);}).join(''):'<div class="ayuda">Todavía no generaste nada desde el panel.</div>';};
+ csa('franInfo',{},function(d){INFO=d;(d.hist||[]).forEach(function(x){x.api='csa';todo.push(x);});fin();},function(){fin();});
+ adm('franHist',{},function(d){(d.hist||[]).forEach(function(x){x.api='adm';todo.push(x);});fin();},function(){fin();});}
 
-// ---------- 📝 OBSERVACIÓN ----------
-function observacion(id){conFC(function(){abrir('¿De qué alumno?','ob',function(){
- el('ob').innerHTML='<div class="card"><h2><span class="paso">2</span>Observación</h2>'+
-  '<label>Tipo</label><select id="oT">'+op(FC.tipos,FC.tipos[0])+'</select>'+
-  '<label>Qué pasó <span class="req">*</span></label><textarea id="oD" rows="4" placeholder="Lo que viste o hablaste…"></textarea>'+
-  '<div class="fila2"><div><label>Resultado <span class="ayuda">(si fue un seguimiento)</span></label><select id="oR">'+op(FC.resultados)+'</select></div>'+
-  '<div><label>Anotado por</label><select id="oQ">'+op(FC.profes,quienSoy())+'</select></div></div>'+
-  '<label>Próximo paso <span class="ayuda">(opcional)</span></label><input id="oP" placeholder="ej. volver a llamar el viernes">'+
-  '<button class="btn" id="oB" onclick="guardarObs()">📝 Guardar observación</button><div id="oMsg"></div></div>';el('oD').focus();},id);});}
-function guardarObs(){var a=PICK,m=el('oMsg');
- if(!el('oD').value.trim()){m.innerHTML='<div class="err">Escribí la observación.</div>';return;}
- if(el('oQ').value)guardado('gaussCsaYo',el('oQ').value);
- var b=el('oB');b.disabled=true;b.textContent='Guardando…';ACTUAL=a;
- pedir('observacion',{id:a[1],tipo:el('oT').value,detalle:el('oD').value,resultado:el('oR').value,proximo:el('oP').value,quien:el('oQ').value},function(r){
-   hecho('Observación de '+esc(r.nombre)+' guardada en OBSERVACIONES.',otroBoton('📝 Anotar otra','observacion'));},
-  function(e){b.disabled=false;b.textContent='📝 Guardar observación';falla(e,'oMsg');});}
+// ---------- 📥 HORARIO SEMANAL DE CARLOS ----------
+function val(id){var e=el(id);return e?String(e.value||""):"";}
+var HOR=null;
+function postCSA(acc,params,ok,mal){var b={accion:acc,pin:PIN};for(var k in params)b[k]=params[k];
+ fetch(API_CSA,{method:'POST',body:JSON.stringify(b),credentials:'omit'}).then(function(r){return r.json();})
+ .then(function(d){if(d&&d.error)mal({message:d.error});else ok(d);})
+ .catch(function(){mal({message:'No pude conectar con el CSA. Revisá la conexión y probá de nuevo.'});});}
+function cargarXLSX(fn){if(window.XLSX){fn();return;}var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+ s.onload=fn;s.onerror=function(){msg('<span class="err">⚠️ No pude cargar el lector de Excel. Revisá la conexión.</span>');};document.head.appendChild(s);}
+function horario(){HOR=null;pantalla('<div class="card"><h2>📥 Cargar horario de la semana</h2>'+
+ '<div class="ayuda">Subí el Excel de Carlos. Se leen solo los grupos <b>FIUNA</b>: los <b>exámenes</b> van al 📅 calendario (y salen las alertas de ausencia), '+
+ 'TAREA / DESCANSO / terminar ejercicios quedan como <b>🚫 sin clase</b>, y en las listas de esa semana se completan solas las filas <b>DOCENTE</b> y <b>MATERIA</b>.</div>'+
+ '<label>Archivo de Excel</label><input type="file" id="hF" accept=".xlsx,.xls" onchange="leerHorario()">'+
+ '<div id="hR"></div></div>');}
+var MESES_H=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+function sinTilde(s){return String(s==null?'':s).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();}
+// "Octubre_26_al_31.xlsx" → lunes de esa semana
+function lunesDeArchivo(nombre){var n=sinTilde(nombre).replace(/_/g,' '),m=-1;MESES_H.forEach(function(x,i){if(n.indexOf(sinTilde(x))>=0)m=i;});
+ var d=(n.match(/(\d{1,2})/)||[])[1];if(m<0||!d)return '';var hoy=new Date(),y=hoy.getFullYear();if(m<hoy.getMonth()-6)y++;
+ var f=new Date(Date.UTC(y,m,Number(d))),w=f.getUTCDay();f=new Date(f.getTime()-((w+6)%7)*864e5);return f.toISOString().slice(0,10);}
+function lunesDeHoy(){var h=hoyIso(),p=h.split('-').map(Number),f=new Date(Date.UTC(p[0],p[1]-1,p[2])),w=f.getUTCDay();
+ return new Date(f.getTime()+(w===0?1:-(w-1))*864e5).toISOString().slice(0,10);}
+var DIAS_H=['LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO'];
+// Celda → {k: E examen | S sin clase | C clase, mat, prof}
+function celdaHorario(txt){var t=String(txt||'').replace(/\r/g,'').trim();if(!t)return null;var n=sinTilde(t);
+ if(/^(TAREA|DESCANSO|TERMINAR EJERCICIOS)/.test(n))return {k:'S',mat:'',prof:'',txt:t.replace(/\s+/g,' ')};
+ var mat=t.split('.')[0].trim(),prof='',m=t.match(/\s{3,}([^\s].*?)\s*$/);
+ if(m&&m[1].length<=25)prof=m[1].trim();
+ else{var partes=t.split('.').map(function(x){return x.trim();}).filter(function(x){return x;}),u=partes[partes.length-1]||'';
+  var w=u.split(/\s+/),ult=w.slice(-1)[0]||'';if(partes.length>1&&ult&&/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+$/.test(ult)&&!/^(Ejercicios|Examen|Teoria|Repaso|Capitulo|Rectas|Vectores|Triangulos|Principia|Generales|Trigo|Geo)$/i.test(ult))prof=ult;}
+ var ex=/\bEXAMEN\b/.test(n.replace(/PRE[\s-]*EXAMEN/g,''));   // "Miscelánea pre examen" no es examen
+ return {k:ex?'E':'C',mat:mat,prof:prof,txt:t.replace(/\s{2,}/g,' ').slice(0,120)};}
+function leerHorario(){var f=el('hF').files[0],r=el('hR');if(!f)return;r.innerHTML='<div class="ayuda">Leyendo el Excel…</div>';
+ cargarXLSX(function(){var fr=new FileReader();fr.onload=function(ev){try{
+  var wb=XLSX.read(new Uint8Array(ev.target.result),{type:'array'}),nom=wb.SheetNames.filter(function(s){return /HORARIO/i.test(s);})[0]||wb.SheetNames[0];
+  var A=XLSX.utils.sheet_to_json(wb.Sheets[nom],{header:1,defval:'',raw:false}),items=[],grupos={};
+  for(var i=0;i<A.length-3;i++){var fila=A[i];
+   for(var c=0;c<fila.length;c++){var g=sinTilde(fila[c]);if(!/^FIUNA (EXT|COL|INT)\b/.test(g))continue;
+    var dia=sinTilde((A[i+1]||[])[c]),d=-1;DIAS_H.forEach(function(x,k){if(dia.indexOf(x)===0)d=k;});if(d<0)continue;
+    [0,1].forEach(function(t){var x=celdaHorario((A[i+2+t]||[])[c]);if(!x)return;grupos[g]=1;
+     items.push({g:String(fila[c]).replace(/\s+/g,' ').trim(),d:d,t:t,k:x.k,mat:x.mat,prof:x.prof,txt:x.txt});});}}
+  if(!items.length){r.innerHTML='<div class="err">No encontré grupos FIUNA en la hoja "'+esc(nom)+'".</div>';return;}
+  HOR={items:items,archivo:f.name};var lu=lunesDeArchivo(f.name)||lunesDeHoy();
+  r.innerHTML='<div class="ok" style="margin-top:10px">Leí <b>'+items.length+' turnos</b> de '+Object.keys(grupos).length+' grupos FIUNA ('+items.filter(function(x){return x.k==='E';}).length+' con examen).</div>'+
+   '<label>Semana (lunes)</label><input type="date" id="hL" value="'+lu+'">'+
+   '<label style="font-weight:normal;margin-top:8px"><input type="checkbox" id="hP" style="width:auto"> Pisar el docente / materia que ya estén escritos en las listas</label>'+
+   '<button class="btn" id="hV" onclick="previaHorario()">👁️ Ver qué se va a cargar</button><div id="hPrev"></div>';
+ }catch(e){r.innerHTML='<div class="err">⚠️ No pude leer el archivo: '+esc(e.message||e)+'</div>';}};fr.readAsArrayBuffer(f);});}
+function datosHorario(){return {lunes:val('hL'),items:HOR.items};}
+function previaHorario(){var d=el('hPrev'),b=el('hV');if(!HOR)return;if(!val('hL')){d.innerHTML='<div class="err">Elegí la semana.</div>';return;}
+ b.disabled=true;b.textContent='Revisando… (unos segundos)';d.innerHTML='';
+ postCSA('franHorario',{datos:datosHorario(),confirmar:'0',pisar:el('hP').checked?'1':''},function(r){b.disabled=false;b.textContent='👁️ Ver qué se va a cargar';d.innerHTML=htmlHorario(r)+
+   '<button class="btn" style="background:#1b8a3a" id="hC" onclick="cargarHorario()">✅ Cargar en el calendario y las listas</button><div id="hM"></div>';},
+  function(e){b.disabled=false;b.textContent='👁️ Ver qué se va a cargar';falla(e,'hPrev');});}
+function lista2(t,l,col){return l&&l.length?'<div style="margin-top:8px;background:'+(col||'#fff2cc')+';border-radius:8px;padding:8px"><b>'+t+'</b><div style="font-size:14px">'+l.map(esc).join(' · ')+'</div></div>':'';}
+function htmlHorario(r){
+ return '<div class="card" style="margin-top:10px;background:#f7f9fc"><b>Semana del '+esc(r.semana)+'</b>'+
+  '<div style="margin-top:6px">📝 <b>'+r.examenes.length+' exámenes</b> al calendario'+(r.examenes.length?':':'')+'</div>'+
+  r.examenes.map(function(x){return '<div style="font-size:14px;margin-left:10px">• '+esc(x.g)+' · '+esc(x.dia)+' '+esc(x.turno)+' · <b>'+esc(x.mat)+'</b></div>';}).join('')+
+  '<div style="margin-top:6px">🚫 <b>'+r.sinClase+' turnos sin clase</b> (tarea, descanso, terminar ejercicios)</div>'+
+  '<div style="margin-top:6px">📋 <b>'+r.celdas+' casillas</b> de DOCENTE / MATERIA para completar en: '+(r.listas.length?esc(r.listas.join(', ')):(!r.celdas&&!(r.sinLista&&r.sinLista.length)?'<span style="color:#1b8a3a">✅ ninguna: las listas de esa semana ya estaban completas</span>':'<span class="err" style="display:inline">ninguna lista</span>'))+
+  (r.yaTenian?' <span class="ayuda">('+r.yaTenian+' ya tenían otro valor y no se tocan; tildá "pisar" para cambiarlas)</span>':'')+'</div>'+
+  '<div style="margin-top:6px">🙈 <b>'+(r.ocultar||0)+' turnos sin clase</b> se ocultan en las listas'+(r.mostrar?' · <b>'+r.mostrar+'</b> se vuelven a mostrar':'')+
+  ' <span class="ayuda">(no se borran: se ven tocando las flechitas ◀▶ del encabezado)</span></div>'+
+  lista2('⚠️ Turnos sin clase que ya tienen marcas P/A/J (no se ocultan):',r.conMarcas)+
+  lista2('⚠️ Grupos que no existen en el CSA (se saltean):',r.sinGrupo)+
+  lista2('⚠️ Grupos sin lista creada para esa semana (no se completa docente/materia):',r.sinLista)+
+  lista2('⚠️ Materias sin equivalencia (hoja MATERIAS, columnas H e I):',r.sinMateria)+
+  lista2('⚠️ Apodos de profes sin docente (hoja PROFES HORARIO):',r.sinProfe)+
+  (r.apodosNuevos&&r.apodosNuevos.length?'<div style="margin-top:8px;background:#eaf2fb;border-radius:8px;padding:8px"><b>👤 Apodos nuevos</b> (se agregan a PROFES HORARIO; revisá que estén bien):'+
+   r.apodosNuevos.map(function(a){return '<div style="font-size:14px">'+esc(a.apodo)+' → '+(a.docente?esc(a.docente):'<span style="color:#c0392b">sin adivinar: completalo en la hoja</span>')+'</div>';}).join('')+'</div>':'')+
+  lista2('Avisos:',r.avisos)+'</div>';}
+function cargarHorario(){var b=el('hC'),m=el('hM');if(!confirm('¿Cargar el horario de la semana en el calendario y las listas?'))return;
+ b.disabled=true;b.textContent='Cargando… (puede tardar un poco)';
+ postCSA('franHorario',{datos:datosHorario(),confirmar:'1',pisar:el('hP').checked?'1':''},function(r){
+   pantalla('<div class="card ok"><b style="font-size:19px">✅ Horario cargado</b>'+htmlHorario(r)+
+    '<div class="ayuda" style="margin-top:8px">Si volvés a cargar el horario de la misma semana, se reemplaza lo que se cargó antes en el calendario (no se duplica).</div>'+
+    '<button class="btn" onclick="inicio()">⬅ Volver al inicio</button></div>');},
+  function(e){b.disabled=false;b.textContent='✅ Cargar en el calendario y las listas';falla(e,'hM');});}
 
-// ---------- 📞 CONTACTO ----------
-var MOTIVOS_C=['Faltas','Notas bajas','Conducta','Deuda','Seguimiento','Justificativo','Otro'];
-var CON_QUIEN=['Alumno','Responsable','Mamá','Papá','Tutor/a','Otro'];
-var MEDIOS=['WhatsApp','Llamada','En persona','Mensaje de texto'];
-function contacto(id){conFC(function(){abrir('¿Por qué alumno?','co',function(){
- el('co').innerHTML='<div class="card"><h2><span class="paso">2</span>Contacto</h2>'+
-  '<div class="fila2"><div><label>Hablé con <span class="req">*</span></label><select id="cA">'+op(CON_QUIEN)+'</select></div>'+
-  '<div><label>Por</label><select id="cM">'+op(MEDIOS,'WhatsApp')+'</select></div></div>'+
-  '<div class="fila2"><div><label>Motivo</label><select id="cMo">'+op(MOTIVOS_C)+'</select></div>'+
-  '<div><label>Quién contactó</label><select id="cQ">'+op(FC.profes,quienSoy())+'</select></div></div>'+
-  '<label>Qué se habló <span class="ayuda">(opcional)</span></label><textarea id="cN" rows="3"></textarea>'+
-  '<button class="btn" id="cB" onclick="guardarCon()">📞 Guardar contacto</button><div id="cMsg"></div></div>';},id);});}
-function guardarCon(){var a=PICK,m=el('cMsg');
- if(!el('cA').value){m.innerHTML='<div class="err">Elegí con quién hablaste.</div>';return;}
- if(el('cQ').value)guardado('gaussCsaYo',el('cQ').value);
- var b=el('cB');b.disabled=true;b.textContent='Guardando…';ACTUAL=a;
- pedir('contacto',{id:a[1],aquien:el('cA').value,medio:el('cM').value,motivo:el('cMo').value,quien:el('cQ').value,nota:el('cN').value},function(r){
-   hecho('Contacto con '+esc(r.nombre)+' guardado en REGISTRO DE CONTACTOS.<br><span style="font-weight:normal;font-size:15px">Cuenta como "último contacto" en la próxima actualización.</span>',otroBoton('📞 Registrar otro','contacto'));},
-  function(e){b.disabled=false;b.textContent='📞 Guardar contacto';falla(e,'cMsg');});}
-
-// ---------- 🔄 CAMBIAR DE GRUPO (lo guarda Administración) ----------
-function conFI(fn){if(FI)fn();else{msg('Cargando grupos…');pedirAdm('formInscripcion',{},function(d){FI=d;msg('');fn();},function(e){falla(e);});}}
-function cambiarGrupo(id){conFI(function(){abrir('¿Qué alumno cambia de grupo?','cg',function(a){
- var mods={};FI.grupos.forEach(function(g){(mods[g.mod||'Otros']=mods[g.mod||'Otros']||[]).push(g);});
- el('cg').innerHTML='<div class="card"><h2><span class="paso">2</span>Grupo nuevo</h2>'+
-  '<div class="ayuda">Ahora está en: <b>'+esc(a[2]||'—')+'</b></div>'+
-  '<label>Pasa a <span class="req">*</span></label><select id="cgG"><option value=""></option>'+
-  Object.keys(mods).map(function(m){return '<optgroup label="'+esc(m)+'">'+mods[m].map(function(g){return '<option value="'+esc(g.cod)+'">'+esc(g.nombre)+'</option>';}).join('')+'</optgroup>';}).join('')+'</select>'+
-  '<label>Desde el día <span class="req">*</span></label><input type="date" id="cgF" value="'+hoyIso()+'">'+
-  '<div class="ayuda" style="margin-top:8px">Se cierra la inscripción de antes ese día y se crea la nueva. La cuota la revisa secretaría (le llega un aviso). En el CSA se ve en la próxima actualización.</div>'+
-  '<button class="btn" id="cgB" onclick="guardarCambio()">🔄 Cambiar de grupo</button><div id="cgM"></div></div>';},id);});}
-function guardarCambio(){var a=PICK,g=el('cgG').value,m=el('cgM');
- if(!g){m.innerHTML='<div class="err">Elegí el grupo nuevo.</div>';return;}
- if(!el('cgF').value){m.innerHTML='<div class="err">Elegí la fecha.</div>';return;}
- var gn=FI.grupos.filter(function(x){return x.cod===g;})[0];
- if(!confirm('¿Pasar a '+nombreDe(a)+'\nde '+(a[2]||'?')+' a '+gn.nombre+'\ndesde el '+fecha(el('cgF').value)+'?'))return;
- var b=el('cgB');b.disabled=true;b.textContent='Guardando…';ACTUAL=a;
- pedirAdm('cambioGrupo',{id:a[1],grupo:g,fecha:el('cgF').value,quien:quienSoy()},function(r){a[2]=r.grupo;
-   hecho(esc(r.nombre)+' pasó a '+esc(r.grupo)+'.<br><span style="font-weight:normal;font-size:15px">Sumalo al grupo de WhatsApp nuevo.</span>',otroBoton('🔄 Cambiar a otro alumno','cambiarGrupo'));},
-  function(e){b.disabled=false;b.textContent='🔄 Cambiar de grupo';falla(e,'cgM');});}
-
-// ---------- 🚪 SALIÓ DEL GRUPO (lo guarda Administración) ----------
-function baja(id){var seguir=function(){abrir('¿Qué alumno salió?','bj',function(a){
- el('bj').innerHTML='<div class="card"><h2><span class="paso">2</span>Salió del grupo</h2>'+
-  '<label>¿Cuándo avisó que ya no viene? <span class="req">*</span></label><input type="date" id="bA" value="'+FB.hoy+'">'+
-  '<div style="background:#f3f5f9;border-radius:8px;padding:10px;margin-top:12px"><b>Último día que vino:</b> <span id="bUv">buscando en las listas…</span><input type="hidden" id="bF">'+
-  '<div class="ayuda">Sale solo de las listas (la última vez que tuvo presente). Las cuotas las revisa secretaría (le llega un aviso).</div></div>'+
-  '<label>Motivo</label>'+(FB.motivos.length?'<select id="bM">'+op(FB.motivos)+'</select>':'<input id="bM">')+
-  '<label>Observación <span class="ayuda">(opcional)</span></label><input id="bO">'+
-  '<button class="btn" id="bB" onclick="guardarBaja()">🚪 Confirmar salida</button><div id="bMsg"></div></div>';
- pedirAdm('bajaPrevia',{id:a[1]},function(r){if(!el('bF'))return;el('bF').value=r.ultimaVez||'';el('bUv').innerHTML=r.ultimaVez?'<b>'+esc(r.ultimaVezTxt)+'</b>':'no figura en las listas (se usa el día que avisó)';},
-  function(){if(el('bUv'))el('bUv').textContent='se busca al guardar';});},id);};
- if(FB)seguir();else{msg('Cargando…');pedirAdm('formBaja',{},function(d){FB=d;msg('');seguir();},function(e){falla(e);});}}
-function guardarBaja(){var a=PICK,m=el('bMsg');
- if(!el('bA').value){m.innerHTML='<div class="err">Falta cuándo avisó.</div>';return;}
- if(!confirm('¿Registrar que '+nombreDe(a)+' ('+(a[2]||'')+') salió?\n\nAvisó el '+fecha(el('bA').value)+(el('bF').value?'\nVino por última vez el '+fecha(el('bF').value):'')))return;
- var b=el('bB');b.disabled=true;b.textContent='Guardando…';ACTUAL=a;
- pedirAdm('baja',{id:a[1],fecha:el('bF').value,ultima:el('bF').value,aviso:el('bA').value,motivo:el('bM').value,obs:el('bO').value,quien:quienSoy()},function(r){a[3]='Salió';
-   hecho(esc(r.nombre)+' salió de '+esc(r.grupo)+' desde el '+esc(r.fecha)+'.<br><span style="font-weight:normal;font-size:15px">Acordate de sacarlo del grupo de WhatsApp.</span>',otroBoton('🚪 Registrar otra salida','baja'));},
-  function(e){b.disabled=false;b.textContent='🚪 Confirmar salida';falla(e,'bMsg');});}
-
-// ---------- 📒 CARGAS DE LA SEMANA ----------
-var CS_MODO='0';
-function cargasSemana(){pantalla('<div class="card"><h2>📒 Cargas de la semana</h2><div class="cs-sem">'+
-  '<button id="cs0" onclick="csIr(\'0\')">Esta semana</button><button id="cs1" onclick="csIr(\'1\')">Semana anterior</button><button id="csX" onclick="csIr(\'x\')">Elegir fechas</button></div>'+
-  '<div id="csF" style="display:none;margin-top:8px"><div class="fila'+'2'+'"><div><label>Desde</label><input type="date" id="csD"></div><div><label>Hasta</label><input type="date" id="csH"></div></div>'+
-  '<button class="btn" style="margin-top:10px" onclick="csVer({desde:el(\'csD\').value,hasta:el(\'csH\').value})">Ver</button></div>'+
-  '<div class="ayuda" style="margin-top:6px">La semana va de sábado a viernes. <button class="mini" id="csOrd" onclick="csCambiarOrden()" style="margin-left:6px">'+csOrdTxt()+'</button></div></div><div id="csR"></div>');csIr(CS_MODO==='x'?'0':CS_MODO);}
-// orden de las cargas: por defecto lo último cargado arriba (el servidor manda de más viejo a más nuevo)
-var CS_ORDEN=guardado('gaussCsOrden')||'nuevo',CS_ULT=null;
-function csOrdTxt(){return CS_ORDEN==='nuevo'?'↓ Más nuevos primero':'↑ Más viejos primero';}
-function csCambiarOrden(){CS_ORDEN=CS_ORDEN==='nuevo'?'viejo':'nuevo';guardado('gaussCsOrden',CS_ORDEN);var b=el('csOrd');if(b)b.textContent=csOrdTxt();if(CS_ULT&&el('csL'))csListas();}
-function csOrdenar(R){var X={};Object.keys(R).forEach(function(k){X[k]=Array.isArray(R[k])&&k!=='medios'&&CS_ORDEN==='nuevo'?R[k].slice().reverse():R[k];});return X;}
-function csIr(m){CS_MODO=m;['0','1','X'].forEach(function(k){var b=el('cs'+k);if(b)b.className=(k===m||(k==='X'&&m==='x'))?'on':'';});
- el('csF').style.display=m==='x'?'block':'none';if(m!=='x')csVer({anterior:m});}
-function csVer(p){el('csR').innerHTML='<div class="card">Cargando… (unos segundos)</div>';
- CS_PEDIR('cargasSemana',p,function(R){el('csR').innerHTML=csPintar(R);if(el('csD')&&!el('csD').value){el('csD').value=R.desdeIso;el('csH').value=R.hastaIso;}},function(e){falla(e,'csR');});}
-function csTabla(tit,enc,filas,der){der=der||[];return '<div class="card"><h2>'+tit+' <span class="ayuda">('+filas.length+')</span></h2>'+(filas.length?'<div style="overflow-x:auto"><table class="cs-tb"><tr>'+
-  enc.map(function(e,i){return '<th'+(der.indexOf(i)>=0?' class="n"':'')+'>'+esc(e)+'</th>';}).join('')+'</tr>'+filas.map(function(f){return '<tr>'+f.map(function(c,i){return '<td'+(der.indexOf(i)>=0?' class="n"':'')+'>'+c+'</td>';}).join('')+'</tr>';}).join('')+
-  '</table></div>':'<div class="ayuda">— nada cargado —</div>')+'</div>';}
-function csK(t,v){return '<div class="cs-k"><span>'+esc(t)+'</span><b>'+v+'</b></div>';}
-function csMil(n){return Math.round(Number(n)||0).toLocaleString('es-PY');}
-
-function CS_PEDIR(a,p,ok,mal){if(p.desde||p.hasta){NAV++;sbMarca('');pedir(a,p,ok,mal);return;}rapido(a,p,'csaCargas',p.anterior==='1'?'anterior':'actual',ok,mal);}
-function csPintar(R){CS_ULT=R;CS_LIM={obs:10,contactos:10,justif:10,informes:10};
- var h='<div class="card"><h2>Del '+esc(R.desde)+' al '+esc(R.hasta)+'</h2><div class="cs-res">'+
-  csK('Observaciones',R.obs.length)+csK('Contactos',csContactos(R.contactos).length)+csK('Justificativos',R.justif.length)+csK('Informes padres',R.informes.length)+'</div>'+
-  '<label>🔎 Buscar un alumno en estas cargas</label><input id="csQ" placeholder="Apellido, nombre o ID…" value="'+esc(CS_Q)+'" oninput="CS_Q=this.value;csListas()" autocomplete="off">'+
-  '<div class="ayuda" style="margin-top:6px">Busca en el período elegido. Para buscar más atrás, usá "Elegir fechas". Tocá un nombre para abrir su perfil.</div></div><div id="csL">'+csSecciones()+'</div>';
- return h;}
-var CS_Q='',CS_LIM={obs:10,contactos:10,justif:10,informes:10};
-function csListas(){var y=window.scrollY;if(el('csL'))el('csL').innerHTML=csSecciones();window.scrollTo(0,y);}
-function csMas(k){CS_LIM[k]+=10;csListas();}
-// un contacto marcado desde las alertas queda 2 veces (con quién + "Resuelta"): se muestra en una sola fila
-function csContactos(l){var M={},out=[];(l||[]).forEach(function(x){var k=[x.id,x.dia,x.motivo,x.medio,x.nota].join('|');
-  if(M[k]){if(!/^Resuelta/.test(x.aquien)&&M[k].aquien.indexOf(x.aquien)<0)M[k].aquien=(/^Resuelta/.test(M[k].aquien)?x.aquien:M[k].aquien+' · '+x.aquien);M[k].res=M[k].res||/^Resuelta/.test(x.aquien);return;}
-  var y={};for(var z in x)y[z]=x[z];y.res=/^Resuelta/.test(x.aquien);M[k]=y;out.push(y);});
- out.forEach(function(x){if(x.res&&!/^Resuelta/.test(x.aquien))x.aquien+=' ✔';else if(/^Resuelta/.test(x.aquien))x.aquien='✔ Resuelta';});return out;}
-function csSecciones(){var R=csOrdenar(CS_ULT),q=sa(CS_Q.trim()),pal=q?q.split(/\s+/):[];
- var al=function(x){return x.id&&alumno(x.id)?'<span class="cs-al" onclick="perfil(\''+esc(x.id)+'\')">'+esc(x.alumno)+'</span>':esc(x.alumno);};
- var ok=function(x){if(!pal.length)return true;var t=sa((x.alumno||'')+' '+(x.id||''));if(pal.every(function(w){return t.indexOf(w)>=0;}))return true;var a=x.id&&alumno(x.id);return !!(a&&numBusca(CS_Q,a[5]));};
- var sec=function(k,tit,enc,lista,fila){var l=lista.filter(ok),n=CS_LIM[k],vis=pal.length?l:l.slice(0,n);
-  var h=csTabla(tit,enc,vis.map(fila));h=h.replace('<span class="ayuda">('+vis.length+')</span>','<span class="ayuda">('+l.length+')</span>');
-  if(!pal.length&&l.length>n)h=h.replace(/<\/div>$/,'<button class="mini" style="margin-top:8px" onclick="csMas(\''+k+'\')">⬇ Ver 10 más (quedan '+(l.length-n)+')</button></div>');
-  return h;};
- return sec('obs','📝 Observaciones',['Día','Alumno','Tipo','Detalle','Resultado','Anotó'],R.obs,function(x){return [esc(x.dia),al(x),esc(x.tipo),esc(x.detalle),esc(x.resultado),esc(x.quien)];})+
-  sec('contactos','📞 Contactos',['Día','Alumno','Con quién','Motivo','Por','Nota'],csContactos(R.contactos),function(x){return [esc(x.dia),al(x),esc(x.aquien),esc(x.motivo),esc(x.medio),esc(x.nota)];})+
-  sec('justif','🩺 Justificativos',['Cargado','Alumno','Desde','Hasta','Motivo','Quién justificó','A quién'],R.justif,function(x){return [esc(x.dia),al(x),esc(x.desde),esc(x.hasta),esc(x.motivo),esc(x.quien),esc(x.aquien)];})+
-  sec('informes','📄 Informes para padres',['Día','Alumno','Grupo','Generado por'],R.informes,function(x){return [esc(x.dia),al(x),esc(x.grupo),esc(x.quien)];});}
 </script></body></html>
