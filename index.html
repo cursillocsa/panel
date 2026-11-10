@@ -292,8 +292,8 @@ function rpPintar(){
  var n=Object.keys(RSEL).length,d=rpGrupo(el('rD').value);
  el('rC').textContent='Elegidos: '+n+' de '+RP.alumnos.length+(n&&d?' → quedan '+(RP.alumnos.length-n)+' en '+rpGrupo(RP.origen).nombre:'');
  el('rB').textContent=n?'✅ Pasar '+n+' alumno'+(n>1?'s':'')+' a '+(d?d.nombre:'…'):'✅ Pasar';el('rB').disabled=!n;}
-function rpTog(id){if(RSEL[id])delete RSEL[id];else RSEL[id]=1;rpPintar();}
-function rpTodos(si){rpVisibles().forEach(function(a){if(si&&rpPermitido(a))RSEL[a.id]=1;else if(!si)delete RSEL[a.id];});rpPintar();}
+function rpTog(id){var a=RP.alumnos.filter(function(x){return x.id===id;})[0];if(a&&!rpPermitido(a)){alert('Este alumno ya empezó en el grupo. Para poder tildarlo, marcá arriba la casilla "Incluir también los que ya empezaron".');return;}if(RSEL[id])delete RSEL[id];else RSEL[id]=1;rpPintar();}
+function rpTodos(si){if(si&&RP.alumnos.some(function(x){return x.empezo;})&&!(el('rE')&&el('rE').checked)&&rpVisibles().every(function(x){return !rpPermitido(x);})){alert('Todos estos alumnos ya empezaron. Marcá arriba "Incluir también los que ya empezaron" y volvé a tocar.');return;}rpVisibles().forEach(function(a){if(si&&rpPermitido(a))RSEL[a.id]=1;else if(!si)delete RSEL[a.id];});rpPintar();}
 function rpUltimos(){var n=parseInt(el('rU').value,10);if(!n||n<1)return;RSEL={};
  RP.alumnos.filter(rpPermitido).slice().sort(function(a,b){return b.fila-a.fila;}).slice(0,n).forEach(function(a){RSEL[a.id]=1;});rpPintar();}
 function rpAplicar(){var ids=Object.keys(RSEL),d=rpGrupo(el('rD').value),o=rpGrupo(RP.origen);
