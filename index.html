@@ -39,6 +39,9 @@ input[type=checkbox]{width:auto;transform:scale(1.3);margin:0 8px 0 0}
 .auto{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .sw{border:0;border-radius:18px;padding:8px 14px;font-weight:bold;cursor:pointer;font-family:inherit}
 .sw.on{background:var(--verde);color:#fff}.sw.off{background:#ddd;color:#333}
+.rp-fila{display:flex;align-items:center;gap:10px;padding:9px 6px;border-bottom:1px solid #eee;cursor:pointer;font-size:16px;user-select:none}.rp-fila.on{background:#e8f0fe}.rp-fila small{margin-left:auto;color:#777;font-size:12px;white-space:nowrap}.rp-fila .emp{color:#c0392b}
+.rp-barra{position:sticky;bottom:0;background:#fff;padding:10px 0 2px;border-top:1px solid #ddd}
+.ct-chip{display:inline-block;border:1px solid #bbb;border-radius:18px;padding:7px 12px;margin:4px 6px 0 0;font-size:14px;cursor:pointer;background:#fff;user-select:none}.ct-chip.on{background:#1f4e79;color:#fff;border-color:#1f4e79}.ct-g{display:inline-flex;align-items:center;border:1px solid #ddd;border-radius:8px;padding:6px 10px;margin:4px 6px 0 0;font-size:14px;cursor:pointer;background:#fff;user-select:none}.ct-g.on{background:#e8f0fe;border-color:#1f4e79}.ct-k{margin-top:10px}.ct-k b{font-size:13px;color:#555}
 header h1 span.tit{color:inherit}h1 .tit{cursor:pointer;-webkit-tap-highlight-color:transparent}h1 .tit:active{opacity:.6}
 </style></head><body>
 <header><h1><span class="tit" onclick="if(GR&&INFO)inicio()" title="Ir al inicio">🧑‍💻 Panel de Fran <span>Gauss</span></span></h1><button id="volver" onclick="inicio()">⬅ Inicio</button></header>
@@ -109,6 +112,8 @@ function inicio(desdeHist){if(!desdeHist)HIST=[];el('volver').style.display='non
   '<button class="bgrande" style="background:#6a1b9a" onclick="pdfNotas()">🖨️ PDF de notas<small>Un examen o todos, de un grupo</small></button>'+
   '<button class="bgrande" style="background:#00838f" onclick="lista()">📋 Crear lista de llamado<small>Desde el celular</small></button>'+
   '<button class="bgrande" style="background:#2e7d32" onclick="horario()">📥 Cargar horario de la semana<small>Excel de Carlos → exámenes al calendario + docente y materia en las listas FIUNA</small></button>'+
+  '<button class="bgrande" style="background:#ad1457" onclick="reparto()">👥 Repartir grupo<small>Pasar muchos alumnos de un grupo a otro (ej. INT 11 nov → INT 5)</small></button>'+
+  '<button class="bgrande" style="background:#0277bd" onclick="contactos()">📇 Exportar contactos<small>CSV para Google Contactos · alumnos y responsables por grupo o modalidad</small></button>'+
   '<button class="bgrande" style="background:#455a64" onclick="historial()">📁 Historial<small>Lo último que generaste</small></button>'+
   '</div><div class="card" style="margin-top:14px"><div class="auto"><div><b>⏰ Resumen semanal automático</b><div class="ayuda">Los viernes a las 19 h se generan solos los dos PDFs (sin mail). Abrís el panel y compartís.</div></div>'+
   '<button class="sw off" id="swA" onclick="auto()">…</button></div></div>';
@@ -244,6 +249,121 @@ function historial(){pantalla('<div class="card"><h2>📁 Historial</h2><div id=
   el('hR').innerHTML=todo.length?todo.slice(0,30).map(function(x){return tarjeta(x,x.api);}).join(''):'<div class="ayuda">Todavía no generaste nada desde el panel.</div>';};
  csa('franInfo',{},function(d){INFO=d;(d.hist||[]).forEach(function(x){x.api='csa';todo.push(x);});fin();},function(){fin();});
  adm('franHist',{},function(d){(d.hist||[]).forEach(function(x){x.api='adm';todo.push(x);});fin();},function(){fin();});}
+
+
+// ---------- 👥 REPARTIR GRUPO ----------
+var RP=null,RSEL={};
+function sinAc(s){return String(s==null?'':s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();}
+function reparto(){RP=null;RSEL={};
+ pantalla('<div class="card"><h2>👥 Repartir grupo</h2><div id="rW">Cargando grupos…</div></div>');
+ adm('franRepartoLista',{grupo:''},function(d){RP=d;rpPaso1();},function(e){falla(e,'rW');});}
+function rpUltimoHtml(){var u=RP&&RP.ultimo;if(!u)return '';
+ return '<div class="aviso">↩️ Último reparto: <b>'+u.n+' alumnos</b> de '+esc(u.origen)+' a '+esc(u.destino)+'.<br><button class="acc" style="background:#666" onclick="rpDeshacer()">↩️ Deshacer ese reparto</button><div id="rDes"></div></div>';}
+function rpPaso1(){
+ var op=RP.grupos.filter(function(g){return g.n>0;}).map(function(g){return '<option value="'+esc(g.cod)+'">'+esc(g.nombre)+' · '+g.n+' alumnos'+(g.ini?' · inicia '+fecha(g.ini):'')+'</option>';}).join('');
+ el('rW').innerHTML='<div class="ayuda">Elegí el grupo del que salen los alumnos. Después tildás cuáles pasan y a qué grupo (tiene que existir ya en GRUPOS).</div>'+
+  '<label>Grupo de origen</label><select id="rO">'+op+'</select>'+
+  '<button class="btn" id="rV" onclick="rpVer()">👁️ Ver los alumnos</button><div id="rE1"></div>'+rpUltimoHtml();}
+function rpVer(){var b=el('rV'),cod=el('rO').value;b.disabled=true;b.textContent='Cargando…';
+ adm('franRepartoLista',{grupo:cod},function(d){RP=d;RSEL={};rpPaso2();},function(e){b.disabled=false;b.textContent='👁️ Ver los alumnos';falla(e,'rE1');});}
+function rpGrupo(cod){for(var i=0;i<RP.grupos.length;i++)if(RP.grupos[i].cod===cod)return RP.grupos[i];return null;}
+function rpPaso2(){
+ var o=rpGrupo(RP.origen),hayEmp=RP.alumnos.some(function(a){return a.empezo;});
+ var dest=RP.grupos.filter(function(g){return g.cod!==RP.origen;}).map(function(g){return '<option value="'+esc(g.cod)+'">'+esc(g.nombre)+' · '+g.n+' alumnos'+(g.ini?' · inicia '+fecha(g.ini):'')+'</option>';}).join('');
+ pantalla('<div class="card"><h2>👥 Repartir: '+esc(o.nombre)+' <span class="ayuda">('+RP.alumnos.length+' alumnos)</span></h2>'+
+  '<label>Pasan a este grupo</label><select id="rD" onchange="rpNota()">'+dest+'</select><div id="rN"></div>'+
+  '<label>Buscar</label><input id="rQ" placeholder="Apellido, nombre o ID…" oninput="rpPintar()">'+
+  '<div style="margin-top:8px"><span class="chip" onclick="rpUltimos()">Tildar los últimos…</span><input id="rU" type="number" min="1" value="20" style="width:80px;display:inline-block;margin-left:4px"> <span class="ayuda">inscriptos</span>'+
+  '<span class="chip" onclick="rpTodos(true)">☑️ Tildar todos los que se ven</span><span class="chip" onclick="rpTodos(false)">✕ Quitar todos</span></div>'+
+  (hayEmp?'<label style="font-weight:normal;margin-top:10px"><input type="checkbox" id="rE" onchange="rpPintar()">Incluir también los que <b>ya empezaron</b> (se marcan en rojo)</label>':'')+
+  '<div id="rL" style="margin-top:10px"></div>'+
+  '<div class="rp-barra"><div id="rC" style="font-weight:bold;margin-bottom:4px"></div><button class="btn" id="rB" style="margin-top:4px" onclick="rpAplicar()">✅ Pasar</button><div id="rR"></div></div></div>');
+ rpNota();rpPintar();}
+function rpNota(){var o=rpGrupo(RP.origen),d=rpGrupo(el('rD').value),n='';if(!d){el('rN').innerHTML='';return;}
+ if(o.ini&&d.ini&&o.ini!==d.ini)n+='<div class="aviso">⚠️ '+esc(d.nombre)+' inicia el '+fecha(d.ini)+' y '+esc(o.nombre)+' el '+fecha(o.ini)+'.</div>';
+ if(o.cuota!=null&&d.cuota!=null&&o.cuota!==d.cuota)n+='<div class="aviso">⚠️ La cuota de '+esc(d.nombre)+' (Gs. '+d.cuota.toLocaleString('es-PY')+') es distinta a la de '+esc(o.nombre)+' (Gs. '+o.cuota.toLocaleString('es-PY')+').</div>';
+ el('rN').innerHTML=n;rpPintar();}
+function rpPermitido(a){return !a.empezo||(el('rE')&&el('rE').checked);}
+function rpVisibles(){var q=sinAc(el('rQ')?el('rQ').value:'');return RP.alumnos.filter(function(a){return !q||sinAc(a.nombre+' '+a.id).indexOf(q)>=0;});}
+function rpPintar(){
+ if(!el('rL'))return;var v=rpVisibles();
+ Object.keys(RSEL).forEach(function(id){var a=RP.alumnos.filter(function(x){return x.id===id;})[0];if(!a||!rpPermitido(a))delete RSEL[id];});
+ el('rL').innerHTML=v.length?v.map(function(a){return '<div class="rp-fila'+(RSEL[a.id]?' on':'')+'" data-id="'+esc(a.id)+'" onclick="rpTog(this.getAttribute(\'data-id\'))">'+(RSEL[a.id]?'☑️':'⬜')+' <span'+(a.empezo?' class="emp"':'')+'>'+esc(a.nombre)+'</span><small>'+esc(a.id)+(a.empezo?' · ya empezó':'')+'</small></div>';}).join(''):'<div class="ayuda">Ningún alumno coincide.</div>';
+ var n=Object.keys(RSEL).length,d=rpGrupo(el('rD').value);
+ el('rC').textContent='Elegidos: '+n+' de '+RP.alumnos.length+(n&&d?' → quedan '+(RP.alumnos.length-n)+' en '+rpGrupo(RP.origen).nombre:'');
+ el('rB').textContent=n?'✅ Pasar '+n+' alumno'+(n>1?'s':'')+' a '+(d?d.nombre:'…'):'✅ Pasar';el('rB').disabled=!n;}
+function rpTog(id){if(RSEL[id])delete RSEL[id];else RSEL[id]=1;rpPintar();}
+function rpTodos(si){rpVisibles().forEach(function(a){if(si&&rpPermitido(a))RSEL[a.id]=1;else if(!si)delete RSEL[a.id];});rpPintar();}
+function rpUltimos(){var n=parseInt(el('rU').value,10);if(!n||n<1)return;RSEL={};
+ RP.alumnos.filter(rpPermitido).slice().sort(function(a,b){return b.fila-a.fila;}).slice(0,n).forEach(function(a){RSEL[a.id]=1;});rpPintar();}
+function rpAplicar(){var ids=Object.keys(RSEL),d=rpGrupo(el('rD').value),o=rpGrupo(RP.origen);
+ if(!ids.length||!d)return;
+ if(!confirm('¿Pasar '+ids.length+' alumno'+(ids.length>1?'s':'')+' de '+o.nombre+' a '+d.nombre+'?\n\nSe puede deshacer después.'))return;
+ var b=el('rB');b.disabled=true;b.textContent='Pasando… (unos segundos)';
+ adm('franRepartoAplicar',{grupo:RP.origen,destino:d.cod,ids:ids.join(','),empezados:(el('rE')&&el('rE').checked)?'1':''},function(r){
+  var h='<div class="card ok"><b style="font-size:19px">✅ Pasaron '+r.n+' alumno'+(r.n>1?'s':'')+'</b><div style="margin-top:6px">'+esc(r.origen)+' → <b>'+esc(r.destino)+'</b></div>';
+  if(r.saltados&&r.saltados.length)h+='<div class="aviso">No se movieron: '+r.saltados.map(esc).join(' · ')+'</div>';
+  if(r.noEncontrados&&r.noEncontrados.length)h+='<div class="aviso">No encontrados: '+r.noEncontrados.map(esc).join(', ')+'</div>';
+  (r.avisos||[]).forEach(function(x){h+='<div class="aviso">⚠️ '+esc(x)+'</div>';});
+  h+='<div class="ayuda" style="margin-top:8px">Las deudas se recalculan solas en unos segundos y el CSA lo toma en su próxima actualización (cada hora). Las listas de llamado se arman con el grupo nuevo: creá las listas del intensivo <b>después</b> del reparto.</div>'+
+   '<button class="btn gr" onclick="rpDeshacer()">↩️ Deshacer este reparto</button><div id="rDes"></div><button class="btn az" onclick="inicio()">⬅ Volver al inicio</button></div>';
+  pantalla(h);},
+  function(e){b.disabled=false;rpPintar();falla(e,'rR');});}
+function rpDeshacer(){if(!confirm('¿Deshacer el último reparto? Los alumnos vuelven a su grupo de origen.'))return;
+ var c=el('rDes');if(c)c.innerHTML='<div class="ayuda">Deshaciendo…</div>';
+ adm('franRepartoDeshacer',{},function(r){if(c)c.innerHTML='<div class="ok">✅ Volvieron '+r.n+' alumno'+(r.n>1?'s':'')+' a '+esc(r.origen)+(r.saltados&&r.saltados.length?'. No se tocaron (ya cambiaron de grupo): '+r.saltados.map(esc).join(', '):'')+'</div>';if(RP)RP.ultimo=null;},
+  function(e){falla(e,'rDes');});}
+
+
+// ---------- 📇 EXPORTAR CONTACTOS (CSV para Google Contactos) ----------
+var CT=null,CTSEL={},CTR=null;
+function ctLlamar(a,p,ok,mal){adm(a,p,ok,mal);}
+function contactos(){CT=null;CTSEL={};CTR=null;
+ pantalla('<div class="card"><h2>📇 Exportar contactos</h2><div id="cW">Cargando grupos…</div></div>');
+ ctLlamar('contactosOpciones',{},function(d){CT=d;ctPaso();},function(e){falla(e,'cW');});}
+function ctClave(g){return (g.curso||'Otros')+(g.mod?' '+g.mod:'');}
+function ctPaso(){
+ var mods={},cursos={};CT.grupos.forEach(function(g){if(g.mod)mods[g.mod]=1;if(g.curso)cursos[g.curso]=1;});
+ el('cW').innerHTML='<div class="ayuda">Se descarga un archivo CSV para importar en Google Contactos (contacts.google.com → Importar). Alumno: APELLIDO NOMBRE GRUPO · Responsable: TUTORGRUPO APELLIDO NOMBRE (uno por hijo).</div>'+
+  '<label>¿De quién?</label><select id="cQ"><option value="ambos">Alumnos y responsables</option><option value="alumnos">Solo alumnos</option><option value="responsables">Solo responsables (tutores)</option></select>'+
+  '<label>¿De qué grupos?</label><div class="ayuda">Por modalidad o curso (tilda o destilda todos sus grupos):</div><div id="cM"></div>'+
+  '<div id="cG"></div>'+
+  '<label style="font-weight:normal;margin-top:12px"><input type="checkbox" id="cA" checked>Solo los que están cursando (sin los que ya salieron)</label>'+
+  '<button class="btn" id="cB" onclick="ctGenerar()">📇 Descargar CSV</button><div id="cR"></div>';
+ ctPintar();}
+function ctSeleccion(f){var gs=CT.grupos.filter(f);return gs;}
+function ctTodosOn(gs){return gs.length>0&&gs.every(function(g){return CTSEL[g.cod];});}
+function ctPintar(){
+ var mods={},cursos={};CT.grupos.forEach(function(g){if(g.mod)mods[g.mod]=1;if(g.curso)cursos[g.curso]=1;});
+ var ch='<span class="ct-chip'+(ctTodosOn(CT.grupos)?' on':'')+'" onclick="ctGrupoSet(\'*\',\'\')">Todos los grupos</span>';
+ Object.keys(mods).sort().forEach(function(m){ch+='<span class="ct-chip'+(ctTodosOn(ctSeleccion(function(g){return g.mod===m;}))?' on':'')+'" data-v="'+esc(m)+'" onclick="ctGrupoSet(\'m\',this.getAttribute(\'data-v\'))">'+esc(m)+'</span>';});
+ Object.keys(cursos).sort().forEach(function(m){ch+='<span class="ct-chip'+(ctTodosOn(ctSeleccion(function(g){return g.curso===m;}))?' on':'')+'" data-v="'+esc(m)+'" onclick="ctGrupoSet(\'c\',this.getAttribute(\'data-v\'))">Todos '+esc(m)+'</span>';});
+ ch+='<span class="ct-chip" onclick="ctGrupoSet(\'0\',\'\')">✕ Ninguno</span>';
+ el('cM').innerHTML=ch;
+ var por={};CT.grupos.forEach(function(g){(por[ctClave(g)]=por[ctClave(g)]||[]).push(g);});
+ el('cG').innerHTML=Object.keys(por).sort().map(function(k){return '<div class="ct-k"><b>'+esc(k)+'</b><br>'+por[k].map(function(g){
+  return '<span class="ct-g'+(CTSEL[g.cod]?' on':'')+'" data-c="'+esc(g.cod)+'" onclick="ctTog(this.getAttribute(\'data-c\'))">'+(CTSEL[g.cod]?'☑️ ':'⬜ ')+esc(g.nombre)+' <span class="ayuda">&nbsp;('+g.n+')</span></span>';}).join('')+'</div>';}).join('');
+ var n=Object.keys(CTSEL).length;el('cB').textContent='📇 Descargar CSV'+(n?' ('+n+' grupo'+(n>1?'s':'')+')':'');}
+function ctTog(c){if(CTSEL[c])delete CTSEL[c];else CTSEL[c]=1;ctPintar();}
+function ctGrupoSet(tipo,v){
+ if(tipo==='0'){CTSEL={};ctPintar();return;}
+ var gs=CT.grupos.filter(function(g){return tipo==='*'||(tipo==='m'&&g.mod===v)||(tipo==='c'&&g.curso===v);});
+ var on=ctTodosOn(gs);gs.forEach(function(g){if(on)delete CTSEL[g.cod];else CTSEL[g.cod]=1;});ctPintar();}
+function ctBlob(r){return new Blob(['﻿'+r.csv],{type:'text/csv;charset=utf-8'});}
+function ctBajar(){if(!CTR)return;var url=URL.createObjectURL(ctBlob(CTR)),a=document.createElement('a');a.href=url;a.download=CTR.archivo;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},4000);}
+function ctCompartir(){if(!CTR)return;var f=null;try{f=new File([ctBlob(CTR)],CTR.archivo,{type:'text/csv'});}catch(e){}
+ if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:CTR.archivo}).catch(function(){});}else ctBajar();}
+function ctGenerar(){var cods=Object.keys(CTSEL),b=el('cB'),r=el('cR');
+ if(!cods.length){r.innerHTML='<div class="err">Elegí al menos un grupo.</div>';return;}
+ b.disabled=true;b.textContent='Armando… (unos segundos)';r.innerHTML='';
+ ctLlamar('contactosCsv',{quien:el('cQ').value,grupos:cods.join(','),activos:el('cA').checked?'1':'0'},function(x){
+  b.disabled=false;ctPintar();CTR=x;
+  var h='<div class="ok" style="margin-top:12px"><b class="big">✅ '+x.n+' contactos</b>'+x.alumnos+' de alumnos · '+x.responsables+' de responsables'+
+   '<button class="btn az" style="margin-top:10px" onclick="ctBajar()">⬇️ Descargar de nuevo</button><button class="btn" style="background:#25d366" onclick="ctCompartir()">📲 Compartir archivo</button></div>';
+  if(x.totalSinTel)h+='<div class="aviso">⚠️ '+x.totalSinTel+' sin teléfono (no se incluyen): '+x.sinTel.map(esc).join(' · ')+(x.totalSinTel>x.sinTel.length?' …':'')+'</div>';
+  h+='<div class="aviso">Para importar: entrá a <b>contacts.google.com</b> → <b>Importar</b> → elegí el archivo. Cada contacto queda con una etiqueta (el grupo, o "TUTORES grupo"): si te equivocás, borrás los contactos de esa etiqueta. No lo importes dos veces.</div>';
+  r.innerHTML=h;ctBajar();},
+  function(e){b.disabled=false;ctPintar();falla(e,'cR');});}
 
 // ---------- 📥 HORARIO SEMANAL DE CARLOS ----------
 function val(id){var e=el(id);return e?String(e.value||""):"";}
