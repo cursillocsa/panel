@@ -237,9 +237,10 @@ function lista(){var d=new Date();d.setDate(d.getDate()+((8-d.getDay())%7||7));v
  pantalla('<div class="card"><h2>📋 Crear lista de llamado</h2>'+
   '<label>Lista</label><select id="lL">'+INFO.listas.map(function(l){return '<option value="'+esc(l.nombre)+'">'+esc(l.nombre)+' ('+esc(String(l.tipo).toLowerCase())+')</option>';}).join('')+'</select>'+
   '<label>Cualquier día de la semana <span class="ayuda">(o del mes, si es mensual)</span></label><input type="date" id="lF" value="'+lunes+'">'+
+  '<label>Filas libres para nombres nuevos <span class="ayuda">(debajo de los alumnos de cada grupo; 0 a 60)</span></label><input type="number" id="lN" min="0" max="60" value="10" inputmode="numeric">'+
   '<button class="btn" id="lB" onclick="crearL()">📋 Crear lista</button><div id="lR"></div></div>');}
 function crearL(){var b=el('lB');b.disabled=true;b.textContent='Creando… (puede tardar un minuto)';
- csa('franCrearLista',{lista:el('lL').value,fecha:el('lF').value},function(r){b.disabled=false;b.textContent='📋 Crear lista';
+ csa('franCrearLista',{lista:el('lL').value,fecha:el('lF').value,libres:Math.max(0,Math.min(60,parseInt(el('lN').value,10)||0))},function(r){b.disabled=false;b.textContent='📋 Crear lista';
   el('lR').innerHTML='<div class="ok">✅ Lista creada</div>'+tarjeta({nombre:r.nombre,tipo:'Lista',url:r.url,t:Date.now()});},
   function(e){b.disabled=false;b.textContent='📋 Crear lista';falla(e,'lR');});}
 
@@ -444,5 +445,56 @@ function cargarHorario(){var b=el('hC'),m=el('hM');if(!confirm('¿Cargar el hora
     '<div class="ayuda" style="margin-top:8px">Si volvés a cargar el horario de la misma semana, se reemplaza lo que se cargó antes en el calendario (no se duplica).</div>'+
     '<button class="btn" onclick="inicio()">⬅ Volver al inicio</button></div>');},
   function(e){b.disabled=false;b.textContent='✅ Cargar en el calendario y las listas';falla(e,'hM');});}
+
+
+function gbPedir(ok,mal){adm('gruposResumen',{},ok,mal);}
+/* 📊 BURBUJA "Alumnos por grupo" (tanda 4r / CSA 3j): botón redondo flotante que abre la lista de grupos con su cantidad de alumnos activos */
+var GB_DATOS=null,GB_ABIERTA=false;
+function gbEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function gbN(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+function gbInit(){
+ if(document.getElementById('gbBtn'))return;
+ var st=document.createElement('style');
+ st.textContent='#gbBtn{position:fixed;right:14px;bottom:14px;z-index:9998;width:56px;height:56px;border-radius:50%;border:0;background:#1565c0;color:#fff;font-size:26px;line-height:56px;padding:0;box-shadow:0 3px 10px rgba(0,0,0,.4);cursor:pointer}'+
+ '#gbBtn small{position:absolute;top:-6px;right:-6px;background:#c62828;color:#fff;border-radius:10px;font-size:11px;line-height:16px;min-width:16px;padding:0 4px;display:none}'+
+ '#gbVel{display:none;position:fixed;left:0;top:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,.5);overflow:auto;-webkit-overflow-scrolling:touch}'+
+ '#gbCaja{background:#fff;color:#222;max-width:560px;margin:24px auto;border-radius:14px;padding:14px 16px 18px;box-shadow:0 6px 24px rgba(0,0,0,.4);font-family:inherit}'+
+ '#gbCaja h2{margin:0 0 4px;font-size:19px}#gbCaja .gbX{float:right;border:0;background:#eee;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer}'+
+ '#gbCaja .gbTot{font-size:15px;margin:6px 0 8px;color:#444}#gbCaja .gbChips span{display:inline-block;background:#e3f2fd;color:#0d47a1;border-radius:14px;padding:3px 10px;margin:2px 4px 2px 0;font-size:13px;font-weight:bold}'+
+ '#gbCaja input{width:100%;box-sizing:border-box;padding:9px;margin:8px 0;border:1px solid #bbb;border-radius:8px;font-size:15px}'+
+ '#gbCaja .gbCurso{background:#0d47a1;color:#fff;border-radius:8px;padding:6px 10px;margin:12px 0 4px;font-weight:bold;display:flex;justify-content:space-between}'+
+ '#gbCaja .gbFila{display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #e5e5e5;font-size:15px}'+
+ '#gbCaja .gbFila small{display:block;color:#777;font-size:12px}#gbCaja .gbFila b{font-size:18px;min-width:34px;text-align:right}'+
+ '#gbCaja .gbAct{width:100%;margin-top:12px;padding:10px;border:0;border-radius:8px;background:#455a64;color:#fff;font-size:15px;cursor:pointer}';
+ document.head.appendChild(st);
+ var b=document.createElement('button');b.id='gbBtn';b.type='button';b.title='Alumnos por grupo';b.innerHTML='📊<small id="gbBadge"></small>';b.onclick=gbAbrir;document.body.appendChild(b);
+ var v=document.createElement('div');v.id='gbVel';v.onclick=function(e){if(e.target===v)gbCerrar();};
+ v.innerHTML='<div id="gbCaja"><button class="gbX" type="button" onclick="gbCerrar()">✕</button><h2>📊 Alumnos por grupo</h2><div id="gbCuerpo">Cargando…</div></div>';
+ document.body.appendChild(v);}
+function gbAbrir(){gbInit();GB_ABIERTA=true;document.getElementById('gbVel').style.display='block';
+ if(typeof PIN!=='undefined'&&!PIN){document.getElementById('gbCuerpo').innerHTML='<p>Primero ingresá con tu PIN y volvé a tocar la burbuja.</p>';return;}
+ gbCargar();}
+function gbCerrar(){GB_ABIERTA=false;document.getElementById('gbVel').style.display='none';}
+function gbCargar(){
+ document.getElementById('gbCuerpo').innerHTML='Cargando…';
+ gbPedir(function(d){GB_DATOS=d;gbPintar('');},function(e){
+  document.getElementById('gbCuerpo').innerHTML='<p style="color:#b71c1c">'+gbEsc(String(e&&e.message||e).replace(/^.*PIN:\s*/,'PIN: '))+'</p><button class="gbAct" type="button" onclick="gbCargar()">🔄 Probar de nuevo</button>';});}
+function gbPintar(filtro){
+ var d=GB_DATOS;if(!d)return;
+ var f=String(filtro||'').toLowerCase(),h='';
+ var chips='';d.cursos.forEach(function(c){chips+='<span>'+gbEsc(c.curso)+': '+gbN(c.act)+'</span>';});
+ h+='<div class="gbTot"><b>'+gbN(d.total)+'</b> alumnos activos en <b>'+d.grupos.length+'</b> '+(d.grupos.length===1?'grupo':'grupos')+(d.anot?' · '+gbN(d.anot)+' anotados para pasar de grupo':'')+'<br><small>Al '+gbEsc(d.hoy||'')+'</small></div><div class="gbChips">'+chips+'</div>';
+ h+='<input id="gbF" type="search" placeholder="Buscar grupo…" value="'+gbEsc(filtro||'')+'" oninput="gbPintar(this.value)">';
+ var ult=null,sub={},lista=[];
+ d.grupos.forEach(function(g){if(f&&(g.nombre+' '+g.curso+' '+g.mod).toLowerCase().indexOf(f)<0)return;lista.push(g);sub[g.curso]=(sub[g.curso]||0)+g.act;});
+ lista.forEach(function(g){
+  if(g.curso!==ult){ult=g.curso;h+='<div class="gbCurso"><span>'+gbEsc(g.curso)+'</span><span>'+gbN(sub[g.curso])+'</span></div>';}
+  var det=[];if(g.mod)det.push(g.mod);if(g.anot)det.push('+'+g.anot+' anotados');if(g.fin)det.push('termina '+g.fin);
+  h+='<div class="gbFila"><div>'+gbEsc(g.nombre)+(det.length?'<small>'+gbEsc(det.join(' · '))+'</small>':'')+'</div><b>'+gbN(g.act)+'</b></div>';});
+ if(!lista.length)h+='<p>No hay grupos que coincidan.</p>';
+ h+='<button class="gbAct" type="button" onclick="gbCargar()">🔄 Actualizar</button>';
+ document.getElementById('gbCuerpo').innerHTML=h;
+ var inp=document.getElementById('gbF');if(inp&&filtro){inp.focus();try{inp.setSelectionRange(filtro.length,filtro.length);}catch(e){}}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',gbInit);else gbInit();
 
 </script></body></html>
