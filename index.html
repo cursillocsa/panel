@@ -154,17 +154,29 @@ function sabVie(anterior){var d=new Date(),dow=d.getDay(),v=new Date(d);
 function semanal(){pantalla('<div class="card"><h2>📊 Resumen semanal</h2>'+
   '<label>Semana</label><select id="sS"><option value="0">Esta semana · sábado '+sabVie(false).replace(' al ',' → viernes ')+'</option><option value="1">Semana anterior · '+sabVie(true)+'</option></select>'+
   '<div class="ayuda" style="margin-top:6px">Si ya estaba generado (por ejemplo el automático del viernes), lo trae al instante.</div>'+
+  '<label style="margin-top:12px">Grupos del académico</label><div class="ayuda" id="sGt"></div>'+
+  '<button type="button" class="mini" style="margin-top:6px" onclick="sElegir()">☑️ Elegir grupos</button> <button type="button" class="mini" style="background:#666" onclick="SELS={};pintarSel()">✕ Todos los activos</button>'+
+  '<div id="sGl" style="display:none;margin-top:8px"></div>'+
   '<button class="btn" id="sB" onclick="genSemanal(0)">📊 Generar académico + económico</button><div id="sR"></div></div>'+
   '<div class="card"><h2>🧪 Académico nuevo (prueba)</h2><div class="ayuda">Formato corto: una tabla por grupo. Se guarda en otra carpeta (RESÚMENES SEMANALES (PRUEBA)); el de siempre no cambia.</div>'+
-  '<button class="btn" id="sN" style="background:#6a1b9a" onclick="genNuevo()">🧪 Generar el académico nuevo</button><div id="sNR"></div></div>');}
+  '<button class="btn" id="sN" style="background:#6a1b9a" onclick="genNuevo()">🧪 Generar el académico nuevo</button><div id="sNR"></div></div>');SELS={};pintarSel();}
+var SELS={};
+function selNombres(){return GR&&GR.grupos?GR.grupos.filter(function(g){return SELS[g.cod];}).map(function(g){return g.nombre;}).join('|'):'';}
+function pintarSel(){var t=el('sGt'),l=el('sGl');if(!t)return;var gs=GR&&GR.grupos?GR.grupos.filter(function(g){return g.vigente;}):[],n=Object.keys(SELS).length;
+ t.innerHTML=n?'<b>'+n+' grupo'+(n>1?'s':'')+' elegido'+(n>1?'s':'')+'</b> (el económico sale igual, de todos). Si no elegís ninguno, salen todos los grupos activos.':'Todos los grupos activos (los que ya terminaron no salen). El económico no cambia.';
+ var por={};gs.forEach(function(g){(por[claveCurso(g)]=por[claveCurso(g)]||[]).push(g);});
+ l.innerHTML=Object.keys(por).sort().map(function(k){return '<div class="gr-curso"><b>'+esc(k)+'</b><br>'+por[k].map(function(g){
+  return '<span class="gr-item'+(SELS[g.cod]?' on':'')+'" onclick="toggleSel(\''+esc(g.cod)+'\')">'+(SELS[g.cod]?'☑️ ':'⬜ ')+esc(g.nombre)+'</span>';}).join('')+'</div>';}).join('')||'<div class="ayuda">Cargando grupos…</div>';}
+function toggleSel(c){if(SELS[c])delete SELS[c];else SELS[c]=1;pintarSel();}
+function sElegir(){var d=el('sGl');d.style.display=d.style.display==='none'?'block':'none';pintarSel();}
 function genNuevo(){var b=el('sN');b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';el('sNR').innerHTML='';
- csa('franSemanal',{anterior:el('sS').value,nuevo:'1'},function(r){b.disabled=false;b.textContent='🧪 Generar el académico nuevo';el('sNR').innerHTML=tarjeta(r,'csa');},
+ csa('franSemanal',{anterior:el('sS').value,nuevo:'1',grupos:selNombres()},function(r){b.disabled=false;b.textContent='🧪 Generar el académico nuevo';el('sNR').innerHTML=tarjeta(r,'csa');},
   function(e){b.disabled=false;b.textContent='🧪 Generar el académico nuevo';falla(e,'sNR');});}
 function genSemanal(force){var b=el('sB'),ant=el('sS').value;b.disabled=true;b.textContent='Generando… (puede tardar un minuto)';
  el('sR').innerHTML='<div id="sA" class="pdf">📘 Académico: generando…</div><div id="sE" class="pdf">💰 Económico: generando…</div>';
  var n=0,fin=function(){if(++n<2)return;b.disabled=false;b.textContent='📊 Generar académico + económico';
   el('sR').insertAdjacentHTML('beforeend','<button class="btn gr" style="font-size:15px;padding:10px" onclick="genSemanal(1)">🔄 Volver a generar con los datos de ahora</button>');};
- csa('franSemanal',{anterior:ant,force:force},function(r){el('sA').outerHTML=tarjeta(r,'csa');fin();},function(e){falla(e,'sA');fin();});
+ csa('franSemanal',{anterior:ant,force:force,grupos:selNombres()},function(r){el('sA').outerHTML=tarjeta(r,'csa');fin();},function(e){falla(e,'sA');fin();});
  adm('franSemanal',{anterior:ant,force:force},function(r){el('sE').outerHTML=tarjeta(r,'adm');fin();},function(e){falla(e,'sE');fin();});}
 
 // ---------- 🎯 RESUMEN ESPECÍFICO ----------
